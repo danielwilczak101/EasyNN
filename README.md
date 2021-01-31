@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/large_logo.png)
+![](https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/readme_logo.png)
 
 # EasyNN - Neural Networks made Easy
 
