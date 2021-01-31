@@ -1,1 +1,1 @@
- 
+from EasyNN import NN
