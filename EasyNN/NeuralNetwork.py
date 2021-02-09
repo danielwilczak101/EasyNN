@@ -34,34 +34,3 @@ class NeuralNetwork:
         """ Train is used to take a data set and train it based on an input
         and output."""
         print("Hello NN World!")
-
-
-class DeepNN:
-    """Layered NN structure, which allows more efficient operations."""
-
-    layers: Sequence[NeuralLayer]
-
-    def __init__(
-            self,
-            layers: Sequence[int],
-            activation: Dict[int, Callable[[float], float]] = {},
-    ):
-        """Convert input integers to actual layers, with activation functions
-         appropriately."""
-
-        pass
-
-
-    def __call__(
-            self,
-            input_values: Sequence[float],
-            pad: float = 0
-    ) -> Sequence[float]:
-        """
-        Fill in the first layer with the input_values,
-        fill in remaining nodes/layers with the pad value,
-        perform feed-forward propagation,
-        and return the last layer's values.
-        """
-
-        pass
