@@ -86,7 +86,7 @@ class NeuralNetwork:
         self.output_nodes = self.nodes[-amount_of_outputs:]
 
         # Collect hidden nodes
-        self.hidden_nodes = self.nodes[len(self.input_nodes):(lambda i: (i, print(i))[0])(len(self.nodes)-len(self.output_nodes))]
+        self.hidden_nodes = self.nodes[len(self.input_nodes):(len(self.nodes)-len(self.output_nodes))]
 
 
     def __call__(
