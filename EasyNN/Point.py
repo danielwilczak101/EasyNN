@@ -3,8 +3,11 @@ import numpy as np
 import random
 
 
-TensorType = Union[np.ndarray, float, List[float], List[List[float]], '...']
-"""Tensor Type is a nested multidimensional list of floats (possibly numpy array)."""
+TensorType = Union[np.ndarray, float, List['TensorType']]
+"""
+Tensor Type is either a float or list of Tensors
+(a multidimensional array, like numpy arrays).
+"""
 
 
 class Point:
@@ -13,6 +16,11 @@ class Point:
     Additionally stores derivatives and other parameters
     and various methods which may be useful.
     Uses numpy arrays.
+
+    Note on scalar values:
+    - shape: (1,).
+    - may be accessed using Point.points[0].
+    - should be updated using Point.points = [new_point].
     """
 
 
@@ -24,10 +32,10 @@ class Point:
     shape: Sequence[int]
     """The shape of the points stored."""
 
-    points: TensorType
+    points: np.ndarray
     """The points stored."""
 
-    derivatives: TensorType
+    derivatives: np.ndarray
     """The partial derivatives stored."""
 
 
@@ -57,7 +65,7 @@ class Point:
             self,
             low: float = -10,
             high: float = 10,
-            tensor: Union[None, TensorType] = None,
+            tensor: Union[None, np.ndarray] = None,
     ):
         """Randomizes the points and derivatives."""
 
