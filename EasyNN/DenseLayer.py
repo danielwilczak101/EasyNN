@@ -26,8 +26,23 @@ class DenseLayer:
         Forward pass of the neural Network, assumes previousLayer.output contains the correct values
         """
         self.neuron_output = np.dot(self.previousLayer.output, self.weights) + self.biases
+        print("neuron_output" + str(self.neuron_output))
         #TODO change this later, rn it only does RELU
         self.output = np.maximum(0, self.neuron_output)
+        print("output" + str(self.output))
 
-    def backward(self):
-        pass
+    def backward(self, gradiantIn):
+        #Gradiant in is a 1d array that has the gradiant value for each neuron
+        print("\n\nBack prop start")
+        if self.previousLayer is not None:
+            print("weights:" + str(self.weights))
+            print("inputs:" + str(self.previousLayer.output))
+            gradiantCpy = gradiantIn.copy()
+            print("Gradiant copy: " + str(self.neuron_output < 0))
+            gradiantCpy[self.neuron_output < 0] = 0
+            print("gradiantCpy: " + str(gradiantCpy))
+            self.d_inputs = np.dot(gradiantCpy, self.weights.T)
+            print("d_inputs:" + str(self.d_inputs))
+            self.d_weights = np.dot(self.previousLayer.output.T, gradiantCpy)
+            print("d_weights:" + str(self.d_weights))
+
