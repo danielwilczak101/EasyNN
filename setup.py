@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='EasyNN',
-    version='0.0.1',
+    version='0.0.2',
     description='EasyNN is a python package designed to provide an easy-to-use neural network. The package is designed to work right out of the box, while also allowing the user to customize features as they see fit.',
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
@@ -21,7 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
         ],
     install_requires = ["matplotlib ~= 3.3.2",
-                        "pytest>=3.7",
+                        "clint>=0.5.1",
                         "tabulate >=0.8.7"
                         ],
     )

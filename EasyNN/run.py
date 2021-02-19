@@ -1,7 +1,5 @@
 from EasyNN import NeuralNetwork, mnist
 
-
-
 #model = NeuralNetwork()
 
 #model.train()
