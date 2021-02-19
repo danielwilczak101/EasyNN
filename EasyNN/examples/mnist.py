@@ -32,7 +32,6 @@ class mnist:
         if path.exists("mnist.sqlite3") == False:
             self.get_mnist_dataset()
 
-
     def get_mnist_dataset(self):
         """Since the file size is over 50MB we require the user to download it
         from the website https://www.datadb.dev/datadb/mnist/"""
@@ -101,21 +100,6 @@ class mnist:
             self.conn = None
             print(e)
 
-    #=====================================#
-    # Setters and Getters:                #
-    #=====================================#
-
-    @property
-    def training(self):
-        """Getter function for training data"""
-
-        # Return if the training data has already been set
-        if self._training is not None:
-            return self._training
-        else:
-            self.set_data()
-            return self._training
-
     @property
     def conn(self):
         """Getter function for conn"""
@@ -133,3 +117,10 @@ class mnist:
         except:
             # If the connection doesnt exist then print error
             raise Exception("""mnist database has not been downloaded yet.""")
+
+    @conn.setter
+    def conn(self, value_input):
+        """Setter function for conn"""
+
+        # Set the name in the ga attribute
+        self._conn = value_input

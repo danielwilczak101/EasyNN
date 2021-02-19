@@ -1,1 +1,1 @@
-from EasyNN import NN
+from EasyNN.examples.mnist import mnist

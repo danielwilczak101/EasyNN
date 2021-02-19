@@ -1,4 +1,4 @@
-from EasyNN import NeuralNetwork, mnist
+from EasyNN import mnist
 
 #model = NeuralNetwork()
 
