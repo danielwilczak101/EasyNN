@@ -29,6 +29,9 @@ class mnist:
         self.training  = None
         self.testing   = None
 
+        if path.exists("mnist.sqlite3") == False:
+            self.get_mnist_dataset()
+
 
     def get_mnist_dataset(self):
         """Since the file size is over 50MB we require the user to download it
@@ -113,14 +116,6 @@ class mnist:
             return self._conn
 
         except:
-            # If you can not connect then the file may not have been downloaded.
-            if path.exists("mnist.sqlite3") == False:
-                self.get_mnist_dataset()
-
-            self.create_connection()
-            return self._conn
-
-        else:
             # If the connection doesnt exist then print error
             raise Exception("""mnist database has not been downloaded yet.""")
 
