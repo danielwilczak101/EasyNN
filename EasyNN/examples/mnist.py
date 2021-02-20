@@ -15,7 +15,12 @@ import requests
 import os.path
 from os import path
 
+# Download progress bar
 from clint.textui import progress
+
+# Function progress bar
+from time import sleep
+from tqdm import tqdm
 
 class mnist:
     """mnist dataset used in training neural networks about hand written letters."""
@@ -136,7 +141,7 @@ class mnist:
         dataset."""
 
         # Get the training data
-        data = self.query_all("""SELECT label, image FROM train""")
+        data = self.query_all("""SELECT label, image FROM test""")
 
         # This may take a while so we want the user to know
         print("""Getting 10,000 testing examples. This may take a minute:""")
@@ -153,7 +158,7 @@ class mnist:
         formated_data = []
 
         # For each (label, image in the training dataset)
-        for image in data:
+        for image in tqdm(data):
 
             temp = []
             io_reader = io.BytesIO(image[1])
