@@ -8,7 +8,7 @@ from EasyNN import mnist
 # download 50MB sqlite3 file.
 mnist = mnist()
 
-train = mnist.train
+train = mnist.training
 test  = mnist.testing
 
 mnist.show_image(train[0])
