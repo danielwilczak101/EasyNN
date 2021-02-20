@@ -1,6 +1,6 @@
 from typing import List, Sequence, Union
-import numpy as np
 import random
+import numpy as np
 
 
 TensorType = Union[np.ndarray, float, List['TensorType']]
@@ -18,9 +18,9 @@ class Point:
     Uses numpy arrays.
 
     Note on scalar values:
-    - shape: (1,).
-    - may be accessed using Point.points[0].
-    - should be updated using Point.points = [new_point].
+    - shape: ().  (default)
+    - may be accessed using Point.points.
+    - should be updated using Point.points = new_point.
     """
 
 
@@ -42,100 +42,6 @@ class Point:
     #==================#
     # Initializing     #
     # - Point          #
-    # - random tensors #
-    #==================#
-
-
-    def __init__(
-            self,
-            shape: Sequence[int],
-    ):
-        """Initialize 0's with the given shape."""
-
-        # Initialize values directly,
-        # skipping properties in case the
-        # properties are recursively defined
-        # (which they frequently are).
-        self.shape = shape
-        self._points = np.zeros(shape)
-        self._derivatives = np.zeros(shape)
-
-
-    def randomize(
-            self,
-            low: float = -10,
-            high: float = 10,
-            tensor: Union[None, np.ndarray] = None,
-    ):
-        """Randomizes the points and derivatives."""
-
-        if tensor is None:
-            self._points = np.random.uniform(low, high, self.shape)
-            self._derivatives = np.random.uniform(low, high, self.shape)
-
-        else:
-            tensor[:] = np.random.uniform(low, high, np.shape(tensor))
-
-
-    #========================#
-    # String representations #
-    #========================#
-
-
-    def __str__(self):
-        """Casts Point to string, showing Point.points"""
-        return str(self.points)
-
-
-    #=========#
-    # Methods #
-    #=========#
-
-
-    def optimize(self, normalizer: float = 1):
-        """
-        Modifies the points using
-                points -= normalizer * derivatives
-        """
-        self.points -= normalizer * self.derivatives
-
-
-    #============#
-    # Properties #
-    #============#
-
-
-    @property
-    def points(self) -> Sequence[float]:
-        """Property allowing special points modifying."""
-        return self._points
-
-
-    @points.setter
-    def points(self, new_points: Sequence[float]):
-        """Property setter for points."""
-        self._points = new_points
-
-
-    @property
-    def derivatives(self) -> Sequence[float]:
-        """Property allowing special derivatives modifying."""
-        return self._derivatives
-
-
-    @derivatives.setter
-    def derivatives(self, new_derivatives: Sequence[float]):
-        """Property setter for derivatives."""
-        self._derivatives = new_derivatives
-
-
-class PointList(Point):
-    """Subclass of Point, using mutable lists to allow mutable shapes."""
-
-
-    #==================#
-    # Initializing     #
-    # - Point          #
     # - zero tensors   #
     # - random tensors #
     #==================#
@@ -143,9 +49,9 @@ class PointList(Point):
 
     def __init__(
             self,
-            shape: Sequence[int],
+            shape: Sequence[int] = (),
     ):
-        """Initialize 0's with the given shape."""
+        """Initialize 0's with the given shape. (Scalar shape = () by default.)"""
 
         # Initialize values directly,
         # skipping properties in case the
@@ -157,17 +63,8 @@ class PointList(Point):
 
 
     def zeros(self, shape: Sequence[int]) -> TensorType:
-        """Creates lists filled with 0's of the right shape."""
-
-        # If shape = [], return scalar 0
-        if len(shape) == 0:
-            return 0
-
-        # If shape = [dimension, ...],
-        # return vector of the dimension
-        # filled with zeros(...)
-        dimension, *shape = shape
-        return [self.zeros(shape) for _ in range(dimension)]
+        """Creates numpy arrays filled with 0's of the right shape."""
+        return np.zeros(shape)
 
 
     def randomize(
@@ -175,24 +72,24 @@ class PointList(Point):
             low: float = -10,
             high: float = 10,
             tensor: Union[None, TensorType] = None,
-    ) -> Union[None, TensorType]:
+    ) -> TensorType:
         """Randomizes the points and derivatives."""
 
         if tensor is None:
-            self.randomize(low, high, self.points)
-            self.randomize(low, high, self.derivatives)
-            return None
+            self.points = self.randomize(low, high, self.points)
+            return self.points
 
-        elif type(tensor) in (int, float):
-            return random.uniform(low, high)
+        return np.random.uniform(low, high, np.shape(tensor))
 
-        else:
-            tensor[:] = [
-                self.randomize(low, high, subtensor)
-                for subtensor
-                in tensor
-            ]
-            return tensor
+
+    #========================#
+    # String representations #
+    #========================#
+
+
+    def __str__(self) -> str:
+        """Casts Point to string, showing Point.points"""
+        return str(self.points)
 
 
     #=========#
@@ -200,13 +97,153 @@ class PointList(Point):
     #=========#
 
 
-    def optimize(self, normalizer: float = 1):
+    def optimize(self):
         """
         Modifies the points using
-                points -= normalizer * derivatives
+                points -= gradient
         """
-        self.points = [
-            point - normalizer * dx
-            for point, dx
-            in zip(self.points, self.derivatives)
-        ]
+        self.points -= self.gradient
+
+
+    #============#
+    # Properties #
+    #============#
+
+
+    @property
+    def points(self) -> TensorType:
+        """Property allowing special points modifying."""
+        return self.get_points()
+
+
+    @points.setter
+    def points(self, new_points: TensorType):
+        """Property setter for points."""
+        self.set_points(new_points)
+
+
+    @property
+    def derivatives(self) -> TensorType:
+        """Property allowing special derivatives modifying."""
+        return self.get_derivatives()
+
+
+    @derivatives.setter
+    def derivatives(self, new_derivatives: TensorType):
+        """Property setter for derivatives."""
+        return self.set_derivatives(new_derivatives)
+
+
+    @property
+    def gradient(self) -> TensorType:
+        """Property only for getting gradient used in gradient descent."""
+        return self.get_derivatives()
+
+
+    def get_points(self) -> TensorType:
+        """Customizable .points getter."""
+        return self._points
+
+
+    def set_points(self, new_points: TensorType):
+        """Customizable .points setter."""
+        self._points = np.array(new_points)
+
+
+    def get_derivatives(self) -> TensorType:
+        """Customizable .derivatives getter."""
+        return self._derivatives
+
+
+    def set_derivatives(self, new_derivatives: TensorType):
+        """Customizable .points setter."""
+        self._derivatives = np.array(new_derivatives)
+
+
+class PointList(Point):
+    """Subclass of Point, using mutable lists to allow mutable shapes."""
+
+
+    #============#
+    # Attributes #
+    #============#
+
+
+    shape: Sequence[int]
+    """The shape of the points stored."""
+
+    points: TensorType
+    """The points stored."""
+
+    derivatives: TensorType
+    """The partial derivatives stored."""
+
+
+    #==============================#
+    # Initializing                 #
+    # - Point          (inherited) #
+    # - zero tensors   (modified)  #
+    # - random tensors (inherited) #
+    #==============================#
+
+
+    def zeros(self, shape: Sequence[int]) -> TensorType:
+        """Creates lists filled with 0's of the right shape."""
+        return self.to_list(np.zeros(shape))
+
+
+    #=========#
+    # Methods #
+    #=========#
+
+
+    def optimize(self):
+        """
+        Modifies the points using
+                points -= gradient
+        """
+        self.points = self.sub(self.points, self.gradient)
+
+
+    #================#
+    # Tensor Methods #
+    #================#
+
+
+    def to_list(self, tensor: TensorType) -> TensorType:
+        """Converts tensor to python lists."""
+
+        # lists of tensors
+        try:
+            return [self.to_list(x) for x in tensor]
+
+        # scalars
+        except TypeError:
+            return float(tensor)
+
+
+    def sub(self, tensor1: TensorType, tensor2: TensorType) -> TensorType:
+        """Subtract two tensors component-wise."""
+
+        # scalars
+        try:
+            return tensor1 - tensor2
+
+        # lists of tensors x1 and x2
+        except TypeError:
+            return [self.sub(x1, x2) for x1, x2 in zip(tensor1, tensor2)]
+                
+
+    #============#
+    # Properties #
+    #============#
+
+
+    def set_points(self, new_points: TensorType):
+        """Customizable .points setter."""
+        self._points = self.to_list(new_points)
+
+
+    def set_derivatives(self, new_derivatives: TensorType):
+        """Customizable .points setter."""
+        self._derivatives = self.to_list(new_derivatives)
