@@ -8,16 +8,6 @@ EasyNN is a python package designed to provide an easy-to-use Neural Network. Th
 
 ## Check out our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
 
-
-```
-Downloading MNIST dataset:
-[################################] 56148/56149 - 00:02:19
-Getting 50,000 training examples. This may take a minute:
-100%|███████████████████████████████████| 60000/60000 [00:14<00:00, 4250.58it/s]
-Getting 10,000 testing examples. This may take a minute:
-100%|███████████████████████████████████| 10000/10000 [00:02<00:00, 4350.04it/s]
-```
-
 ```Python
 from EasyNN import mnist
 
@@ -37,3 +27,14 @@ mnist.show_image(train[0])
 # model(image)
 # tell me what the probabilities are
 ```
+
+## Ouput:
+```
+Downloading MNIST dataset:
+[################################] 56148/56149 - 00:02:19
+Getting 50,000 training examples. This may take a minute:
+100%|███████████████████████████████████| 60000/60000 [00:14<00:00, 4250.58it/s]
+Getting 10,000 testing examples. This may take a minute:
+100%|███████████████████████████████████| 10000/10000 [00:02<00:00, 4350.04it/s]
+```
+
