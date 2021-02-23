@@ -25,8 +25,11 @@ test  = mnist.testing
 
 mnist.show_image(train[0])
 
+# If you want to show the images data
+print(train[0])
+
 # model(image)
-# tell me what the probabilities are
+# tell me what the probabilities are.
 ```
 
 ## Ouput:
