@@ -39,3 +39,5 @@ Getting 10,000 testing examples. This may take a minute:
 100%|███████████████████████████████████| 10000/10000 [00:02<00:00, 4350.04it/s]
 ```
 
+## Image:
+![](https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/readme_logo.png)
