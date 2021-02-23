@@ -63,10 +63,10 @@ class Tensor:
         return self.shape[0]
 
 
-    def __getitem__(self, indexes: Tuple[Union[int, slice], ...]) -> Union[float, Tensor]:
+    def __getitem__(self, indexes: Sequence[Union[int, slice]]) -> Union[float, Tensor]:
         """Implements tensor[i1, i2, ...]."""
 
-        if isinstance(indexes, int):
+        if type(indexes) not in (list, tuple):
             indexes = [indexes]
 
         # return a copy of itself if there's no more indexes
@@ -88,6 +88,9 @@ class Tensor:
 
     def __setitem__(t1: Tensor, indexes: Tuple[Union[int, slice], ...], t2: TensorLike):
         """Implements t1[i1, i2, ...] = t2."""
+
+        if type(indexes) not in (list, tuple):
+            indexes = [indexes]
 
         shape2 = Tensor.shape_of(t2)
 
