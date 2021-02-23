@@ -247,7 +247,7 @@ class Tensor:
     def __str__(self) -> str:
         """Return a readable representation of the tensor."""
 
-        # multiple dimensions        
+        # multiple dimensions
         if self.dimensions > 1:
             return (
                 "[\n"
