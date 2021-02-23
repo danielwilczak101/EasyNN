@@ -8,6 +8,7 @@ EasyNN is a python package designed to provide an easy-to-use Neural Network. Th
 
 ## Check out our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
 
+Current example of working code
 ```Python
 from EasyNN import mnist
 
