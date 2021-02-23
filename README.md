@@ -40,6 +40,8 @@ Getting 50,000 training examples. This may take a minute:
 100%|███████████████████████████████████| 60000/60000 [00:14<00:00, 4250.58it/s]
 Getting 10,000 testing examples. This may take a minute:
 100%|███████████████████████████████████| 10000/10000 [00:02<00:00, 4350.04it/s]
+
+[5, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... ]]
 ```
 
 ## Image Output:
