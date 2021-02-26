@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, Sequence, List, Tuple, Union
+from itertools import zip_longest
 import random
 import numpy as np
 
@@ -32,7 +33,7 @@ class Tensor:
         self.shape = shape
 
         # a 0-dimensional tensor is a float
-        if self.dimensions == 0:
+        if self.is_scalar():
             self.values = float(values)
 
         # otherwise fill in recursively with lists of tensors
@@ -42,9 +43,21 @@ class Tensor:
 
 
     @staticmethod
+    def full(shape: Tuple[int, ...], value: float) -> Tensor:
+        """Returns a new tensor filled with the given value of the given shape."""
+        pass
+
+
+    @staticmethod
     def zeros(shape: Tuple[int, ...]) -> Tensor:
         """Returns a new tensor filled with zeros of the given shape."""
-        pass
+        return full(shape, 0.0)
+
+
+    @staticmethod
+    def ones(shape: Tuple[int, ...]) -> Tensor:
+        """Returns a new tensor filled with ones of the given shape."""
+        return full(shape, 1.0)
 
 
     @staticmethod
@@ -79,11 +92,11 @@ class Tensor:
         # only get tensor from one row
         # when an integer index is used
         if isinstance(index, int):
-            return self.values[index].__getitem__(indexes)
+            return self.values[index][indexes]
 
         # get tensor from multiple rows
         # when a slice index is used
-        return Tensor([self[i].__getitem__(indexes) for i in range(*index.indices(len(self)))])
+        return Tensor([self[i][indexes] for i in range(*index.indices(len(self)))])
 
 
     def __setitem__(t1: Tensor, indexes: Tuple[Union[int, slice], ...], t2: TensorLike):
@@ -99,12 +112,17 @@ class Tensor:
             try:
                 t1.values = float(t2)
             except TypeError:
-                raise ValueError("Wrong input shape compared to indexes or slice")
+                try:
+                    iter(t2)
+                except TypeError:
+                    raise ValueError("Tensor only accepts float values.")
+                else:
+                    raise IndexError("Wrong input shape compared to indexes or slice")
 
         # Update t1 with tensors
         elif len(indexes) == 0:
             if t1.shape != shape2:
-                raise ValueError("Wrong input shape compared to indexes or slice")
+                raise IndexError("Wrong input shape compared to indexes or slice")
 
             t1.values = Tensor(t2, shape2).values
 
@@ -114,15 +132,16 @@ class Tensor:
 
             # Assign to current index
             if isinstance(index, int):
-                t1.values[index].__setitem__(indexes, t2)
+                t1.values[index][indexes] = t2
 
             # Assign to slice
             else:
                 index = range(*index.indices(len(t1)))
-                if len(index) != len(t2):
-                    raise ValueError("Wrong input shape compared to indexes or slice")
-                for i, row in zip(index, t2):
-                    t1.values[i].__setitem__(indexes, row)
+
+                for i, row in zip_longest(index, t2):
+                    if i is None or row is None:
+                        raise IndexError("Wrong input shape compared to indexes or slice")
+                    t1.values[i][indexes] = row
 
 
     def __iter__(self) -> Iterable[Tensor]:
@@ -229,6 +248,21 @@ class Tensor:
         return len(self.shape)
 
 
+    def is_scalar(self) -> bool:
+        """Returns if the Tensor is a scalar value."""
+        return self.dimensions == 0
+
+
+    def is_vector(self) -> bool:
+        """Returns if the Tensor is a vector value."""
+        return self.dimensions == 1
+
+
+    def is_matrix(self) -> bool:
+        """Returns if the Tensor is a matrix value."""
+        return self.dimensions == 2
+
+
     def __float__(self) -> float:
         """Implements float(tensor)."""
         return float(self.values)
@@ -247,27 +281,29 @@ class Tensor:
     def __str__(self) -> str:
         """Return a readable representation of the tensor."""
 
-        # multiple dimensions
-        if self.dimensions > 1:
-            return (
-                "[\n"
-                + ",\n".join(
-                             '\n'.join(
-                                       "    " + line
-                                       for line
-                                       in str(row).split('\n')
-                             )
-                             for row
-                             in self
-                )
-                + "\n]"
-            )
+        def pad_lines(s: str) -> str:
+            """Puts an extra space before every line."""
+            return '\n'.join(' ' + line for line in s.split('\n'))
 
-        # array
-        elif self.dimensions == 1:
-            return "[" + ", ".join(str(row) for row in self) + "]"
+        # for multiple dimensions,
+        # indent all lines with 1 space,
+        # except the first line which gets a '[',
+        # and finally a ']' is applied to the end
 
-        # scalar
+        # if there are more than 2 dimensions,
+        # 2 new lines are used between rows
+        if self.dimensions > 2:
+            return '[' + ",\n\n".join(pad_lines(str(row)) for row in self)[1:] + ']'
+
+        # For matrices, only 1 new line is used between rows
+        elif self.is_matrix():
+            return '[' + ",\n".join(pad_lines(str(row)) for row in self)[1:] + ']'
+
+        # array is printed as usual
+        elif self.is_vector():
+            return '[' + ", ".join(str(row) for row in self) + ']'
+
+        # scalar is printed as usual
         else:
             return str(self.values)
 
@@ -282,20 +318,26 @@ class Tensor:
             pass
 
         # a float is a 0 dimensional tensor
-        if type(self) in (int, float):
+        try:
+            float(self)
+        except Exception:
+            pass
+        else:
             return ()
 
         # get the unique shapes of each row
-        shape = {Tensor.shape_of(row) for row in self}
+        unique_shapes = {Tensor.shape_of(row) for row in self}
 
         # there are no rows
-        if len(shape) == 0:
+        if len(unique_shapes) == 0:
             raise ValueError("Size of the last dimension can't be 0")
 
         # 2 or more rows have different shapes
-        elif len(shape) > 1:
+        elif len(unique_shapes) > 1:
             raise ValueError("Sizes do not match")
 
         # prepend the length of itself to the shape of each row
         else:
-            return (len(self),) + list(shape)[0]
+            # get the unique shape
+            shape, = unique_shapes
+            return (len(self),) + shape
