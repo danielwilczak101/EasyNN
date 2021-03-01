@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, Sequence, List, Tuple, Union
+from collections import Counter
 import random
 import numpy as np
 
@@ -86,25 +87,53 @@ class Tensor:
 
     def __len__(self) -> int:
         """Implements len(tensor)."""
-        return self.shape[0]
+        return len(self.values)
+
+
+    def format_indexes(self, indexes: Sequence[Union[int, slice]]) -> Union[float, Tensor]:
+        """
+        Replaces an ellipsis in the indexes with slice(None, None, None)
+        until len(indexes) == self.dimensions.
+
+        Does nothing if no ellipsis is found.
+        Raises an IndexError if multiple ellipses are found.
+        """
+
+        try:
+            indexes = list(indexes)
+        except TypeError:
+            indexes = [indexes]
+
+        ellipsis_count = Counter(indexes)[...]
+
+        # iterate over the indexes like normal
+        if ellipsis_count == 0:
+            return iter(indexes)
+
+        # multiple ellipses cannot be parsed
+        elif ellipsis_count > 1:
+            raise IndexError("an index can only have a single ellipsis ('...')")
+
+        # replace found ellipsis with slices
+        for elem in indexes:
+            if elem == ...:
+                yield from [slice(None, None, None)] * (self.dimensions - len(indexes) + 1)
+            else:
+                yield elem
 
 
     def __getitem__(self, indexes: Sequence[Union[int, slice]]) -> Union[float, Tensor]:
         """Implements tensor[i1, i2, ...]."""
 
-        # Cast to iterable of indexes
-        try:
-            indexes = iter(indexes)
-        except TypeError:
-            indexes = iter([indexes])
+        indexes = self.format_indexes(indexes)
 
         # extract the first index
         try:
             index = next(indexes)
 
-        # return a copy of itself if there's no more indexes
+        # return itself if there's no more indexes
         except StopIteration:
-            return self.copy()
+            return self
 
         # only get tensor from one row
         # when an integer index is used
@@ -124,11 +153,7 @@ class Tensor:
     def __setitem__(t1: Tensor, indexes: Tuple[Union[int, slice], ...], t2: TensorLike):
         """Implements t1[i1, i2, ...] = t2."""
 
-        # Cast to iterable of indexes
-        try:
-            indexes = iter(indexes)
-        except TypeError:
-            indexes = iter([indexes])
+        indexes = self.format_indexes(indexes)
 
         shape2 = Tensor.shape_of(t2)
 
@@ -229,18 +254,13 @@ class Tensor:
         pass
 
 
-    def __div__(t1: Tensor, t2: TensorLike) -> Tensor:
+    def __truediv__(t1: Tensor, t2: TensorLike) -> Tensor:
         """Implements t = t1 / t2."""
         pass
 
 
     def __abs__(self) -> float:
-        """Implements magnitude = abs(tensor)."""
-        return self.norm()
-
-
-    def norm(self, order: float = 2) -> float:
-        """Implements magnitude = tensor.norm(order)."""
+        """Implements componentwise abs(tensor)."""
         pass
 
 
@@ -251,6 +271,11 @@ class Tensor:
 
     def __eq__(t1: Tensor, t2: TensorLike) -> Tensor:
         """Implements t1 == t2."""
+        pass
+
+
+    def norm(self, order: float = 2) -> float:
+        """Implements magnitude = tensor.norm(order)."""
         pass
 
 
@@ -282,7 +307,7 @@ class Tensor:
         return t1
 
 
-    def __idiv__(t1: Tensor, t2: TensorLike) -> Tensor:
+    def __itruediv__(t1: Tensor, t2: TensorLike) -> Tensor:
         """Implements t1 /= t2."""
         pass
         return t1
