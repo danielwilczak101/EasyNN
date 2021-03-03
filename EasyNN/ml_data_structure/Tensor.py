@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Iterable, Sequence, List, Tuple, Union
-from collections import Counter
 import random
 import numpy as np
 
@@ -22,8 +21,25 @@ class Tensor:
     #======================#
 
 
-    def __init__(self, values: TensorLike, shape: Union[None, Tuple[int, ...]] = None):
+    def __new__(cls, values: TensorLike) -> Tensor:
+        """Create a new tensor object unless the input is already a tensor."""
+
+        if isinstance(values, cls):
+            return values
+        else:
+            return super(Tensor, cls).__new__(cls)
+
+
+    def __init__(self, values: TensorLike):
         """Initialize a tensor object from values."""
+
+        # Check if already initialized, use tensor[...] = ... to fill tensor
+        try:
+            self.values
+            self.shape
+            return
+        except AttributeError:
+            pass
 
         # check for float value
         try:
@@ -41,7 +57,8 @@ class Tensor:
 
             # there are no tensors
             if len(tensor_shapes) == 0:
-                raise ValueError("Ambiguous size of the last dimension: can't be 0")
+                self.values = values
+                self._shape = (0,)
 
             # 2 or more tensors have different shapes
             elif len(tensor_shapes) > 1:
@@ -104,22 +121,24 @@ class Tensor:
         except TypeError:
             indexes = [indexes]
 
-        ellipsis_count = Counter(indexes)[...]
+        ellipsis_count = indexes.count(...)
 
         # iterate over the indexes like normal
         if ellipsis_count == 0:
-            return iter(indexes)
+            yield from indexes
 
         # multiple ellipses cannot be parsed
         elif ellipsis_count > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
 
         # replace found ellipsis with slices
-        for elem in indexes:
-            if elem == ...:
-                yield from [slice(None, None, None)] * (self.dimensions - len(indexes) + 1)
-            else:
-                yield elem
+        else:
+            for elem in indexes:
+                print("ell")
+                if elem == ...:
+                    yield from [slice(None, None, None)] * (self.dimensions - len(indexes) + 1)
+                else:
+                    yield elem
 
 
     def __getitem__(self, indexes: Sequence[Union[int, slice]]) -> Union[float, Tensor]:
@@ -153,7 +172,7 @@ class Tensor:
     def __setitem__(t1: Tensor, indexes: Tuple[Union[int, slice], ...], t2: TensorLike):
         """Implements t1[i1, i2, ...] = t2."""
 
-        indexes = self.format_indexes(indexes)
+        indexes = t1.format_indexes(indexes)
 
         shape2 = Tensor.shape_of(t2)
 
@@ -205,7 +224,10 @@ class Tensor:
                 index_range = range(*index.indices(len(t1)))
 
                 # check matching sizes
-                if len(index_range) != len(t2):
+                try:
+                    if len(index_range) != len(t2):
+                        raise TypeError
+                except TypeError:
                     raise IndexError("Wrong input shape compared to indexes or slice")
 
                 # update at indexes
@@ -415,12 +437,8 @@ class Tensor:
         # get the unique shapes of each row
         unique_shapes = {Tensor.shape_of(row) for row in self}
 
-        # there are no rows
-        if len(unique_shapes) == 0:
-            raise ValueError("Ambiguous size of the last dimension: can't be 0")
-
         # 2 or more rows have different shapes
-        elif len(unique_shapes) > 1:
+        if len(unique_shapes) > 1:
             raise ValueError("Sizes do not match")
 
         # prepend the length of itself to the shape of each row
