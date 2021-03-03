@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-
+from EasyNN.ml_data_structure import Point
 
 class DenseLayer:
 	"""
@@ -17,10 +17,12 @@ class DenseLayer:
 		if previousLayer is not None:
 			self.activationFunction =  np.vectorize(activationFunction)
 			self.activationFunction.derivative =  np.vectorize(activationFunction.derivative)
-			self.weights = np.random.randn(previousLayer.output.size, n_neurons)
-			self.biases = np.random.randn(n_neurons)
-			self.neuron_output = np.zeros((1, n_neurons)) #This is pre activation
-		self.output = np.zeros((1, n_neurons)) #this is post activation
+			self.weights = Point.Point(shape=(previousLayer.output.points.size, n_neurons))
+			self.weights.randomize()
+			self.biases = Point.Point(shape=(n_neurons,))
+			self.biases.randomize()
+			self.neuron_output = Point.Point(shape=(1, n_neurons))
+		self.output = Point.Point(shape=(1, n_neurons))
         # There are two outputs because a layer has a activation function however for back propogation we need pre and
         # post activation values
 
@@ -29,19 +31,19 @@ class DenseLayer:
 		Forward pass of the neural Network, assumes previousLayer.output contains the correct values
 		"""
 		if self.previousLayer is not None:
-			self.neuron_output = np.dot(self.previousLayer.output, self.weights) + self.biases
-			self.output = self.activationFunction(self.neuron_output)
+			self.neuron_output.points = np.dot(self.previousLayer.output.points, self.weights.points) + self.biases.points
+			self.output.points = self.activationFunction(self.neuron_output.points)
 			print("OUTPUT: " + str(self.output))
 
-	def backward(self, gradiantIn):
+	def backward(self):
         #Gradiant in is a 1d array that has the gradiant value for each neuro
 		self.d_inputs = []
 		if self.previousLayer is not None:
-			d_activation = self.activationFunction.derivative(self.neuron_output)
-			gradiantCpy = gradiantIn.copy()
+			d_activation = self.activationFunction.derivative(self.neuron_output.points)
 			print("d_activation: " + str(d_activation))
 			print("neuron_output: " + str(self.neuron_output))
-			gradiantCpy = np.multiply(gradiantCpy, d_activation)
-			self.d_inputs = np.dot(gradiantCpy, self.weights.T)
-			self.d_weights = np.dot(self.previousLayer.output.T, gradiantCpy)
+			
+			self.neuron_output.derivatives = np.multiply(self.output.derivatives, d_activation)
+			self.previousLayer.output.derivatives = np.dot(self.neuron_output.derivatives, self.weights.points.T)
+			self.weights.derivatives = np.dot(self.previousLayer.output.points.T, self.neuron_output.derivatives)
 

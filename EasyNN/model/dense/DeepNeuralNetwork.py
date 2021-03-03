@@ -1,7 +1,8 @@
 import numpy as np
 #import nnfs
 #from nnfs.datasets import spiral_data
-import DenseLayer
+import EasyNN.model.dense.DenseLayer as DenseLayer
+import EasyNN.ml_data_structure.Point as Point
 class DeepNeuralNetwork:
 	"""Class that is used to control the Deep Neural Network."""
 	def __init__(self, numInputs, layerSpecification):
@@ -21,7 +22,7 @@ class DeepNeuralNetwork:
 		"""
 		should be a list of inputs each of which is the size of layers[0].size		
 		"""
-		self.layers[0].output = inputValues #ya.... not the most intuitive statement....
+		self.layers[0].output.points = inputValues #ya.... not the most intuitive statement....
 		for layer in self.layers:
 			layer.forward()
 		return self.layers[-1].output
@@ -35,8 +36,8 @@ class DeepNeuralNetwork:
 			correctValues = np.eye(self.layers[-1].n_neurons)[correctValues]
 		
 		print(str(correctValues))
-		backPropogateValues = correctValues
+		#backPropogateValues = correctValues
+		self.layers[-1].output.derivatives = correctValues
 		for layer in reversed(self.layers):
 			print(" LAYER started")
-			layer.backward(backPropogateValues)
-			backPropogateValues = layer.d_inputs
+			layer.backward()

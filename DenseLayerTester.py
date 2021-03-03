@@ -1,6 +1,5 @@
 import numpy as np
-import DenseLayer
-import DeepNeuralNetwork
+import EasyNN.model.dense.DeepNeuralNetwork as DNN
 
 def relu(x):
 	if x > 0:
@@ -17,7 +16,7 @@ relu.derivative = d_relu
 
 if __name__ == '__main__':
 	layerSpecification = [(3, relu), (2, relu)]
-	NN = DeepNeuralNetwork.DeepNeuralNetwork(2, layerSpecification)
+	NN = DNN.DeepNeuralNetwork(2, layerSpecification)
 	
 	print(str(NN.forward([[10, 5]])))
     
