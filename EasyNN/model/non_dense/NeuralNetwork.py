@@ -201,17 +201,16 @@ class NeuralNetwork:
             # shuffle and loop through the data
             np.random.shuffle(data)
             for x, y in data:
-                batch_counter = batch_counter % batch_size + 1
+                batch_counter = (batch_counter + 1) % batch_size
 
                 # insert x into the model
                 self(x)
 
                 # adjust output derivatives from expected values
                 for node, expected_value in zip(self.output_nodes, y):
-                    delta_output = node.neuron_output[0] - expected_value - node.neuron_output[1]
-                    node.neuron_output[1] += delta_output / batch_counter
+                    node.neuron_output[1] += node.neuron_output[0] - expected_value
 
-                if batch_counter == batch_size:
+                if batch_counter == 0:
 
                     # back-propagate the derivative
                     for node in self.output_nodes:
@@ -225,6 +224,10 @@ class NeuralNetwork:
                     # stop after epoch many optimizations
                     if self.ml.iteration >= epoch:
                         break
+
+                    # adjust output derivatives from expected values
+                    for node, expected_value in zip(self.output_nodes, y):
+                        node.neuron_output[1] = 0
 
             # if for loop doesn't break, go again
             else:
