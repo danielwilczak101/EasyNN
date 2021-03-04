@@ -82,17 +82,17 @@ class Tensor:
     @classmethod
     def zeros(cls, shape: Tuple[int, ...]) -> Tensor:
         """Returns a new tensor filled with zeros of the given shape."""
-        return full(shape, 0.0)
+        return cls.full(shape, 0.0)
 
 
     @classmethod
     def ones(cls, shape: Tuple[int, ...]) -> Tensor:
         """Returns a new tensor filled with ones of the given shape."""
-        return full(shape, 1.0)
+        return cls.full(shape, 1.0)
 
 
     @classmethod
-    def random(cls, shape: Tuple[int, ...], lower: float = 0, upper: float = 1) -> Tensor:
+    def random(cls, shape: Tuple[int, ...], lower: float = -10, upper: float = 10) -> Tensor:
         """Returns a new tensor filled with random values of the given shape."""
         pass
 
@@ -126,6 +126,7 @@ class Tensor:
         # iterate over the indexes like normal
         if ellipsis_count == 0:
             yield from indexes
+            yield from [slice(None, None, None)] * (self.dimensions - len(indexes))
 
         # multiple ellipses cannot be parsed
         elif ellipsis_count > 1:
@@ -203,13 +204,9 @@ class Tensor:
                     except TypeError:
                         raise ValueError("Tensor only accepts float values.")
 
-            # check shape
-            elif t1.shape != shape2:
-                raise IndexError("Wrong input shape compared to indexes or slice")
-
-            # update t1 with tensors
+            # wrong shape
             else:
-                t1.values = Tensor(t2, shape2).values
+                raise IndexError("Wrong input shape compared to indexes or slice")
 
         # there's more indexes
         else:
