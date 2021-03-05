@@ -21,34 +21,78 @@ class Tensor:
     #======================#
 
 
-    def __init__(self, values: TensorLike, shape: Union[None, Tuple[int, ...]] = None):
+    def __new__(cls, values: TensorLike) -> Tensor:
+        """Create a new tensor object unless the input is already a tensor."""
+
+        if isinstance(values, cls):
+            return values
+        else:
+            return super(Tensor, cls).__new__(cls)
+
+
+    def __init__(self, values: TensorLike):
         """Initialize a tensor object from values."""
 
-        # initially check if the values are
-        # shaped like a tensor and get the shape.
-        if shape is None:
-            shape = Tensor.shape_of(values)
+        # Check if already initialized, use tensor[...] = ... to fill tensor
+        try:
+            self.values
+            self.shape
+            return
+        except AttributeError:
+            pass
 
-        self.shape = shape
-
-        # a 0-dimensional tensor is a float
-        if self.dimensions == 0:
+        # check for float value
+        try:
             self.values = float(values)
+            self._shape = ()
 
-        # otherwise fill in recursively with lists of tensors
-        else:
-            shape = shape[1:]
-            self.values = [Tensor(row, shape) for row in values]
+        # otherwise list of values
+        except TypeError:
+
+            # convert to list of tensors
+            values = [Tensor(row) for row in values]
+
+            # get the shape of the tensors
+            tensor_shapes = {tensor.shape for tensor in values}
+
+            # there are no tensors
+            if len(tensor_shapes) == 0:
+                self.values = values
+                self._shape = (0,)
+
+            # 2 or more tensors have different shapes
+            elif len(tensor_shapes) > 1:
+                raise ValueError("Sizes do not match")
+
+            # everything matches
+            else:
+                # get the tensors' shapes
+                shape, = tensor_shapes
+
+                self.values = values
+                self._shape = (len(values),) + shape
 
 
-    @staticmethod
-    def zeros(shape: Tuple[int, ...]) -> Tensor:
-        """Returns a new tensor filled with zeros of the given shape."""
+    @classmethod
+    def full(cls, shape: Tuple[int, ...], value: float) -> Tensor:
+        """Returns a new tensor filled with the given value of the given shape."""
         pass
 
 
-    @staticmethod
-    def random(shape: Tuple[int, ...], lower: float = 0, upper: float = 1) -> Tensor:
+    @classmethod
+    def zeros(cls, shape: Tuple[int, ...]) -> Tensor:
+        """Returns a new tensor filled with zeros of the given shape."""
+        return cls.full(shape, 0.0)
+
+
+    @classmethod
+    def ones(cls, shape: Tuple[int, ...]) -> Tensor:
+        """Returns a new tensor filled with ones of the given shape."""
+        return cls.full(shape, 1.0)
+
+
+    @classmethod
+    def random(cls, shape: Tuple[int, ...], lower: float = -10, upper: float = 10) -> Tensor:
         """Returns a new tensor filled with random values of the given shape."""
         pass
 
@@ -60,74 +104,149 @@ class Tensor:
 
     def __len__(self) -> int:
         """Implements len(tensor)."""
-        return self.shape[0]
+        return len(self.values)
+
+
+    def format_indexes(self, indexes: Sequence[Union[int, slice]]) -> Union[float, Tensor]:
+        """
+        Replaces an ellipsis in the indexes with slice(None, None, None)
+        until len(indexes) == self.dimensions.
+
+        Does nothing if no ellipsis is found.
+        Raises an IndexError if multiple ellipses are found.
+        """
+
+        try:
+            indexes = list(indexes)
+        except TypeError:
+            indexes = [indexes]
+
+        ellipsis_count = indexes.count(...)
+
+        # iterate over the indexes like normal
+        if ellipsis_count == 0:
+            yield from indexes
+            yield from [slice(None, None, None)] * (self.dimensions - len(indexes))
+
+        # multiple ellipses cannot be parsed
+        elif ellipsis_count > 1:
+            raise IndexError("an index can only have a single ellipsis ('...')")
+
+        # replace found ellipsis with slices
+        else:
+            for elem in indexes:
+                print("ell")
+                if elem == ...:
+                    yield from [slice(None, None, None)] * (self.dimensions - len(indexes) + 1)
+                else:
+                    yield elem
 
 
     def __getitem__(self, indexes: Sequence[Union[int, slice]]) -> Union[float, Tensor]:
         """Implements tensor[i1, i2, ...]."""
 
-        if type(indexes) not in (list, tuple):
-            indexes = [indexes]
-
-        # return a copy of itself if there's no more indexes
-        if len(indexes) == 0:
-            return self.copy()
+        indexes = self.format_indexes(indexes)
 
         # extract the first index
-        index, *indexes = indexes
+        try:
+            index = next(indexes)
+
+        # return itself if there's no more indexes
+        except StopIteration:
+            return self
 
         # only get tensor from one row
         # when an integer index is used
         if isinstance(index, int):
-            return self.values[index].__getitem__(indexes)
+            return self.values[index][indexes]
 
         # get tensor from multiple rows
         # when a slice index is used
-        return Tensor([self[i].__getitem__(indexes) for i in range(*index.indices(len(self)))])
+        else:
+            # convert index slice to range
+            index_range = range(*index.indices(len(self)))
+
+            indexes = list(indexes)
+            return Tensor([self[i][indexes] for i in index_range])
 
 
     def __setitem__(t1: Tensor, indexes: Tuple[Union[int, slice], ...], t2: TensorLike):
         """Implements t1[i1, i2, ...] = t2."""
 
-        if type(indexes) not in (list, tuple):
-            indexes = [indexes]
+        indexes = t1.format_indexes(indexes)
 
         shape2 = Tensor.shape_of(t2)
 
-        # Update t1 with a float value
-        if len(indexes) == 0 and isinstance(t1.values, float):
-            try:
-                t1.values = float(t2)
-            except TypeError:
-                raise ValueError("Wrong input shape compared to indexes or slice")
+        # extract the first index
+        try:
+            index = next(indexes)
 
-        # Update t1 with tensors
-        elif len(indexes) == 0:
-            if t1.shape != shape2:
-                raise ValueError("Wrong input shape compared to indexes or slice")
+        # if there's no more indexes
+        except StopIteration:
 
-            t1.values = Tensor(t2, shape2).values
+            # update t1 with a float value
+            if isinstance(t1.values, float):
 
-        else:
-            # extract the first index
-            index, *indexes = indexes
+                # cast t2 to float
+                try:
+                    t1.values = float(t2)
 
-            # Assign to current index
-            if isinstance(index, int):
-                t1.values[index].__setitem__(indexes, t2)
+                # if it's not a float, figure out error
+                except TypeError:
 
-            # Assign to slice
+                    try:
+                        iter(t2)
+
+                        # tried to update float with list
+                        raise IndexError("Wrong input shape compared to indexes or slice")
+
+                    # tried to update float with non-list
+                    except TypeError:
+                        raise ValueError("Tensor only accepts float values.")
+
+            # wrong shape
             else:
-                index = range(*index.indices(len(t1)))
-                if len(index) != len(t2):
-                    raise ValueError("Wrong input shape compared to indexes or slice")
-                for i, row in zip(index, t2):
-                    t1.values[i].__setitem__(indexes, row)
+                raise IndexError("Wrong input shape compared to indexes or slice")
+
+        # there's more indexes
+        else:
+
+            # assign to current index
+            if isinstance(index, int):
+                t1.values[index][indexes] = t2
+
+            # assign to slice
+            else:
+                # convert index slice to range
+                index_range = range(*index.indices(len(t1)))
+
+                # check matching sizes
+                try:
+                    if len(index_range) != len(t2):
+                        raise TypeError
+                except TypeError:
+                    raise IndexError("Wrong input shape compared to indexes or slice")
+
+                # update at indexes
+                indexes = list(indexes)
+                for i, row in zip(index_range, t2):
+                    t1.values[i][indexes] = row
 
 
     def __iter__(self) -> Iterable[Tensor]:
         """Implements looping over tensors."""
         return iter(self.values)
+
+
+    def deep_iter(self) -> Iterable[float]:
+        """Returns all floats in the tensor."""
+
+        if self.is_scalar():
+            yield float(self)
+
+        else:
+            for row in self:
+                yield from row.deep_iter()
 
 
     #===================#
@@ -154,18 +273,13 @@ class Tensor:
         pass
 
 
-    def __div__(t1: Tensor, t2: TensorLike) -> Tensor:
+    def __truediv__(t1: Tensor, t2: TensorLike) -> Tensor:
         """Implements t = t1 / t2."""
         pass
 
 
     def __abs__(self) -> float:
-        """Implements magnitude = abs(tensor)."""
-        pass
-
-
-    def norm(self, order: float = 2) -> float:
-        """Implements magnitude = tensor.norm(order)."""
+        """Implements componentwise abs(tensor)."""
         pass
 
 
@@ -176,6 +290,11 @@ class Tensor:
 
     def __eq__(t1: Tensor, t2: TensorLike) -> Tensor:
         """Implements t1 == t2."""
+        pass
+
+
+    def norm(self, order: float = 2) -> float:
+        """Implements magnitude = tensor.norm(order)."""
         pass
 
 
@@ -207,7 +326,7 @@ class Tensor:
         return t1
 
 
-    def __idiv__(t1: Tensor, t2: TensorLike) -> Tensor:
+    def __itruediv__(t1: Tensor, t2: TensorLike) -> Tensor:
         """Implements t1 /= t2."""
         pass
         return t1
@@ -224,9 +343,30 @@ class Tensor:
 
 
     @property
+    def shape(self):
+         """Getter for tensor.shape."""
+         return self._shape
+
+
+    @property
     def dimensions(self):
-        """Implements tensor.dimensions based on the shape."""
+        """Getter for tensor.dimensions based on the shape."""
         return len(self.shape)
+
+
+    def is_scalar(self) -> bool:
+        """Returns if the Tensor is a scalar value."""
+        return self.dimensions == 0
+
+
+    def is_vector(self) -> bool:
+        """Returns if the Tensor is a vector value."""
+        return self.dimensions == 1
+
+
+    def is_matrix(self) -> bool:
+        """Returns if the Tensor is a matrix value."""
+        return self.dimensions == 2
 
 
     def __float__(self) -> float:
@@ -247,27 +387,29 @@ class Tensor:
     def __str__(self) -> str:
         """Return a readable representation of the tensor."""
 
-        # multiple dimensions
-        if self.dimensions > 1:
-            return (
-                "[\n"
-                + ",\n".join(
-                             '\n'.join(
-                                       "    " + line
-                                       for line
-                                       in str(row).split('\n')
-                             )
-                             for row
-                             in self
-                )
-                + "\n]"
-            )
+        def pad_lines(s: str) -> str:
+            """Puts an extra space before every line."""
+            return '\n'.join(' ' + line for line in s.split('\n'))
 
-        # array
-        elif self.dimensions == 1:
-            return "[" + ", ".join(str(row) for row in self) + "]"
+        # for multiple dimensions,
+        # indent all lines with 1 space,
+        # except the first line which gets a '[',
+        # and finally a ']' is applied to the end
 
-        # scalar
+        # if there are more than 2 dimensions,
+        # 2 new lines are used between rows
+        if self.dimensions > 2:
+            return '[' + ",\n\n".join(pad_lines(str(row)) for row in self)[1:] + ']'
+
+        # For matrices, only 1 new line is used between rows
+        elif self.is_matrix():
+            return '[' + ",\n".join(pad_lines(str(row)) for row in self)[1:] + ']'
+
+        # array is printed as usual
+        elif self.is_vector():
+            return '[' + ", ".join(str(row) for row in self) + ']'
+
+        # scalar is printed as usual
         else:
             return str(self.values)
 
@@ -282,20 +424,22 @@ class Tensor:
             pass
 
         # a float is a 0 dimensional tensor
-        if type(self) in (int, float):
+        try:
+            float(self)
+        except Exception:
+            pass
+        else:
             return ()
 
         # get the unique shapes of each row
-        shape = {Tensor.shape_of(row) for row in self}
-
-        # there are no rows
-        if len(shape) == 0:
-            raise ValueError("Size of the last dimension can't be 0")
+        unique_shapes = {Tensor.shape_of(row) for row in self}
 
         # 2 or more rows have different shapes
-        elif len(shape) > 1:
+        if len(unique_shapes) > 1:
             raise ValueError("Sizes do not match")
 
         # prepend the length of itself to the shape of each row
         else:
-            return (len(self),) + list(shape)[0]
+            # get the unique shape
+            shape, = unique_shapes
+            return (len(self),) + shape
