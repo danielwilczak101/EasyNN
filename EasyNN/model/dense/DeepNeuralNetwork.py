@@ -2,6 +2,7 @@ import numpy as np
 #import nnfs
 #from nnfs.datasets import spiral_data
 import EasyNN.model.dense.DenseLayer as DenseLayer
+import EastNN.ml_data_structure.MachineLearning as ML
 import EasyNN.ml_data_structure.Point as Point
 class DeepNeuralNetwork:
 	"""Class that is used to control the Deep Neural Network."""
@@ -14,12 +15,12 @@ class DeepNeuralNetwork:
 		self.layers = []
 		firstLayer = DenseLayer.DenseLayer(numInputs)
 		previousLayer=firstLayer
-                
+                ml = ML.MachineLearning
 		for numNeurons, activationFunction in layerSpecification:
 			currentLayer = DenseLayer.DenseLayer(numNeurons, previousLayer=previousLayer, activationFunction=activationFunction)
 			self.layers.append(currentLayer)
 			previousLayer=currentLayer
-                        
+
                         
 	def forward(self, inputValues):
 		"""
@@ -45,3 +46,4 @@ class DeepNeuralNetwork:
 		for layer in reversed(self.layers):
 			print(" LAYER started")
 			layer.backward()
+

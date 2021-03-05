@@ -46,4 +46,13 @@ class DenseLayer:
 			self.neuron_output.derivatives = self.output.derivatives * d_activation
 			self.previousLayer.output.derivatives = np.dot(self.neuron_output.derivatives, self.weights.points.T)
 			self.weights.derivatives = np.dot(self.previousLayer.output.points.T, self.neuron_output.derivatives)
-
+        def getItems(self, items):
+                values = self.weights.points.flatten()
+                values = np.append(values, self.biases.points.flatten())
+                
+                derivatives = self.weights.derivatives.flatten()
+                derivatives = np.append(values, self.biases.derivatives.flatten())
+                return (values, derivatives)
+                
+        def setItems(self, items):
+                pass
