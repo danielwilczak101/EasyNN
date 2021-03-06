@@ -175,7 +175,8 @@ class Tensor:
 
         indexes = t1.format_indexes(indexes)
 
-        shape2 = Tensor.shape_of(t2)
+        if not isinstance(t2, Tensor):
+            t2 = Tensor(t2)
 
         # extract the first index
         try:
@@ -381,15 +382,22 @@ class Tensor:
 
     def __repr__(self) -> str:
         """Return a code string representation of the tensor."""
-        return f"Tensor({self.values}, {self.shape})"
+
+        def pad_lines(s: str, spaces=1) -> str:
+            """Puts an extra space before every line."""
+            return '\n'.join(' '*spaces + line for line in s.split('\n'))
+
+        spaces = len("Tensor(")
+
+        return "Tensor(" + pad_lines(str(self), spaces)[spaces:] + ")"
 
 
     def __str__(self) -> str:
         """Return a readable representation of the tensor."""
 
-        def pad_lines(s: str) -> str:
+        def pad_lines(s: str, spaces=1) -> str:
             """Puts an extra space before every line."""
-            return '\n'.join(' ' + line for line in s.split('\n'))
+            return '\n'.join(' '*spaces + line for line in s.split('\n'))
 
         # for multiple dimensions,
         # indent all lines with 1 space,
@@ -412,34 +420,3 @@ class Tensor:
         # scalar is printed as usual
         else:
             return str(self.values)
-
-
-    def shape_of(self: TensorLike) -> Tuple[int, ...]:
-        """Returns the shape of a tensor-like object."""
-
-        # Check for already saved shape
-        try:
-            return self.shape
-        except AttributeError:
-            pass
-
-        # a float is a 0 dimensional tensor
-        try:
-            float(self)
-        except Exception:
-            pass
-        else:
-            return ()
-
-        # get the unique shapes of each row
-        unique_shapes = {Tensor.shape_of(row) for row in self}
-
-        # 2 or more rows have different shapes
-        if len(unique_shapes) > 1:
-            raise ValueError("Sizes do not match")
-
-        # prepend the length of itself to the shape of each row
-        else:
-            # get the unique shape
-            shape, = unique_shapes
-            return (len(self),) + shape
