@@ -27,9 +27,9 @@ class MachineLearning:
 
 
     def optimize(self):
-        """Optimize the values given the values and derivatives, using the optimizer."""
+        """Optimize the values given the values and derivatives (together), using the optimizer."""
         self.iteration += 1
-        self.optimizer.update(self.iteration, self.values, self.derivatives)
+        self.optimizer.update(self.iteration, self.items)
 
 
     @property
