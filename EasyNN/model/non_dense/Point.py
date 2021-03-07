@@ -53,11 +53,6 @@ class Point:
             return setattr(self.items, name, value)
 
 
-    def __hasattr__(self, name):
-        """Defaults checking self.attribute to self.items.attribute."""
-        return super().__hasattr__(name) or hasattr(self.items, name)
-
-
     def __init__(
             self,
             items: TensorLike,

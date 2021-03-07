@@ -1,0 +1,64 @@
+3.1.1: EasyNN
+
+3.1.1.1
+Description: The Network system shall only accept float tensors as input.
+Evaluation : Check if Network system casts inputs to float tensors to ensure correct types and shapes.
+
+3.1.1.2.
+Description: The Network system shall return a float tensor as output.
+Evaluation : Check code for operations used and if they result in tensors.
+
+3.1.1.3
+Description: The Machine Learning system shall find a local minima of a function, provided a built-in optimization algorithm.
+Evaluation : The Machine learning system should be tried on test cases from https://en.wikipedia.org/wiki/Test_functions_for_optimization.
+
+3.1.1.4
+Description: The Optimization system shall use given values and derivatives to train on.
+Evaluation : The Machine Learning system should pass the values and derivatives into the optimizer.
+
+3.1.1.5
+Description: The Network system shall produce a model matching a given topology.
+Evaluation : The software for the initialization of networks should be checked to see if they match the specified input topology format for that network.
+
+3.1.1.6
+Description: The EasyNN system shall save network models in a database when asked to.
+Evaluation : The EasyNN system should save the topology, machine learning parameters, and activation functions to a database.
+
+3.1.1.7
+Description: The EasyNN system shall have all neural network models as listed in 4.1.
+Evaluation : Implementations of each model should be included.
+
+3.1.1.8
+Description: The EasyNN system shall have all optimization algorithms as lists in 4.2.
+Evaluation : Implementations should follow formulas found in the literature.
+
+3.1.1.9
+Description: The Network system shall use back propagation (through time) to compute derivatives during training. Recurrent models require a modified form of back propagation.
+Evaluation : Implementations of back propagation should follow formulas found in the literature.
+
+3.1.1.10
+Description: 
+Evaluation : 
+
+4.1. List of desired models to be supported:
+4.1.1. Non-dense feed-forward
+4.1.2. Dense feed-forward
+4.1.3. Non-dense recurrent
+4.1.4. Dense recurrent
+4.1.5. Markov chain
+4.1.6. Convolutional
+4.1.7. Neuroevolving non-dense feed-forward
+
+4.2. List of optimization algorithms to be supported:
+4.2.1. Gradient descent
+4.2.2. Momentum-based gradient descent
+4.2.3. Stochastic gradient descent
+4.2.4. Perturbed gradient descent
+4.2.5. Adagrad
+4.2.6. Adadelta
+4.2.7. RMSprop
+4.2.8. BFGS
+4.2.9. Broyden's method
+4.2.10. DFP
+4.2.11. SR1
+4.2.12. L-BFGS
