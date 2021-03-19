@@ -1,26 +1,25 @@
 from Optimizer import Optimizer
 
 
-class Optimizer:
+class StochasticAdagrad(Optimizer):
+    learning_rate: float
+    decay: float
+    epsilon: float
 
-    def __init__(self, learningRate=1.0, decay=0.0, epsilon=1e-7):
-        self.learningRate = learningRate
-        self.currentLearningRate = learningRate
+    def __init__(self, learning_rate: float = 1.0, decay: float = 0.0, epsilon: float = 1e-7):
+        """Initialize """
+        self.learning_rate = learning_rate
         self.decay = decay
         self.epsilon = epsilon
-
-
-    def preUpdateParams(self, iteration):
-        if self.decay:
-            self.current_learning_rate = self.learning_rate * (1.0 / (1.0 + self.decay * self.iterations))
+        self.cache = None
 
     def update(self, iteration: int, items: Point):
-        if self.decay:
-            self.current_learning_rate = self.learning_rate * (1.0 / (1.0 + self.decay * iteration))
-        if not hasattr(items, 'cache'):
-            items.cache = np.zeros_like(items.values)
-
-        items.cache += items.derivatives ** 2
-
-        items.values += -self.current_learning_rate * items.derivatives / (np.sqrt(items.cache) + self.epsilon)
+        """Rescale the weight of each component in the derivatives using an accumulating cache."""
         
+        # Initialize the cache if necessary
+        if self.cache is None:
+            self.cache = np.zeros_like(items.values)
+
+        self.cache += items.derivatives ** 2
+        items.values -= (self.learning_rate / (1.0 + self.decay * iteration)) * items.derivatives / (np.sqrt(self.cache) + self.epsilon)
+
