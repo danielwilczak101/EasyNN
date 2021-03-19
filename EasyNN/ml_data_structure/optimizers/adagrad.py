@@ -2,12 +2,14 @@ from Optimizer import Optimizer
 
 
 class StochasticAdagrad(Optimizer):
+    """Adagrad method with stochastic learning rate."""
+
     learning_rate: float
     decay: float
     epsilon: float
 
     def __init__(self, learning_rate: float = 1.0, decay: float = 0.0, epsilon: float = 1e-7):
-        """Initialize """
+        """Initialize using learning rate, decay rate, and epsilon."""
         self.learning_rate = learning_rate
         self.decay = decay
         self.epsilon = epsilon
