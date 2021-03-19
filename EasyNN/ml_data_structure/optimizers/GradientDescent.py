@@ -1,8 +1,8 @@
-import Optimizer
+from Optimizer import Optimizer
 from Point import Point
 
 
-class GradiantDescent(Optimizer):
+class GradientDescent(Optimizer):
     """Basic Gradient Descent optimizer, using only a learning rate and derivatives."""
 
     learning_rate: float
