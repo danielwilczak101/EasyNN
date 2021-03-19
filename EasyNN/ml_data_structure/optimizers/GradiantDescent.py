@@ -4,7 +4,10 @@ from Point import Point
 
 class GradiantDescent(Optimizer):
     """Basic Gradient Descent optimizer, using only a learning rate and derivatives."""
-    
+
+    learning_rate: float
+    """Rate at which the values change based on the derivatives."""
+
     def __init__(self, learning_rate: float = 0.1):
         """Requires a learning rate."""
         self.learning_rate = learning_rate
