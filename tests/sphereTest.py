@@ -8,10 +8,10 @@ class OptimizerTest:
     """Interface for optimizer test cases."""
 
     dimensions: int = 2
-    bounds: Optional[Tuple[float, float]] = None
+    bounds: Optional[Tuple[float, float]] = (-10, +10)
     initial_point: Optional[Tuple[float, ...]] = None
-    iterations: int = 1000,
-    learning_rate: float = 0.1,
+    iterations: int = 1000
+    learning_rate: float = 0.1
 
     @staticmethod
     def func(*args: Tuple[float, ...]):
