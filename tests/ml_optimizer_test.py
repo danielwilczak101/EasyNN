@@ -107,7 +107,7 @@ def plot_3D_test(
     minZ = min(funcZ)
     Z -= minZ
     funcZ -= minZ
-    maxZ = max(max(Z), 1)
+    maxZ = max(Z)
     Z /= maxZ
     funcZ /= maxZ
 
