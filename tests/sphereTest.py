@@ -1,6 +1,6 @@
 import ml_optimizer_test as opt_tester
 import os, sys
-from typing import Tuple
+from typing import Optional, Tuple
 #no bounds
 
 
@@ -8,6 +8,10 @@ class OptimizerTest:
     """Interface for optimizer test cases."""
 
     dimensions: int = 2
+    bounds: Optional[Tuple[float, float]] = None
+    initial_point: Optional[Tuple[float, ...]] = None
+    iterations: int = 1000,
+    learning_rate: float = 0.1,
 
     @staticmethod
     def func(*args: Tuple[float, ...]):
@@ -41,6 +45,10 @@ def runTest(test_case: OptimizerTest, outputDir: str = 'output'):
             file_name=test_case.__name__,
             func=test_case.func,
             derivative=test_case.derivative,
+            bounds=test_case.bounds,
+            initial_point=test_case.initial_point,
+            iterations=test_case.iterations,
+            learning_rate=test_case.learning_rate,
         )
 
     else:
