@@ -13,10 +13,7 @@ def runTest(outputDir:str='output'):
     directory=os.path.isdir(outputDir)
     if not os.path.isdir(outputDir):
         os.makedirs(outputDir)
-
-    outputFile = outputDir + "/sphere"
-    
-    
+    outputFile="sphere"
     opt_tester.plot_3D_test(file_name=outputFile,
                  func=sphereFunction,
                  derivative=sphere_derivative)
