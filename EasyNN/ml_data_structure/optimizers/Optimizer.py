@@ -1,6 +1,6 @@
 """Interface for Optimizer class."""
 
-from Point import Point
+from EasyNN.ml_data_structure.Point import Point
 
 
 class Optimizer:

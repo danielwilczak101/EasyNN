@@ -19,7 +19,7 @@ Features Point.values and Point.derivatives.
 from typing import List, Sequence, Union
 import random
 import numpy as np
-from Tensor import TensorLike, Tensor
+from EasyNN.ml_data_structure.Tensor import TensorLike, Tensor
 
 
 class Point:

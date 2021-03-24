@@ -1,5 +1,4 @@
-from Optimizer import Optimizer
-
+from EasyNN.ml_data_structure.opimizers.Optimizer import Optimizer
 
 class StochasticAdagrad(Optimizer):
     """Adagrad method with stochastic learning rate."""

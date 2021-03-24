@@ -1,5 +1,5 @@
-from Optimizer import Optimizer
-from Point import Point
+from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
+from EasyNN.ml_data_structure.Point import Point
 
 
 class GradientDescent(Optimizer):
