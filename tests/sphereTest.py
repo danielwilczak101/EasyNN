@@ -1,5 +1,5 @@
 import ml_optimizer_test as opt_tester
-import os, sys
+import os, sys, argparse
 from multiprocessing import Pool
 from typing import Optional, Tuple
 from numpy import pi, exp, sin, cos, sqrt
@@ -95,5 +95,13 @@ def runTest(test_case: OptimizerTest, outputDir: str = 'output'):
         raise ValueError("Only test cases with 2 inputs are implemented.")
 
 if __name__ == '__main__':
-    with Pool(3) as p:
-        p.map(runTest, [Sphere(), Rastrigin(), Ackley()])
+	parser = argparse.ArgumentParser(description="Runs tests on optimizers, if the process itself keeps failing, run with the -s or --single-thread option")
+	parser.add_argument('-s', '--singleThread', help='Runs all tests in single threads, safer but slower', action='store_true')
+	args = parser.parse_args()
+	if args.singleThread:
+		runTest(Sphere())
+		runTest(Rastrigin())
+		runTest(Ackley())
+	else:
+		with Pool(3) as p:
+			p.map(runTest, [Sphere(), Rastrigin(), Ackley()])
