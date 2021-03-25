@@ -26,6 +26,7 @@ def plot_3D_test(
         bounds: Tuple[float, float] = (-10, +10),
         initial_point: Optional[Tuple[float, float]] = None,
         frames: int = 25,
+        plot_density: int = 25
     ):
     """
     Runs and plots the result of a machine learning algorithm in 3D.
@@ -39,6 +40,7 @@ def plot_3D_test(
         learning_rate: the learning rate used in gradient descent.
         bounds: bounds used to pick a randomized initial point.
         initial_point: an initial point to be used instead of the bounds.
+        plot_density: number of x/y points used to create the surface.
     """
     # initialize the first point if not given
     if initial_point is None:
@@ -69,15 +71,18 @@ def plot_3D_test(
     Y = np.array(Y)
     Z = np.array(Z)
 
-    # get bounds
+    # get difference between solution and initial point
     dX = abs(X[0] - X[-1])
     dY = abs(Y[0] - Y[-1])
-    Xbounds = X[-1] - 2*dX, X[-1] + 2*dX
-    Ybounds = Y[-1] - 2*dY, Y[-1] + 2*dY
+    max_diff = max(dX, dY)
+
+    # center the plot around the minima and graph around it
+    Xbounds = X[-1] - 2*max_diff, X[-1] + 2*max_diff
+    Ybounds = Y[-1] - 2*max_diff, Y[-1] + 2*max_diff
 
     # compute points
-    funcX = np.linspace(*Xbounds, 100)
-    funcY = np.linspace(*Ybounds, 100)
+    funcX = np.linspace(*Xbounds, plot_density)
+    funcY = np.linspace(*Ybounds, plot_density)
     funcZ = np.array([
         func(x, y)
         for y in funcY
@@ -87,7 +92,7 @@ def plot_3D_test(
     # only keep points where funZ < max(Z) + margin
     valid_points = funcZ < Z.max() + 0.1*Z.max()**2
 
-    # convert X and Y to meshgrid
+    # convert XYZ to meshgrid
     funcX, funcY = np.meshgrid(funcX, funcY)
     funcX = funcX.flatten()[valid_points]
     funcY = funcY.flatten()[valid_points]
@@ -112,8 +117,6 @@ def plot_3D_test(
     theCM._lut[:-3,-1] = np.abs(np.linspace(-1.0, 1.0, theCM.N))
     ax.plot_trisurf(funcX, funcY, funcZ, cmap=theCM, linewidth=0.1)
 
-    line, = ax.plot3D(np.array([]), [], [], 'k-')
-
     # print the results as a table
     print(tabulate(zip(X, Y, Z), headers='XYZ', showindex='always'))
 
@@ -122,6 +125,7 @@ def plot_3D_test(
     X, Y, Z = X[::frames], Y[::frames], Z[::frames]
 
     # animation functions
+    line, = ax.plot3D(np.array([]), [], [], 'k-')
     def init():
         line.set_xdata(np.array([]))
         line.set_ydata([])
