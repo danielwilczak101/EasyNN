@@ -21,8 +21,8 @@ def plot_3D_test(
         file_name: str,
         func: Callable[[float, float], float],
         derivative: Callable[[float, float], Tuple[float, float]],
-        iterations: int = 1000,
-        learning_rate: float = 0.1,
+        iterations: int = 10000,
+        learning_rate: float = 3e-3,
         bounds: Tuple[float, float] = (-10, +10),
         initial_point: Optional[Tuple[float, float]] = None,
         frames: int = 25,
@@ -56,31 +56,6 @@ def plot_3D_test(
     Y = [initial_point[1]]
     Z = [func(X[0], Y[0])]
 
-    # make figure, plot, and line
-    fig = plt.figure(figsize = (7, 7))
-    ax = fig.gca(projection='3d')
-    ax.set_xlim(bounds)
-    ax.set_ylim(bounds)
-    ax.set_zlim((0, 1))
-
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z')
-    ax.view_init(60, 35)
-
-    # animation functions
-    def init():
-        line.set_xdata(np.array([]))
-        line.set_ydata([])
-        line.set_3d_properties([])
-        return line,
-    def animate(i):
-        line.set_xdata(X[:i+1])
-        line.set_ydata(Y[:i+1])
-        line.set_3d_properties(Z[:i+1])
-        plt.title(f"Iteration: {i*frames}\nfunc({X[i]:.3}, {Y[i]:.3}) = {Z[i]:.3}")
-        return line,
-
     # update and save points over the given amount of iterations
     for _ in range(iterations):
         ml.derivatives = derivative(*ml.values)
@@ -94,25 +69,23 @@ def plot_3D_test(
     Y = np.array(Y)
     Z = np.array(Z)
 
-    # get points
-    funcX = np.linspace(*bounds, 25)
-    funcY = np.linspace(*bounds, 25)
+    # get bounds
+    dX = abs(X[0] - X[-1])
+    dY = abs(Y[0] - Y[-1])
+    Xbounds = X[-1] - 2*dX, X[-1] + 2*dX
+    Ybounds = Y[-1] - 2*dY, Y[-1] + 2*dY
+
+    # compute points
+    funcX = np.linspace(*Xbounds, 100)
+    funcY = np.linspace(*Ybounds, 100)
     funcZ = np.array([
         func(x, y)
-        for x in funcX
         for y in funcY
+        for x in funcX
     ])
 
-    # normalize the output
-    minZ = min(funcZ)
-    Z -= minZ
-    funcZ -= minZ
-    maxZ = max(Z)
-    Z /= maxZ
-    funcZ /= maxZ
-
-    # only keep points where 0 < z < 1
-    valid_points = funcZ < 1
+    # only keep points where funZ < max(Z) + margin
+    valid_points = funcZ < Z.max() + 0.1*Z.max()**2
 
     # convert X and Y to meshgrid
     funcX, funcY = np.meshgrid(funcX, funcY)
@@ -120,19 +93,46 @@ def plot_3D_test(
     funcY = funcY.flatten()[valid_points]
     funcZ = funcZ[valid_points]
 
+    # make figure, plot, and line
+    fig = plt.figure(figsize=(7, 7))
+    ax = fig.gca(projection='3d')
+    ax.set_xlim(Xbounds)
+    ax.set_ylim(Ybounds)
+    ax.set_zlim(min(funcZ), max(Z))
+
+    # set labels and viewing angle
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.view_init(60, 35)
+
     # use trisurf plot with custom transparency
     theCM = cm.get_cmap()
     theCM._init()
     theCM._lut[:-3,-1] = np.abs(np.linspace(-1.0, 1.0, theCM.N))
-    ax.plot_trisurf(funcX, funcY, funcZ, cmap=theCM, linewidth=0.1, vmin=0, vmax=1)
+    ax.plot_trisurf(funcX, funcY, funcZ, cmap=theCM, linewidth=0.1)
 
     line, = ax.plot3D(np.array([]), [], [], 'k-')
 
     # print the results as a table
     print(tabulate(zip(X, Y, Z), headers='XYZ', showindex='always'))
 
+    # only use some of the iterations for the animation
     frames = len(X) // frames
     X, Y, Z = X[::frames], Y[::frames], Z[::frames]
+
+    # animation functions
+    def init():
+        line.set_xdata(np.array([]))
+        line.set_ydata([])
+        line.set_3d_properties([])
+        return line,
+    def animate(i):
+        line.set_xdata(X[:i+1])
+        line.set_ydata(Y[:i+1])
+        line.set_3d_properties(Z[:i+1])
+        plt.title(f"Iteration: {i*frames}\nfunc({X[i]:.3}, {Y[i]:.3}) = {Z[i]:.3}")
+        return line,
 
     # save the animation
     anim = animation.FuncAnimation(fig, animate, init_func=init, frames=len(X), interval=20, blit=True)
