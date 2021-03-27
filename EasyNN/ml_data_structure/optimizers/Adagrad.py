@@ -1,6 +1,7 @@
 from numpy import sqrt
 from EasyNN.ml_data_structure.Tensor import TensorLike
-from EasyNN.ml_data_structure.opimizers.Optimizer import Optimizer
+from EasyNN.ml_data_structure.Point import Point
+from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
 
 
 class Adagrad(Optimizer):
