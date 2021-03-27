@@ -21,7 +21,7 @@ class Momentum:
     _biased: bool
     _iteration: int
 
-    def __init__(self, rate: float = 0.99, biased: bool = False):
+    def __init__(self, *, rate: float = 0.99, biased: bool = False):
         """
         Initialize the momentum with a rate and biased flag.
 
