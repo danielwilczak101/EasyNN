@@ -10,7 +10,11 @@ from mpl_toolkits.mplot3d import Axes3D
 from tabulate import tabulate
 from EasyNN.ml_data_structure.Point import Point
 from EasyNN.ml_data_structure.MachineLearning import MachineLearning as ML
-from EasyNN.ml_data_structure.optimizers.GradientDescent import GradientDescent as GD
+from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
+from EasyNN.ml_data_structure.optimizers.Adagrad import Adagrad
+from EasyNN.ml_data_structure.optimizers.GradientDescent import GradientDescent
+from EasyNN.ml_data_structure.optimizers.MomentumGradientDescent import MomentumGradientDescent
+from EasyNN.ml_data_structure.optimizers.Experimental import Experimental
 
 # matplotlib.use('Qt4Agg')
 
@@ -22,11 +26,12 @@ def plot_3D_test(
         func: Callable[[float, float], float],
         derivative: Callable[[float, float], Tuple[float, float]],
         iterations: int = 10000,
-        learning_rate: float = 3e-3,
+        learning_rate: float = 3e-4,
         bounds: Tuple[float, float] = (-10, +10),
         initial_point: Optional[Tuple[float, float]] = None,
         frames: int = 25,
-        plot_density: int = 25
+        plot_density: int = 25,
+        Opt: Optimizer = Experimental,
     ):
     """
     Runs and plots the result of a machine learning algorithm in 3D.
@@ -41,6 +46,7 @@ def plot_3D_test(
         bounds: bounds used to pick a randomized initial point.
         initial_point: an initial point to be used instead of the bounds.
         plot_density: number of x/y points used to create the surface.
+        Opt: the 'type' of optimizer used.
     """
     # initialize the first point if not given
     if initial_point is None:
@@ -51,7 +57,7 @@ def plot_3D_test(
     tensor[0] = initial_point
 
     # save to ML object
-    ml = ML(Point(tensor), GD(learning_rate))
+    ml = ML(Point(tensor), Opt(learning_rate))
 
     # store the XYZ points
     X = [initial_point[0]]
@@ -70,6 +76,9 @@ def plot_3D_test(
     X = np.array(X)
     Y = np.array(Y)
     Z = np.array(Z)
+
+    # print the results as a table
+    print(tabulate(zip(X, Y, Z), headers='XYZ', showindex='always'))
 
     # get difference between solution and initial point
     dX = abs(X[0] - X[-1])
@@ -116,9 +125,6 @@ def plot_3D_test(
     theCM._init()
     theCM._lut[:-3,-1] = np.abs(np.linspace(-1.0, 1.0, theCM.N))
     ax.plot_trisurf(funcX, funcY, funcZ, cmap=theCM, linewidth=0.1)
-
-    # print the results as a table
-    print(tabulate(zip(X, Y, Z), headers='XYZ', showindex='always'))
 
     # only use some of the iterations for the animation
     frames = len(X) // frames
