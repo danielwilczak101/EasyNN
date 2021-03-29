@@ -19,7 +19,7 @@ class Momentum:
     _rate: float
     _value: TensorLike
     _biased: bool
-    _iteration: int
+    _bias: float
 
     def __init__(self, *, rate: float = 0.99, biased: bool = False):
         """
@@ -41,9 +41,9 @@ class Momentum:
 
         if 0 < rate < 1:
             self._rate = rate
-            self._value = 0
-            self._iteration = 0
+            self._value = 0.0
             self._biased = biased
+            self._bias = 0.0
 
         else:
             raise ValueError("rate has to be between 0 and 1")
@@ -57,7 +57,8 @@ class Momentum:
         """
 
         # update momentum
-        self._value += (1 - self._rate) * (value - self._value)
+        factor = 1 - self._rate
+        self._value += factor * (value - self._value)
 
         # return biased value
         if self._biased:
@@ -65,5 +66,5 @@ class Momentum:
 
         # return unbiased value
         else:
-            self._iteration += 1
-            return self._value / (1 - self._rate**self._iteration)
+            self._bias += factor * (1 - self._bias)
+            return self._value / self._bias
