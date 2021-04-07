@@ -2,6 +2,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
 from EasyNN.ml_data_structure.optimizers.GradientDescent import GradientDescent
+from EasyNN.Batch import Batch
 from EasyNN.Batch import MiniBatch
 
 

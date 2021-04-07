@@ -1,6 +1,7 @@
 import sys
 sys.path.append("../") 
-from EasyNN.model.Weights import Weights as Weights
+from EasyNN.model import Weights
+import numpy as np
 
 def runWeightTest() -> bool:
     """
@@ -13,29 +14,29 @@ def runWeightTest() -> bool:
     """
     success = True
     
-    weights = weights.Weights()
-    weights.values = [[1, 2], [2, 3]]
-    forwardPass = weights([4,5])
-    d_inputs = weights.backpropogate([6,7])
+    weights = Weights.Weights(2, 2)
+    weights.values = [[1.0, 2.0], [3.0, 4.0]]
+    forwardPass = weights([4.0,5.0])
+    d_inputs = weights.backpropagate([6.0,7.0])
     d_weights = weights.derivatives
 
-    expected_forwardPass = [ 14,32 ]
-    expected_d_weights = [[24, 30], [28, 35]]
-    expected_d_inputs = [27, 40]
+    expected_forwardPass = [ 14.0,32.0 ]
+    expected_d_weights = [[24.0, 30.0], [28.0, 35.0]]
+    expected_d_inputs = [27.0, 40.0]
     
-    if expected_forwardPass != forwardPass:
+    if not np.array_equal(expected_forwardPass, forwardPass):
         success = False
         print("Forward Pass failed")
         print("Expected: "+  str(expected_forwardPass))
         print("Actual: " + str(forwardPass))
     
-    if expected_d_weights != d_weights:
+    if not np.array_equal(expected_d_weights, d_weights):
         success = False
         print("d_weights incorrect")
         print("Expected: "+  str(expected_d_weights))
         print("Actual: " + str(d_weights))
     
-    if expected_d_inputs != d_inputs:
+    if not np.array_equal(expected_d_inputs, d_inputs):
         success = False
         print("d_inputs incorrect")
         print("Expected: "+  str(expected_d_inputs))
@@ -51,7 +52,9 @@ def runTest() -> bool:
     bool
         A bool that states whether the test passed or failed
     """
-    return runWeightTest()
+    testPass = runWeightTest()
+    if not testPass:
+        print("TESTS FAILED")
     
 if __name__ == '__main__':
     runTest()
