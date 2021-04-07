@@ -19,6 +19,16 @@ class Batch:
         -------
         Iterable[ArrayLike]
             Yields all of the indexes.
+
+        Notes
+        -----
+        Use the following format to collect the batch from the data:
+
+        >>> batches = Batch()
+        >>> for indexes in batches(len(data)):
+        ...     batch = data.take(indexes, axis=0)
+        ... 
+        >>> 
         """
         yield np.arange(size)
 
@@ -46,6 +56,16 @@ class MiniBatch(Batch):
         -------
         Iterable[ArrayLike]
             Yields the indexes of each mini-batch.
+
+        Notes
+        -----
+        Use the following format to collect the batch from the data:
+
+        >>> batches = MiniBatch(8)
+        >>> for indexes in batches(len(data)):
+        ...     batch = data.take(indexes, axis=0)
+        ... 
+        >>> 
         """
         indexes = np.arange(size)
         np.random.shuffle(indexes)
@@ -75,6 +95,16 @@ class StochasticBatch(Batch):
         -------
         Iterable[ArrayLike]
             Yields the indexes individually.
+
+        Notes
+        -----
+        Use the following format to collect the batch from the data:
+
+        >>> batches = StochasticBatch()
+        >>> for indexes in batches(len(data)):
+        ...     batch = data.take(indexes, axis=0)
+        ... 
+        >>> 
         """
         indexes = np.arange(size)
         np.random.shuffle(indexes)
