@@ -3,6 +3,8 @@ from numpy.typing import ArrayLike
 from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
 from EasyNN.ml_data_structure.optimizers.GradientDescent import GradientDescent
 from EasyNN.Batch import MiniBatch
+from EasyNN.loss.Loss import Loss
+from EasyNN.loss.MeanSquareError import MeanSquareError
 
 
 class Model:
@@ -62,7 +64,7 @@ class Model:
             epochs: int = 1000,
             optimizer: Optimizer = GradientDescent,
             batches: Batch = MiniBatch(8),
-            loss = None,  # implement later
+            loss: Loss = MeanSquareError(),
         ) -> None:
         """
         Trains the model using inputs and outputs.
@@ -79,7 +81,7 @@ class Model:
             The optimizer used to update the parameters.
         batches : Batch = MiniBatch(8)
             How batches are extracted from the dataset.
-        loss : TBA
+        loss : Loss = MeanSquareError()
             The cost function used for computing loss error and
             derivatives to be backpropagated from.
 
