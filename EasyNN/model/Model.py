@@ -58,8 +58,10 @@ class Model:
             self,
             inputs: ArrayLike,
             outputs: ArrayLike,
+            epochs: int = 1000,
             optimizer: Optimizer = GradientDescent,
-            loss_function = None,  # implement later
+            batches: Batch = MiniBatch(8),
+            loss = None,  # implement later
         ) -> None:
         """
         Trains the model using inputs and outputs.
@@ -70,10 +72,14 @@ class Model:
             Values plugged into the model.
         outputs : ArrayLike
             Expected outputs from the model.
-        optimizer : Optional[Optimizer]
+        epochs : int = 10000
+            Number of times the entire dataset is passed through.
+        optimizer : Optimizer
             The optimizer used to update the parameters.
-        loss_function : TBA
-            The cost function used for computing loss values and error
+        batches : Batch = MiniBatch(8)
+            How batches are extracted from the dataset.
+        loss : TBA
+            The cost function used for computing loss error and
             derivatives to be backpropagated from.
 
         Raises
@@ -81,3 +87,27 @@ class Model:
         NotImplementedError : Needs to be overridden by subclass.
         """
         raise NotImplementedError
+
+
+    @property
+    def values(self) -> np.ndarray:
+        """Property for extracting values from parameters."""
+        return self.parameters[0]
+
+
+    @values.setter
+    def values(self, new_values: ArrayLike) -> None:
+        """Set the values."""
+        self.parameters[0] = new_values
+
+
+    @property
+    def derivatives(self) -> np.ndarray:
+        """Property for extracting derivatives of the values from parameters."""
+        return self.parameters[1]
+
+
+    @derivatives.setter
+    def derivatives(self, new_derivatives: ArrayLike) -> np.ndarray:
+        """Set the derivatives."""
+        self.parameters[1] = new_derivatives
