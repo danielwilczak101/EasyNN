@@ -13,6 +13,11 @@ class Model:
     parameters: np.ndarray
 
 
+    def __init__(self) -> None:
+        """Initialize no parameters by default."""
+        self.parameters = np.empty((2, 0))
+
+
     def __call__(self, values: ArrayLike) -> np.ndarray:
         """
         Feedforward propagation of the values.
