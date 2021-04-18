@@ -121,7 +121,7 @@ class Stack(Model):
                 prediction = self(input_)
                 print(loss.error(input_, expectation, prediction))
                 self.backpropagate(loss.gradient(input_, expectation, prediction))
-                self.values -= optimizer.update(self.parameters)
+                optimizer.update(self)
 
 
     @property
