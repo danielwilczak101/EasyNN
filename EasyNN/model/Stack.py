@@ -34,11 +34,10 @@ class Stack(Model):
         >>> model = Stack(model4, model5)
         """
         if isinstance(model, Model):
-            models = [model] + list(models)
+            self.models = [model] + list(models)
         else:
-            models = list(model) + list(models)
-        self.models = models
-        self.parameters = np.hstack([model.parameters for model in models])
+            self.models = list(model) + list(models)
+        self.parameters = np.hstack([model.parameters for model in self.models])
 
 
     def __call__(self, values: ArrayLike) -> np.ndarray:
