@@ -15,10 +15,10 @@ def runWeightTest() -> bool:
     success = True
     
     weights = Weights.Weights(2, 2)
-    weights.values = [[1.0, 2.0], [3.0, 4.0]]
+    weights.matrix = [[1.0, 2.0], [3.0, 4.0]]
     forwardPass = weights([4.0,5.0])
     d_inputs = weights.backpropagate([6.0,7.0])
-    d_weights = weights.derivatives
+    d_weights = weights.derivatives.reshape(weights.shape)
 
     expected_forwardPass = [ 14.0,32.0 ]
     expected_d_weights = [[24.0, 30.0], [28.0, 35.0]]
