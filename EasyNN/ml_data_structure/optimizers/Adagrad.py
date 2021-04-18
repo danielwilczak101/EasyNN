@@ -1,25 +1,42 @@
 from numpy import sqrt
-from EasyNN.ml_data_structure.Tensor import TensorLike
-from EasyNN.ml_data_structure.Point import Point
 from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
 
 
 class Adagrad(Optimizer):
     """Adagrad method."""
     learning_rate: float
-    decay: float
     epsilon: float
-    squares: TensorLike
+    squares: np.ndarray
 
-    def __init__(self, *, learning_rate: float = 1.0, decay: float = 0.0, epsilon: float = 1e-7):
-        """Initialize using learning rate, decay rate, and epsilon."""
+
+    def __init__(self, *, learning_rate: float = 0.1, epsilon: float = 1e-7) -> None:
+        """
+        Initialize Adagrad rates.
+
+        Parameters
+        ----------
+        learning_rate : float = 0.1
+            The factor used on the derivatives when subtracting from the values.
+        epsilon : float = 1e-7
+            Used to avoid division by 0 in the denominator of derivatives / sqrt(squares).
+        """
         self.learning_rate = learning_rate
-        self.decay = decay
         self.epsilon = epsilon
-        self.squares = 0
+        self.squares = np.array(0)
 
-    def update(self, iteration: int, items: Point):
-        """Rescale the weight of each component in the derivatives using an accumulating cache."""
 
+    def update(self, model: "Model") -> None:
+        """
+        Subtracts learning_rate * derivatives from the values.
+
+        Parameters
+        ----------
+        model : Model
+            The model to be optimized.
+        model.values : np.ndarray
+            The parameter values being optimized.
+        model.derivatives : np.ndarray
+            The parameter derivatives being optimized.
+        """
         self.squares += items.derivatives ** 2
-        items.values -= (self.learning_rate / (1.0 + self.decay * iteration)) * items.derivatives / (np.sqrt(self.squares) + self.epsilon)
+        model.values -= self.learning_rate * model.derivatives / (np.sqrt(self.squares) + self.epsilon)

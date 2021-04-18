@@ -1,10 +1,10 @@
 import numpy as np
 from numpy.typing import ArrayLike
 from typing import Union, Iterable, Tuple, List
-from EasyNN.models.Model import Model
+from EasyNN.model.Model import Model
 from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
 from EasyNN.ml_data_structure.optimizers.GradientDescent import GradientDescent
-from EasyNN.Batch import MiniBatch
+from EasyNN.Batch import Batch, MiniBatch
 from EasyNN.loss.Loss import Loss
 from EasyNN.loss.MeanSquareError import MeanSquareError
 
