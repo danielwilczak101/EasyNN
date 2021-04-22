@@ -1,6 +1,6 @@
 from numpy import sqrt
 from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
-
+import numpy as np
 
 class Adagrad(Optimizer):
     """Adagrad method."""
