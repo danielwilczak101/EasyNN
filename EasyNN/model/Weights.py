@@ -33,10 +33,10 @@ class Weights(Model):
         Returns
         -------
         out : np.ndarray
-            Weights.matrix @ values
+            Weights.matrix @ values.T
         """
         self.inputs = np.array(values, copy=False)
-        return self.matrix @ self.inputs
+        return (self.matrix @ self.inputs.T).T
 
 
     def backpropagate(self, derivatives: ArrayLike) -> np.ndarray:
@@ -59,10 +59,10 @@ class Weights(Model):
             self.derivatives = np.outer(derivatives, self.inputs).flatten()
 
         else:
-            self.derivatives = (derivatives.T @ self.inputs).flatten()
+            self.derivatives = (self.inputs.T @ derivatives).flatten()
             self.derivatives /= len(derivatives)
 
-        return self.matrix.T @ derivatives
+        return (self.matrix.T @ derivatives.T).T
 
 
     @property
