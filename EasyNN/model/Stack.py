@@ -86,7 +86,7 @@ class Stack(Model):
             inputs: ArrayLike,
             outputs: ArrayLike,
             epochs: int = 1000,
-            optimizer: Optimizer = GradientDescent,
+            optimizer: Optimizer = GradientDescent(),
             batches: Batch = MiniBatch(8),
             loss: Loss = MeanSquareError(),
         ) -> None:
@@ -109,15 +109,15 @@ class Stack(Model):
             The cost function used for computing loss error and
             derivatives to be backpropagated from.
         """
-        inputs = np.ndarray(inputs, copy=False)
-        outputs = np.ndarray(outputs, copy=False)
+        inputs = np.array(inputs, copy=False)
+        outputs = np.array(outputs, copy=False)
 
         for i in range(epochs):
-            for indexes in batches(data):
+            for indexes in batches(len(inputs)):
                 batch = inputs.take(indexes, axis=0)
                 expectation = outputs.take(indexes, axis=0)
                 prediction = self(batch)
-                print(loss.error(batch, expectation, prediction))
+                print(loss.cost(batch, expectation, prediction))
                 self.backpropagate(loss.gradient(batch, expectation, prediction))
                 optimizer.update(self)
 
