@@ -11,5 +11,5 @@ class ReLU(Activation, Model):
         self.input = np.array(values, copy=False)
         return np.maximum(values, 0)
 
-    def backpropogate(self, derivatives: ArrayLike) -> np.ndarray:
+    def backpropagate(self, derivatives: ArrayLike) -> np.ndarray:
         return np.where(self.input > 0, derivatives, 0)
