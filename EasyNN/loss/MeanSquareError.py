@@ -13,7 +13,7 @@ class MeanSquareError(Loss):
         ) -> float:
         """
         Computes the cost from the formula
-        >>> norm(expect - predict) ** 2 / expect.size
+            norm(expect - predict) ** 2 / (2 * batch_size)
 
         Parameters
         ----------
@@ -26,9 +26,10 @@ class MeanSquareError(Loss):
 
         Returns
         -------
-        float : The cost/error of the model.
+        out : float
+            The cost/error of the model.
         """
-        return np.linalg.norm(expectations - predictions) ** 2 / expectations.size
+        return np.linalg.norm(expectations - predictions) ** 2 / (2 if expectations.ndim==1 else 2*len(expectations))
 
     def gradient(
             self,
@@ -38,7 +39,7 @@ class MeanSquareError(Loss):
         ) -> np.ndarray:
         """
         Computes the gradient from the formula
-        >>> 2 * (expect - predict) / expect.size
+        >>> (expect - predict) / batch_size
 
         Parameters
         ----------
@@ -51,6 +52,10 @@ class MeanSquareError(Loss):
 
         Returns
         -------
-        np.ndarray : The gradient of the cost function.
+        out : np.ndarray
+            The gradient of the cost function.
         """
-        return (2 / expectations.size) * (expectations - predictions)
+        if expectations.ndim == 1:
+            return expectations - predictions
+        else:
+            return (expectations - predictions) / expectations.shape[0]
