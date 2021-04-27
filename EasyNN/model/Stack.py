@@ -99,7 +99,7 @@ class Stack(Model):
             Values plugged into the model.
         outputs : ArrayLike
             Expected outputs from the model.
-        epochs : int = 10000
+        epochs : int = 1000
             Number of times the entire dataset is passed through.
         optimizer : Optimizer
             The optimizer used to update the parameters.
@@ -109,18 +109,16 @@ class Stack(Model):
             The cost function used for computing loss error and
             derivatives to be backpropagated from.
         """
-        if not isinstance(inputs, np.ndarray):
-            inputs = np.ndarray(inputs)
-        if not isinstance(outputs, np.ndarray):
-            outputs = np.ndarray
+        inputs = np.ndarray(inputs, copy=False)
+        outputs = np.ndarray(outputs, copy=False)
 
-        for i in epochs:
-            for batch in batches(data):
-                input_ = inputs.take(batch, axis=0)
-                expectation = outputs.take(batch, axis=0)
-                prediction = self(input_)
-                print(loss.error(input_, expectation, prediction))
-                self.backpropagate(loss.gradient(input_, expectation, prediction))
+        for i in range(epochs):
+            for indexes in batches(data):
+                batch = inputs.take(indexes, axis=0)
+                expectation = outputs.take(indexes, axis=0)
+                prediction = self(batch)
+                print(loss.error(batch, expectation, prediction))
+                self.backpropagate(loss.gradient(batch, expectation, prediction))
                 optimizer.update(self)
 
 
