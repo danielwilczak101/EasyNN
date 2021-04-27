@@ -8,8 +8,8 @@ from EasyNN.Batch import MiniBatch
 
 
 class Biases(Model):
-    """Generic model API."""
-    parameters: np.ndarray
+    """Model for biases."""
+
     def __init__(self, num_neurons):
         self.parameters = np.random.random_sample((2, num_neurons))
         self.num_neurons = num_neurons
@@ -29,7 +29,7 @@ class Biases(Model):
             A numpy array representing the output, representing the result
             of the model on the given input.
         """
-        return self.values + values
+        return values + self.values
 
     def backpropagate(self, derivatives: ArrayLike) -> np.ndarray:
         """
@@ -47,5 +47,8 @@ class Biases(Model):
             how the previous input should be changed to get the desired
             change in output when using the model.
         """
-        self.derivatives = derivatives
+        if derivatives.ndim == 1:
+            self.derivatives = derivatives
+        else:
+            self.derivatives = np.average(derivatives, axis=0)
         return derivatives
