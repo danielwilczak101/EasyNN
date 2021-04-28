@@ -29,7 +29,7 @@ class MeanSquareError(Loss):
         out : float
             The cost/error of the model.
         """
-        return np.linalg.norm(expectations - predictions) ** 2 / (2 if expectations.ndim==1 else 2*len(expectations))
+        return np.linalg.norm(predictions - expectations) ** 2 / (2 if expectations.ndim==1 else 2*len(expectations))
 
     def gradient(
             self,
@@ -58,4 +58,4 @@ class MeanSquareError(Loss):
         if expectations.ndim == 1:
             return expectations - predictions
         else:
-            return (expectations - predictions) / expectations.shape[0]
+            return (predictions - expectations) / expectations.shape[0]
