@@ -11,7 +11,8 @@ class Biases(Model):
     """Model for biases."""
 
     def __init__(self, num_neurons):
-        self.parameters = np.random.random_sample((2, num_neurons))
+        max_weight = np.sqrt(3 / num_neurons)
+        self.parameters = np.random.uniform(-max_weight, +max_weight, (2, num_neurons))
         self.num_neurons = num_neurons
 
     def __call__(self, values: ArrayLike) -> np.ndarray:
