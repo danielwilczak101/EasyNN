@@ -56,6 +56,6 @@ class MeanSquareError(Loss):
             The gradient of the cost function.
         """
         if expectations.ndim == 1:
-            return expectations - predictions
+            return predictions - expectations
         else:
             return (predictions - expectations) / expectations.shape[0]
