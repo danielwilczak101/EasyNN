@@ -2,6 +2,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 from typing import Union, Iterable, Tuple, List
 from EasyNN.model.Model import Model
+from EasyNN.model.Weights import Weights
 from EasyNN.ml_data_structure.optimizers.Optimizer import Optimizer
 from EasyNN.ml_data_structure.optimizers.GradientDescent import GradientDescent
 from EasyNN.Batch import Batch, MiniBatch
@@ -87,8 +88,10 @@ class Stack(Model):
             outputs: ArrayLike,
             epochs: int = 1000,
             optimizer: Optimizer = GradientDescent(),
-            batches: Batch = MiniBatch(8),
+            batches: Batch = MiniBatch(32),
             loss: Loss = MeanSquareError(),
+            l1_rate: float = 0.01,
+            l2_rate: float = 0.01,
         ) -> None:
         """
         Trains the model using inputs and outputs.
@@ -103,11 +106,15 @@ class Stack(Model):
             Number of times the entire dataset is passed through.
         optimizer : Optimizer
             The optimizer used to update the parameters.
-        batches : Batch = MiniBatch(8)
+        batches : Batch = MiniBatch(32)
             How batches are extracted from the dataset.
         loss : Loss = MeanSquareError()
             The cost function used for computing loss error and
             derivatives to be backpropagated from.
+        l1_rate : float = 0.01
+            The coefficient for L1 regularization.
+        l2_rate : float = 0.01
+            The coefficient for L2 regularization.
         """
         inputs = np.array(inputs, copy=False)
         outputs = np.array(outputs, copy=False)
@@ -117,9 +124,22 @@ class Stack(Model):
                 batch = inputs.take(indexes, axis=0)
                 expectation = outputs.take(indexes, axis=0)
                 prediction = self(batch)
-                print(loss.cost(batch, expectation, prediction))
+                print('cost: ', loss.cost(batch, expectation, prediction))
                 self.backpropagate(loss.gradient(batch, expectation, prediction))
+                for model in self.individual_models:
+                    if isinstance(model, Weights):
+                        model.derivatives += l1_rate * np.sign(model.values)
+                        model.derivatives += l2_rate * model.values
                 optimizer.update(self)
+
+    @property
+    def individual_models(self) -> Iterable[Model]:
+        """Iterator over individual models i.e. 'unstacking'."""
+        for model in self.models:
+            if isinstance(model, Stack):
+                yield from model.individual_models
+            else:
+                yield model
 
 
     @property
