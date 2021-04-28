@@ -119,4 +119,7 @@ class Model:
     @derivatives.setter
     def derivatives(self, new_derivatives: ArrayLike) -> np.ndarray:
         """Set the derivatives."""
+        new_derivatives = np.array(new_derivatives, copy=False)
+        if np.isnan(new_derivatives).any():
+            raise ValueError("nan derivative")
         self.parameters[1] = new_derivatives
