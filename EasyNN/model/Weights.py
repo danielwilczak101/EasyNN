@@ -51,12 +51,12 @@ class Weights(Model):
         Returns
         -------
         out : np.ndarray
-            Weights.matrix.T @ derivatives
+            (Weights.matrix.T @ derivatives.T).T
         """
         derivatives = np.array(derivatives, copy=False)
 
         if derivatives.ndim == 1:
-            self.derivatives = np.outer(derivatives, self.inputs).flatten()
+            self.derivatives = np.outer(self.inputs, derivatives).flatten()
 
         else:
             self.derivatives = (self.inputs.T @ derivatives).flatten()
@@ -74,4 +74,4 @@ class Weights(Model):
     @matrix.setter
     def matrix(self, values: ArrayLike) -> None:
         """Replaces the values in the shape of the matrix."""
-        self.matrix[...] = values
+        self.values = values.flatten()
