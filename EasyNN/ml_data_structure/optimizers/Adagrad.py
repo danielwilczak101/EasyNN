@@ -9,7 +9,7 @@ class Adagrad(Optimizer):
     squares: np.ndarray
 
 
-    def __init__(self, *, learning_rate: float = 0.1, epsilon: float = 1e-7) -> None:
+    def __init__(self, learning_rate: float = 0.1, epsilon: float = 1e-7) -> None:
         """
         Initialize Adagrad rates.
 
@@ -22,7 +22,6 @@ class Adagrad(Optimizer):
         """
         self.learning_rate = learning_rate
         self.epsilon = epsilon
-        self.squares = np.array(0)
 
 
     def update(self, model: "Model") -> None:
@@ -38,5 +37,8 @@ class Adagrad(Optimizer):
         model.derivatives : np.ndarray
             The parameter derivatives being optimized.
         """
-        self.squares += items.derivatives ** 2
+        if hasattr(self, 'squares'):
+            self.squares += model.derivatives ** 2
+        else:
+            self.squares = model.derivatives ** 2
         model.values -= self.learning_rate * model.derivatives / (np.sqrt(self.squares) + self.epsilon)
