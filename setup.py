@@ -11,7 +11,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
     url="https://github.com/danielwilczak101/EasyNN",
-    author="Daniel Wilczak, Jack Nguyen, David Fadini, Nathan Foster, Liam Kehoe, Nathan Rose",
+    author="Daniel Wilczak, Jack Nguyen",
     author_email="danielwilczak101@gmail.com",
     long_description = long_description,
     long_description_content_type = "text/markdown",
