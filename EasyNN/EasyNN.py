@@ -1,4 +1,4 @@
-from examples.mnist import mnist as mnist
+#from examples.mnist import mnist as mnist
 
 class NeuralNetwork:
     """General NN structure which allows greater flexibility (and
