@@ -31,3 +31,5 @@ show(images[0])
 # Tells me what the image is.
 model(images[0])
 ```
+
+## CIFAR Example user code:
