@@ -10,8 +10,8 @@ This project is still in work and does not have a production version yet.
 ```Python
 from EasyNN.examples.mnist import images, labels, show, model
 
-# Shows me the first image in the dataset
-show(images[0])
+# Shows me the first image in the dataset. Second value is optional.
+show(images[0],label[0])
 
 # Tells me what the image is.
 model(images[0])
