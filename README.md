@@ -25,8 +25,8 @@ from EasyNN import Classifier
 # Train several models and take the best one.
 model = Classifier(images, labels)
 
-# Shows me the first image in the dataset.
-show(images[0])
+# Shows me the first image in the dataset. Second value is optional.
+show(images[0],label[0])
 
 # Tells me what the image is.
 model(images[0])
