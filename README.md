@@ -3,10 +3,3 @@
 # EasyNN - Neural Networks made Easy
 
 This project is still in work and does not have a production version yet.
-
-
-
-## CIFAR Example user code:
-```Python
-# In work currently
-```
