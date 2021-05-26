@@ -24,6 +24,8 @@ import wget
 import tensorflow as tf
 import math
 from scipy import ndimage
+
+# To install via pip: pip3 install opencv-python  
 import cv2
 
 
