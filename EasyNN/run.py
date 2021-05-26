@@ -1,11 +1,12 @@
-from examples.mnist import images, labels, show, model
-
+from examples.mnist import images, labels, show, model, preprocess_input
 
 #print(images[0])
 #print(labels[0])
 
+
+my_image = preprocess_input("four.jpg")
+
 # Model tells me what the image is.
 model(images[2])
 
-# Plots the image and label
-show(images[2],labels[2])
+show(my_image)
