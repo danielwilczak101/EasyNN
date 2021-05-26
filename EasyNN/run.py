@@ -1,17 +1,12 @@
-#from EasyNN import mnist
+from examples.mnist import images, labels, show
 
-#model = NeuralNetwork()
+#print(images[0])
+#print(labels[0])
 
-#model.train()
+print(images.size)
+print(labels.size)
 
-# This will take a bit if its your first time running since it has to
-# download 50MB sqlite3 file.
-#mnist = mnist()
+show(images[2],labels[2])
 
-#train = mnist.training
-#test  = mnist.testing
-
-#mnist.show_image(train[0])
-
-# model(image)
-# tell me what the probabilities are
+# Tells me what the image is.
+#model(images[0])
