@@ -20,11 +20,9 @@ import numpy as np
 # Used to get the dataset
 import wget
 
+# Tensor flow example
 import tensorflow as tf
-
-import cv2
 import math
-
 from scipy import ndimage
 
 
@@ -44,12 +42,12 @@ def __getattr__(name: str) -> Any:
     elif name == "__path__":
         raise AttributeError
 
-def model(image,label = None) -> None:
-    """Plot the image that was given."""
+def model(image) -> None:
+    """Make the model predict what the number is."""
 
     model = MNIST()
     model.train()
-    model.predict(image)
+    print(f"The model believes its a: {model.predict(image)}")
 
 def show(image,label = None) -> None:
     """Plot the image that was given."""
@@ -100,7 +98,7 @@ class MNIST(tf.keras.models.Sequential):
     dataset = tf.keras.datasets.mnist
     default_neuron_amount = 128
     default_layer_amount = 1
-    epochs = 5
+    epochs = 4
     optimizer = 'adam'
     loss_function = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
