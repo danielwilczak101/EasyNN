@@ -12,24 +12,20 @@ Current example of working code
 ```Python
 from EasyNN import mnist
 
-model = NeuralNetwork()
-
-model.train()
-
-# This will take a bit if its your first time running since it has to
-# download 50MB sqlite3 file.
+# Dowload the MNIST dataset.
 mnist = mnist()
 
-train = mnist.training
-test  = mnist.testing
+model = NeuralNetwork()
+model.train()
 
 mnist.show_image(train[0])
 
 # If you want to show the images data
 print(train[0])
 
-# model(image)
-# tell me what the probabilities are.
+# Tell me what the model thinks it is.
+model(image)
+
 ```
 
 ## Ouput:
