@@ -13,7 +13,7 @@ from EasyNN import mnist
 mnist = mnist()
 
 model = NeuralNetwork()
-model.train()
+model.train(mnist)
 
 mnist.show_image(train[0])
 
