@@ -10,8 +10,7 @@ Current example of working code
 from EasyNN.mnist import model, dataset, compare, preprocess 
 
 compare(user_image,dataset)
-
-model = model.train(dataset)
+model.train(dataset)
 model(image)
 ```
 
