@@ -11,7 +11,11 @@ from EasyNN.mnist import model, dataset, compare, preprocess
 
 compare(user_image,dataset)
 model.train(dataset)
-model(image)
+
+# If you need to preprocess
+user_image = preprocess(user_image)
+
+model(user_image)
 ```
 
 ## Ouput:
