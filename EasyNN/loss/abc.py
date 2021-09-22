@@ -1,7 +1,9 @@
+"""
+TODO: Not complete.
+"""
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import Any, Optional
-from EasyNN.batch.abc import Batch, Dataset
+from typing import Any
 from EasyNN.model.abc import Model
 from EasyNN.typing import ArrayLikeND, ArrayND, Sample
 
@@ -16,19 +18,19 @@ class Loss(ABC):
 
     Example
     -------
+    >>> from EasyNN.batch.mini import MiniBatch
     >>> model = ...
     >>> model.loss = ...
-    >>> x, y_true = ...
+    >>> batch = MiniBatch(...)
+    >>> x, y_true = batch.sample
     >>> y_pred = model(x)
-    >>> model.batch = MiniBatch((x, y_true))
-    >>> accuracy = model.loss()
-    >>> model.backward(model.loss.dy())
+    >>> accuracy = model.loss(batch.sample)
+    >>> model.backward(model.loss.dy(batch.sample))
     """
-    batch: Batch
     model: Model
 
     @abstractmethod
-    def __call__(self: Loss, sample: Sample = None) -> float:
+    def __call__(self: Loss, sample: Sample) -> float:
         """
         Calling loss() will provide the the loss value (i.e. accuracy in some contexts).
 
@@ -44,14 +46,12 @@ class Loss(ABC):
 
         Example
         -------
-        >>> model = ...
-        >>> model.loss = ...
-        >>> training_accuracy = model.loss()
-        >>> testing_accuracy = model.loss(model.loss.testing.sample)
+        >>> training_accuracy = loss(training.sample)
+        >>> testing_accuracy = loss(testing.sample)
         """
         raise NotImplementedError
 
-    def backward(self: Loss, sample: Sample = None) -> Any:
+    def backward(self: Loss, sample: Sample) -> Any:
         """
         Updates self.derivatives (e.g. via backpropagation) for optimizers (e.g. gradient descent).
         Default implementation returns model.backward(loss.dy()).
@@ -63,24 +63,22 @@ class Loss(ABC):
 
         Example
         -------
-        >>> model = ...
-        >>> model.loss = ...
         >>> # The following are equivalent:
-        >>> model.backward()               # For the user.
-        >>> model.backward(model.loss.dy)  # How it's implemented.
-        >>> model.loss.backward()          # For the optimizer.
+        >>> model.backward()                       # For the user.
+        >>> model.backward(model.loss.dy(sample))  # How it's implemented.
+        >>> model.loss.backward(sample)            # For the optimizer.
         """
         return self.model.backward(self.dy(sample))
 
     @abstractmethod
-    def dy(self: Loss, sample: Sample = None) -> ArrayND:
+    def dy(self: Loss, sample: Sample) -> ArrayND:
         """
         Computes the change in y expected, which is used to backpropagate into the model.
         Usually involves loss.y_pred and loss.y_true.
 
         Parameters
         ----------
-        sample: Sample = self.training.sample
+        sample: Sample
             Uses the sample to compute the loss on.
 
         Returns
@@ -90,13 +88,13 @@ class Loss(ABC):
         """
         raise NotImplementedError
 
-    def predict(self: Loss, sample: Sample = None) -> ArrayND:
+    def predict(self: Loss, sample: Sample) -> ArrayND:
         """
         Runs the model on the given sample. Usually just model(sample[0]).
 
         Parameters
         ----------
-        sample: Sample = self.training.sample
+        sample: Sample
             Uses the sample to compute the loss on.
 
         Returns
@@ -104,24 +102,7 @@ class Loss(ABC):
         y_pred: ArrayND
             The result of the model on the given sample.
         """
-        if sample is None:
-            sample = self.training.sample
         return self.model(sample[0])
-
-    @property
-    def training(self: Loss) -> Dataset:
-        """Loss training dataset is a view into the underlying batch."""
-        return self.batch.training
-
-    @property
-    def testing(self: Loss) -> Dataset:
-        """Loss testing dataset is a view into the underlying batch."""
-        return self.batch.testing
-
-    @property
-    def validation(self: Loss) -> Dataset:
-        """Loss validation dataset is a view into the underlying batch."""
-        return self.batch.validation
 
     @property
     def derivatives(self: Loss) -> ArrayND:
