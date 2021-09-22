@@ -1,9 +1,11 @@
+"""
+TODO: Documentation.
+"""
 from __future__ import annotations
-from math import sqrt, prod
 import numpy as np
 from typing import Any, Generic, Literal, TypeVar, Union, overload
 from EasyNN.model import Model
-from EasyNN.typing import ArrayLike1D, ArrayLike2D, ArrayLike3D, ArrayLikeND, Array1D, Array2D, Array3D, ArrayND, Shape1D, Shape2D, ShapeND
+from EasyNN.typing import ArrayLike1D, ArrayLike2D, ArrayLike3D, ArrayLikeND, Array1D, Array2D, Array3D, ArrayND, Shape1D, Shape2D, Shade3D, ShapeND
 
 ShapeVar = TypeVar("ShapeVar", bound=ShapeND)
 

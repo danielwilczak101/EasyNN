@@ -44,5 +44,4 @@ class ReLU(Activation):
         ...
 
     def __forward__(self, x):
-        x[x < 0] = 0.0
-        return x
+        return np.maximum(x, 0, out=x)

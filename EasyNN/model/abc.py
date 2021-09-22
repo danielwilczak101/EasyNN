@@ -1,10 +1,9 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from functools import update_wrapper
-from typing import Any, Type, Union
-from EasyNN.typing import Array1D, ArrayND, ArrayLike1D, ArrayLikeND, DimensionSize, ShapeND
+from typing import Any, Type
+from EasyNN.typing import Array1D, ArrayND, ArrayLike1D, ArrayLikeND, ShapeND
 import numpy as np
-import sys
 
 
 class Model(ABC):
@@ -100,7 +99,7 @@ class Model(ABC):
             self._setup_flag = False
 
     @abstractmethod
-    def __backward__(self: Model, dy: ArrayND) -> ArrayLike:
+    def __backward__(self: Model, dy: ArrayND) -> ArrayLikeND:
         """
         Implements the backpropagation after the input has been parsed.
 
@@ -108,12 +107,12 @@ class Model(ABC):
         """
         return self.__backward_batch__(dy)
 
-    def __backward_batch__(self: Model, dy: ArrayND) -> ArrayLike:
+    def __backward_batch__(self: Model, dy: ArrayND) -> ArrayLikeND:
         """Implements the backpropagation for whole batches at a time."""
         raise NotImplementedError
 
     @abstractmethod
-    def __forward__(self: Model, x: ArrayND) -> ArrayLike:
+    def __forward__(self: Model, x: ArrayND) -> ArrayLikeND:
         """
         Implements the feed-forward propagation after the input has been parsed.
 
@@ -121,7 +120,7 @@ class Model(ABC):
         """
         return self.__forward_batch__(x)
 
-    def __forward_batch__(self: Model, x: ArrayND) -> ArrayLike:
+    def __forward_batch__(self: Model, x: ArrayND) -> ArrayLikeND:
         """Implements the feed-forward propagation for whole batches at a time."""
         raise NotImplementedError
 
