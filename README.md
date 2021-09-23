@@ -37,7 +37,7 @@ model(user_image)
 ```
 
 ## Future goals for non known datasets
-```
+```Python
 from EasyNN.model import model
 
 xtrain = "My images"
