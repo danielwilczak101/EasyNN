@@ -15,7 +15,7 @@ show(xtest[1])
 
 model.predictions(xtest[1])
 model.predict(xtest[1])
-``
+```
 
 
 ### Goal code:
