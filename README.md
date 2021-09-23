@@ -35,3 +35,15 @@ model(user_image)
 ## Image Output:
 ```
 ```
+
+## Future goals for non known datasets
+```
+from EasyNN.model import model
+
+xtrain = "My images"
+ytrain = "My labels"
+
+model.dataset = xtrain, ytrain
+
+model(xtrain[0])
+```
