@@ -5,7 +5,20 @@ EasyNN is a python package designed to provide an easy-to-use Neural Network. Th
 
 ## Check out our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
 
-Current example of working code
+### Current working code:
+```Python
+from EasyNN.dataset.mnist import model, dataset, show
+
+trainx, trainy, xtest, ytrain = dataset
+
+show(xtest[1])
+
+model.predictions(xtest[1])
+model.predict(xtest[1])
+``
+
+
+### Goal code:
 ```Python
 from EasyNN.mnist import model, dataset, compare, preprocess 
 
@@ -18,7 +31,7 @@ user_image = preprocess(user_image)
 model(user_image)
 ```
 
-## Ouput:
+### Ouput:
 ```
 
 # Box with 3 images:
@@ -32,11 +45,11 @@ model(user_image)
  
 ```
 
-## Image Output:
+### Image Output:
 ```
 ```
 
-## Future goals for non known datasets
+### Future goals for non known datasets
 ```Python
 from EasyNN.model import model
 
