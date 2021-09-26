@@ -99,7 +99,7 @@ def download_trained_model() ->None:
     not download the pretrained model from github."""
 
     if not exists(model_file[1]):
-        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/trained_model/"  
+        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/trained_models/"  
         print("Downloading "+model_file[0]+"...")
         request.urlretrieve(base_url+model_file[1], model_file[1])
         print("Download complete.")
