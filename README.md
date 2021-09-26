@@ -24,7 +24,7 @@ print(trained_model(user_image))
 
 ### Goal code:
 ```Python
-from EasyNN.mnist import model, dataset, compare, preprocess, trained_model
+from EasyNN.mnist import model, trained_model, dataset, compare, preprocess, show
 
 compare(user_image,dataset)
 model.train(dataset)
