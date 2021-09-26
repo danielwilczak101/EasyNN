@@ -39,7 +39,7 @@ def model(user_image) -> int:
         # Get the data
         x1, y1, x2, y2 = load()
         # Train the model
-        model.train(x1, y1, validation_data=(x2, y2), epochs=100)
+        model.train(x1, y1, validation_data=(x2, y2), epochs=150)
         model.evaluate(x1,y1)
         # If you want to save your model
         model.save_parameters('fashion.model')
