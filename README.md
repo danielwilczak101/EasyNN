@@ -17,7 +17,7 @@ user_image = np.array([0, 0, 0, ... 0, 0, 0, 0, 0, 0, 0])
 # Shows the proper print style for image.
 show(user_image)
 
-# Returns model
+# Returns models predicted label.
 print(trained_model(user_image))
 ```
 
