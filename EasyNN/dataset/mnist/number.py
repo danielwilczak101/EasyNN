@@ -11,19 +11,16 @@ from EasyNN.loss import *
 from EasyNN.accuracy import *
 
 
-def model(user_image):
+def model(user_image) -> int:
+    """Main function that creates the model for the MNIST dataset."""
 
     # Instantiate the Network
     model = Network()
-
     # Add layers
     model.add(Layer_Dense(784, 128))
     model.add(Activation_ReLU())
-
-    #model.add(Layer_Dropout(0.1))
     model.add(Layer_Dense(128, 128))
     model.add(Activation_ReLU())
-
     model.add(Layer_Dense(128, 10))
     model.add(Activation_Softmax())
 
@@ -38,17 +35,17 @@ def model(user_image):
     model.finalize()
 
     # Check model file exists:
-    if exists("mnist.model") == False:
+    if exists("number.model") == False:
         # Get the data
         x1, y1, x2, y2 = load()
         # Train the model
         model.train(x1, y1, validation_data=(x2, y2), epochs=100)
         model.evaluate(x1,y1)
         # If you want to save your model
-        model.save_parameters('mnist.model')
+        model.save_parameters('number.model')
 
     # load the model to make it better.
-    model.load_parameters('mnist.model')
+    model.load_parameters('number.model')
 
     # Label index to label name relation
     number_mnist_labels = {
@@ -80,18 +77,18 @@ def show(user_image:list[int]) -> None:
     np.set_printoptions(linewidth=75)
 
 dataset_files = [
-        ["training_images","train-images-idx3-ubyte.gz"],
-        ["test_images","t10k-images-idx3-ubyte.gz"],
-        ["training_labels","train-labels-idx1-ubyte.gz"],
-        ["test_labels","t10k-labels-idx1-ubyte.gz"]
+        ["training_images","number_train-images-idx3-ubyte.gz"],
+        ["test_images",    "number_t10k-images-idx3-ubyte.gz"],
+        ["training_labels","number_train-labels-idx1-ubyte.gz"],
+        ["test_labels",    "number_t10k-labels-idx1-ubyte.gz"]
 ]
 
-model_file = ['Trained MNIST model','mnist.model']
+model_file = ['Trained MNIST model','number.model']
 
 def download_mnist() -> None:
     """Downloads four of the mnist dataset files used for traininig and testing."""
     
-    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/"
+    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number/data/"
     for name in dataset_files:
         print("Downloading "+name[1]+"...")
         request.urlretrieve(base_url+name[1], name[1])
@@ -102,7 +99,7 @@ def download_trained_model() ->None:
     not download the pretrained model from github."""
 
     if not exists(model_file[1]):
-        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/"  
+        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number/trained_model/"  
         print("Downloading "+model_file[0]+"...")
         request.urlretrieve(base_url+model_file[1], model_file[1])
         print("Download complete.")
