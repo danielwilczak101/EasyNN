@@ -88,7 +88,7 @@ model_file = ['Trained MNIST model','number.model']
 def download_mnist() -> None:
     """Downloads four of the mnist dataset files used for traininig and testing."""
     
-    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number/data/"
+    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/data/"
     for name in dataset_files:
         print("Downloading "+name[1]+"...")
         request.urlretrieve(base_url+name[1], name[1])
@@ -99,7 +99,7 @@ def download_trained_model() ->None:
     not download the pretrained model from github."""
 
     if not exists(model_file[1]):
-        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number/trained_model/"  
+        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/trained_model/"  
         print("Downloading "+model_file[0]+"...")
         request.urlretrieve(base_url+model_file[1], model_file[1])
         print("Download complete.")

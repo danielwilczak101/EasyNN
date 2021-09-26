@@ -1,4 +1,4 @@
-from EasyNN.dataset.mnist.number import trained_model,dataset
+from EasyNN.dataset.mnist.number import trained_model, dataset
 import numpy as np
 
 # Example user image.
