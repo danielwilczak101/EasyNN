@@ -6,21 +6,25 @@ EasyNN is a python package designed to provide an easy-to-use Neural Network. Th
 ## Check out our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
 
 ### Current working code:
+Full code can be found inside of run.py
 ```Python
-from EasyNN.dataset.mnist import model, dataset, show
+from EasyNN.dataset.mnist import trained_model, show
+import numpy as np
 
-trainx, trainy, xtest, ytrain = dataset
+# Example user image.
+user_image = np.array([0, 0, 0, ... 0, 0, 0, 0, 0, 0, 0])
 
-show(xtest[1])
+# Shows the proper print style for image.
+show(user_image)
 
-model.predictions(xtest[1])
-model.predict(xtest[1])
+# Returns model
+print(trained_model(user_image))
 ```
 
 
 ### Goal code:
 ```Python
-from EasyNN.mnist import model, dataset, compare, preprocess 
+from EasyNN.mnist import model, dataset, compare, preprocess, trained_model
 
 compare(user_image,dataset)
 model.train(dataset)
