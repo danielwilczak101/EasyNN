@@ -3,6 +3,7 @@ import pickle
 from os.path import exists
 from urllib import request
 
+from EasyNN.dataset.common import *
 from EasyNN.model.network import *
 from EasyNN.model.layer import *
 from EasyNN.model.activation import *
@@ -10,6 +11,14 @@ from EasyNN.optimizer import *
 from EasyNN.loss import *
 from EasyNN.accuracy import *
 
+dataset_files = [
+        ["training_images","fashion_train-images-idx3-ubyte.gz"],
+        ["test_images",    "fashion_t10k-images-idx3-ubyte.gz"],
+        ["training_labels","fashion_train-labels-idx1-ubyte.gz"],
+        ["test_labels",    "fashion_t10k-labels-idx1-ubyte.gz"]
+]
+
+model_file = ['Trained Fashion MNIST model','fashion.model']
 
 def model(user_image) -> int:
     """Main function that creates the model for the MNIST dataset."""
@@ -69,21 +78,6 @@ def model(user_image) -> int:
     prediction = number_mnist_labels[predictions[0]]
 
     return prediction
-
-def show(user_image:list[int]) -> None:
-    """To show the array data from the dataset with the corret width."""
-    np.set_printoptions(linewidth=114)
-    print(user_image)
-    np.set_printoptions(linewidth=75)
-
-dataset_files = [
-        ["training_images","fashion_train-images-idx3-ubyte.gz"],
-        ["test_images",    "fashion_t10k-images-idx3-ubyte.gz"],
-        ["training_labels","fashion_train-labels-idx1-ubyte.gz"],
-        ["test_labels",    "fashion_t10k-labels-idx1-ubyte.gz"]
-]
-
-model_file = ['Trained Fashion MNIST model','fashion.model']
 
 def download_mnist() -> None:
     """Downloads four of the mnist dataset files used for traininig and testing."""
