@@ -8,7 +8,7 @@ __pycache__/
 
 *.model
 *.gz
-*.pkl
+#*.pkl
 *.DS_Store
 
 # Distribution / packaging

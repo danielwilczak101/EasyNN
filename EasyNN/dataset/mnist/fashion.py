@@ -110,7 +110,7 @@ def save_mnist():
     for name in dataset_files[-2:]:
         with gzip.open(name[1], 'rb') as f:
             mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=8)
-    with open("mnist.pkl", 'wb') as f:
+    with open("fashion.pkl", 'wb') as f:
         pickle.dump(mnist,f)
     print("Save complete.")
 
@@ -124,7 +124,7 @@ def load() -> list[list[int]]:
     """Loads the unpacked pickel data that was saved from converting
      the downloaded byte data."""
 
-    with open("mnist.pkl",'rb') as f:
+    with open("fashion.pkl",'rb') as f:
         mnist = pickle.load(f)
 
     return  mnist["training_images"], \

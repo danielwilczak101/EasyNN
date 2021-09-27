@@ -1,12 +1,13 @@
-from EasyNN.dataset.mnist.number import model, show, dataset
+from EasyNN.dataset.mnist.number import trained_model, dataset, show
 
-x1,y1,x2,y2 = dataset
+# Downloads dataset to computer
+train_data,train_labels,test_data,test_labels = dataset
 
-user_image = x2[4]
+user_image = test_data[0]
 
-show(user_image)
+# Uses the EasyNN train model on an example test image.
+print(trained_model(user_image))
 
-# Returns model
-print(model(user_image))
-
+show(user_image, "image")  # Shows image as matplotlib graph
+show(user_image, "array")  # Shows image as numpy array print out to proper width.
 
