@@ -9,6 +9,7 @@ __pycache__/
 *.model
 *.gz
 *.pkl
+*.DS_Store
 
 # Distribution / packaging
 .Python
