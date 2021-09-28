@@ -2,6 +2,8 @@ import gzip
 import pickle
 from os.path import exists
 from urllib import request
+import matplotlib.pyplot as plt
+import numpy as np
 
 from EasyNN.dataset.common import *
 from EasyNN.model.network import *
@@ -12,13 +14,10 @@ from EasyNN.loss import *
 from EasyNN.accuracy import *
 
 dataset_files = [
-        ["training_images","fashion_train-images-idx3-ubyte.gz"],
-        ["test_images",    "fashion_t10k-images-idx3-ubyte.gz"],
-        ["training_labels","fashion_train-labels-idx1-ubyte.gz"],
-        ["test_labels",    "fashion_t10k-labels-idx1-ubyte.gz"]
+        ["data","cifar-10-python.tar"]
 ]
 
-model_file = ['Trained Fashion MNIST model','fashion.model']
+model_file = ['Trained CIFAR model','cifar.model']
 
 def model(user_image) -> int:
     """Main function that creates the model for the MNIST dataset."""
@@ -26,7 +25,7 @@ def model(user_image) -> int:
     # Instantiate the Network
     model = Network()
     # Add layers
-    model.add(Layer_Dense(784, 128))
+    model.add(Layer_Dense(1024, 128))
     model.add(Activation_ReLU())
     model.add(Layer_Dense(128, 128))
     model.add(Activation_ReLU())
@@ -44,30 +43,30 @@ def model(user_image) -> int:
     model.finalize()
 
     # Check model file exists:
-    if exists("fashion.model") == False:
+    if exists(model_file[1]) == False:
         # Get the data
         x1, y1, x2, y2 = load()
         # Train the model
-        model.train(x1, y1, validation_data=(x2, y2), epochs=150)
+        model.train(x1, y1, validation_data=(x2, y2), epochs=100)
         model.evaluate(x1,y1)
         # If you want to save your model
-        model.save_parameters('fashion.model')
+        model.save_parameters(model_file[1])
 
     # load the model to make it better.
-    model.load_parameters('fashion.model')
+    model.load_parameters(model_file[1])
 
     # Label index to label name relation
-    fashion_mnist_labels = {
-        0 :	'T-shirt/top',
-        1 :	'Trouser',
-        2 :	'Pullover',
-        3 :	'Dress',
-        4 :	'Coat',
-        5 :	'Sandal',
-        6 :	'Shirt',
-        7 :	'Sneaker',
-        8 :	'Bag',
-        9 :	'Ankle boot',
+    cifar_labels = {
+        0: "airplane",
+        1: "automobile",
+        2: "bird",
+        3: "cat",
+        4: "deer",
+        5: "dog",
+        6: "frog",
+        7: "horse",
+        8: "ship",
+        9: "truck"
     }
 
     # Predict on the image
@@ -75,14 +74,12 @@ def model(user_image) -> int:
     # Get prediction instead of confidence levels
     predictions = model.output_layer_activation.predictions(confidences)
     # Get label name from label index
-    prediction = fashion_mnist_labels[predictions[0]]
+    return cifar_labels[predictions[0]]
 
-    return prediction
 
 def download_mnist() -> None:
     """Downloads four of the mnist dataset files used for traininig and testing."""
-    
-    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/data/"
+    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/data/"
     for name in dataset_files:
         print("Downloading "+name[1]+"...")
         request.urlretrieve(base_url+name[1], name[1])
@@ -93,13 +90,12 @@ def download_trained_model() ->None:
     not download the pretrained model from github."""
 
     if not exists(model_file[1]):
-        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/trained_models/"  
+        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/trained_models/"  
         print("Downloading "+model_file[0]+"...")
         request.urlretrieve(base_url+model_file[1], model_file[1])
         print("Download complete.")
 
-
-def save_mnist():
+def save_mnist() -> None:
     """Restrucures the dataset into a more useable dictonary. Saves the
     data to a pickle file to be loaded later."""
 
@@ -110,7 +106,7 @@ def save_mnist():
     for name in dataset_files[-2:]:
         with gzip.open(name[1], 'rb') as f:
             mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=8)
-    with open("fashion.pkl", 'wb') as f:
+    with open("number.pkl", 'wb') as f:
         pickle.dump(mnist,f)
     print("Save complete.")
 
@@ -124,14 +120,11 @@ def load() -> list[list[int]]:
     """Loads the unpacked pickel data that was saved from converting
      the downloaded byte data."""
 
-    with open("fashion.pkl",'rb') as f:
+    with open("number.pkl",'rb') as f:
         mnist = pickle.load(f)
 
-    return  mnist["training_images"], \
-            mnist["training_labels"],\
-            mnist["test_images"], \
-            mnist["test_labels"]
-
+    return  mnist["data"]
+            
 
 def __getattr__(name):
     """Used to give the user more understanding names while loading the features."""
