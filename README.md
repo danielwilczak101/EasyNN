@@ -46,10 +46,10 @@ Save complete.
 ```
 ### Image output
 <p align="center">
-  <img src="https://github.com/danielwilczak101/EasyNN/blob/media/images/number_7_example.png">
+  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/number_7_example.png">
 </p>
 
-### Future goals for non known datasets
+### Future goals for non known datasets:
 ```Python
 from EasyNN.model import model
 
