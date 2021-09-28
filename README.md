@@ -14,7 +14,8 @@ Run python's pip3 to install:
 pip3 install EasyNN
 ```
 
-## Getting started with EasyGA(Basic Example):
+## Getting started with EasyNN(Basic Example):
+To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
 ```Python
 from EasyNN.dataset.mnist.number import trained_model, dataset, show
 
