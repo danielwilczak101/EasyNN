@@ -44,7 +44,7 @@ Download complete.
 Save complete.
 7
 ```
-### Image output
+### Image output:
 <p align="center">
   <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/number_7_example.png">
 </p>
