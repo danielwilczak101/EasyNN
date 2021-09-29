@@ -1,1 +1,1 @@
-Documents tht are required for senior design.
+Documents that are required for senior design.
