@@ -1,3 +1,10 @@
+"""
+from EasyNN.dataset.mnist.number import trained_model, dataset
+
+# Downloads dataset to computer
+train_data,train_labels,test_data,test_labels = dataset
+"""
+
 import gzip
 import pickle
 from os.path import exists
