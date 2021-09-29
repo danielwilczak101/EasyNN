@@ -1,5 +1,6 @@
 """
-from EasyNN.dataset.mnist.number import trained_model, dataset
+# To download the dataset
+from EasyNN.dataset.mnist.number import dataset
 
 # Downloads dataset to computer
 train_data,train_labels,test_data,test_labels = dataset
