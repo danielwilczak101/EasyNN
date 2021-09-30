@@ -14,7 +14,7 @@ from EasyNN.loss import *
 from EasyNN.accuracy import *
 
 dataset_files = [
-        ["data","cifar-10-python.tar"]
+        ["data","cifar-10-python.tar.gz"]
 ]
 
 model_file = ['Trained CIFAR model','cifar.model']
@@ -79,7 +79,7 @@ def model(user_image) -> int:
 
 def download_mnist() -> None:
     """Downloads four of the mnist dataset files used for traininig and testing."""
-    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/data/"
+    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/cifar/data/"
     for name in dataset_files:
         print("Downloading "+name[1]+"...")
         request.urlretrieve(base_url+name[1], name[1])
@@ -102,11 +102,12 @@ def save_mnist() -> None:
     mnist = {}
     for name in dataset_files[:2]:
         with gzip.open(name[1], 'rb') as f:
-            mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=16).reshape(-1,28*28)
+            mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=16).reshape(-1,3072)
     for name in dataset_files[-2:]:
         with gzip.open(name[1], 'rb') as f:
             mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=8)
-    with open("number.pkl", 'wb') as f:
+
+    with open("cifar.pkl", 'wb') as f:
         pickle.dump(mnist,f)
     print("Save complete.")
 
@@ -120,10 +121,11 @@ def load() -> list[list[int]]:
     """Loads the unpacked pickel data that was saved from converting
      the downloaded byte data."""
 
-    with open("number.pkl",'rb') as f:
+    with open("cifar.pkl",'rb') as f:
         mnist = pickle.load(f)
 
     return  mnist["data"]
+        
             
 
 def __getattr__(name):
