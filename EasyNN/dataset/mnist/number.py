@@ -21,15 +21,6 @@ from EasyNN.optimizer import *
 from EasyNN.loss import *
 from EasyNN.accuracy import *
 
-dataset_files = [
-        ["training_images","number_train-images-idx3-ubyte.gz"],
-        ["test_images",    "number_t10k-images-idx3-ubyte.gz"],
-        ["training_labels","number_train-labels-idx1-ubyte.gz"],
-        ["test_labels",    "number_t10k-labels-idx1-ubyte.gz"]
-]
-
-model_file = ['Trained MNIST model','number.model']
-
 def model(user_image) -> int:
     """Main function that creates the model for the MNIST dataset."""
 
@@ -88,71 +79,25 @@ def model(user_image) -> int:
     return number_mnist_labels[predictions[0]]
 
 
-def download_mnist() -> None:
-    """Downloads four of the mnist dataset files used for traininig and testing."""
-    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/data/"
-    for name in dataset_files:
-        print("Downloading "+name[1]+"...")
-        request.urlretrieve(base_url+name[1], name[1])
-    print("Download complete.")
-
-def download_trained_model() ->None:
-    """Used to check if the pretained model is downloaded if 
-    not download the pretrained model from github."""
-
-    if not exists(model_file[1]):
-        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/trained_models/"  
-        print("Downloading "+model_file[0]+"...")
-        request.urlretrieve(base_url+model_file[1], model_file[1])
-        print("Download complete.")
-
-def save_mnist() -> None:
-    """Restrucures the dataset into a more useable dictonary. Saves the
-    data to a pickle file to be loaded later."""
-
-    mnist = {}
-    for name in dataset_files[:2]:
-        with gzip.open(name[1], 'rb') as f:
-            mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=16).reshape(-1,28*28)
-    for name in dataset_files[-2:]:
-        with gzip.open(name[1], 'rb') as f:
-            mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=8)
-    with open("number.pkl", 'wb') as f:
-        pickle.dump(mnist,f)
-    print("Save complete.")
-
-def mnist_download() -> None:
-    """Download data set if it doesnt already exist."""
-    if any(not exists(file[1]) for file in (dataset_files)):
-        download_mnist()
-        save_mnist()
-
-def load() -> list[list[int]]:
-    """Loads the unpacked pickel data that was saved from converting
-     the downloaded byte data."""
-
-    with open("number.pkl",'rb') as f:
-        mnist = pickle.load(f)
-
-    return  mnist["training_images"], \
-            mnist["training_labels"],\
-            mnist["test_images"], \
-            mnist["test_labels"]
-
 def __getattr__(name):
     """Used to give the user more understanding names while loading the features."""
     if name == "model":        
         return model
     if name == "dataset":
-        mnist_download()
-        return load()
+        # Download and return the dataset variables.
+        download(
+            "number.npz",
+            "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/number.npz"
+        )
+        return load("number.npz")
+
     if name == "trained_model":
-        download_trained_model()
+        # Download the model and return the model class to be used.
+        download(
+            "number.model",
+            "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/number.model"
+        )
         return model
         
     raise AttributeError(f"module {__name__} has no attribute {name}")
-
-
-        
-
 
