@@ -56,8 +56,8 @@ def model(user_image) -> int:
 
     # Check model file exists:
     if exists(model_filename) == False:
-        # Get the data
-        x1, y1, x2, y2 = load(model_filename)
+        # Get the dataset
+        x1, y1, x2, y2 = load(data_filename)
         # Train the model
         model.train(x1, y1, validation_data=(x2, y2), epochs=150)
         model.evaluate(x1,y1)
