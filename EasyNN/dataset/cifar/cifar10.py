@@ -2,8 +2,6 @@ import gzip
 import pickle
 from os.path import exists
 from urllib import request
-import matplotlib.pyplot as plt
-import numpy as np
 
 from EasyNN.dataset.common import *
 from EasyNN.model.network import *
@@ -13,24 +11,24 @@ from EasyNN.optimizer import *
 from EasyNN.loss import *
 from EasyNN.accuracy import *
 
-model_filename = "number.model"
-model_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.model"
+model_filename = "cifar10.model"
+model_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/cifar/cifar10.model"
 
-data_filename = "number.npz"
-data_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.npz"
+data_filename = "cifar10.npz"
+data_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/cifar/cifar10.npz"
 
-# Label index -> Label name
+# Label index to label name relation
 dataset_labels = {
-    0: 0,
-    1: 1,
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9
+    0: "airplane",
+    1: "automobile",
+    2: "bird",
+    3: "cat",
+    4: "deer",
+    5: "dog",
+    6: "frog",
+    7: "horse",
+    8: "ship",
+    9: "truck"
 }
 
 def model(user_image) -> int:
@@ -39,17 +37,17 @@ def model(user_image) -> int:
     # Instantiate the Network
     model = Network()
     # Add layers
-    model.add(Layer_Dense(784, 128))
+    model.add(Layer_Dense(3072, 256))
     model.add(Activation_ReLU())
-    model.add(Layer_Dense(128, 128))
+    model.add(Layer_Dense(256, 256))
     model.add(Activation_ReLU())
-    model.add(Layer_Dense(128, 10))
+    model.add(Layer_Dense(256, 10))
     model.add(Activation_Softmax())
 
     # Set loss, optimizer and accuracy objects
     model.set(
         loss=Loss_CategoricalCrossentropy(),
-        optimizer=Optimizer_Adam(decay=1e-3),
+        optimizer=Optimizer_Adam(decay=1e-6),
         accuracy=Accuracy_Categorical()
     )
 
@@ -58,7 +56,7 @@ def model(user_image) -> int:
 
     # Check model file exists:
     if exists(model_filename) == False:
-        # Get the data
+        # Get the dataset
         x1, y1, x2, y2 = load(data_filename)
         # Train the model
         model.train(x1, y1, validation_data=(x2, y2), epochs=100)
@@ -73,7 +71,9 @@ def model(user_image) -> int:
     # Get prediction instead of confidence levels
     predictions = model.output_layer_activation.predictions(confidences)
     # Get label name from label index
-    return dataset_labels[predictions[0]]
+    prediction = dataset_labels[predictions[0]]
+
+    return prediction
 
 
 def __getattr__(name):
@@ -83,18 +83,21 @@ def __getattr__(name):
     if name == "dataset":
         # Download and return the dataset variables.
         download(
-            "number.npz",
-            "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/number.npz"
+            data_filename,
+            data_url
         )
-        return load("number.npz")
+        return load(data_filename)
 
     if name == "trained_model":
         # Download the model and return the model class to be used.
         download(
-            "number.model",
-            "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/number_/number.model"
+            model_filename,
+            model_url
         )
         return model
         
     raise AttributeError(f"module {__name__} has no attribute {name}")
+
+        
+
 

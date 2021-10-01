@@ -18,7 +18,7 @@ data_filename = "fashion.npz"
 data_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.npz"
 
 # Label index -> Label name
-fashion_mnist_labels = {
+dataset_labels = {
     0 :	'T-shirt/top',
     1 :	'Trouser',
     2 :	'Pullover',
@@ -71,7 +71,7 @@ def model(user_image) -> int:
     # Get prediction instead of confidence levels
     predictions = model.output_layer_activation.predictions(confidences)
     # Get label name from label index
-    prediction = fashion_mnist_labels[predictions[0]]
+    prediction = dataset_labels[predictions[0]]
 
     return prediction
 
