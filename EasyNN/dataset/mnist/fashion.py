@@ -11,14 +11,25 @@ from EasyNN.optimizer import *
 from EasyNN.loss import *
 from EasyNN.accuracy import *
 
-dataset_files = [
-        ["training_images","fashion_train-images-idx3-ubyte.gz"],
-        ["test_images",    "fashion_t10k-images-idx3-ubyte.gz"],
-        ["training_labels","fashion_train-labels-idx1-ubyte.gz"],
-        ["test_labels",    "fashion_t10k-labels-idx1-ubyte.gz"]
-]
+model_filename = "fashion.model"
+model_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.model"
 
-model_file = ['Trained Fashion MNIST model','fashion.model']
+data_filename = "fashion.npz"
+data_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.npz"
+
+# Label index -> Label name
+fashion_mnist_labels = {
+    0 :	'T-shirt/top',
+    1 :	'Trouser',
+    2 :	'Pullover',
+    3 :	'Dress',
+    4 :	'Coat',
+    5 :	'Sandal',
+    6 :	'Shirt',
+    7 :	'Sneaker',
+    8 :	'Bag',
+    9 :	'Ankle boot',
+}
 
 def model(user_image) -> int:
     """Main function that creates the model for the MNIST dataset."""
@@ -44,32 +55,17 @@ def model(user_image) -> int:
     model.finalize()
 
     # Check model file exists:
-    if exists("fashion.model") == False:
+    if exists(model_filename) == False:
         # Get the data
-        x1, y1, x2, y2 = load()
+        x1, y1, x2, y2 = load(model_filename)
         # Train the model
         model.train(x1, y1, validation_data=(x2, y2), epochs=150)
         model.evaluate(x1,y1)
         # If you want to save your model
-        model.save_parameters('fashion.model')
+        model.save_parameters(model_filename)
 
     # load the model to make it better.
-    model.load_parameters('fashion.model')
-
-    # Label index to label name relation
-    fashion_mnist_labels = {
-        0 :	'T-shirt/top',
-        1 :	'Trouser',
-        2 :	'Pullover',
-        3 :	'Dress',
-        4 :	'Coat',
-        5 :	'Sandal',
-        6 :	'Shirt',
-        7 :	'Sneaker',
-        8 :	'Bag',
-        9 :	'Ankle boot',
-    }
-
+    model.load_parameters(model_filename)
     # Predict on the image
     confidences = model.predict(user_image)
     # Get prediction instead of confidence levels
@@ -79,73 +75,28 @@ def model(user_image) -> int:
 
     return prediction
 
-def download_mnist() -> None:
-    """Downloads four of the mnist dataset files used for traininig and testing."""
-    
-    base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/data/"
-    for name in dataset_files:
-        print("Downloading "+name[1]+"...")
-        request.urlretrieve(base_url+name[1], name[1])
-    print("Download complete.")
-
-def download_trained_model() ->None:
-    """Used to check if the pretained model is downloaded if 
-    not download the pretrained model from github."""
-
-    if not exists(model_file[1]):
-        base_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/trained_models/"  
-        print("Downloading "+model_file[0]+"...")
-        request.urlretrieve(base_url+model_file[1], model_file[1])
-        print("Download complete.")
-
-
-def save_mnist():
-    """Restrucures the dataset into a more useable dictonary. Saves the
-    data to a pickle file to be loaded later."""
-
-    mnist = {}
-    for name in dataset_files[:2]:
-        with gzip.open(name[1], 'rb') as f:
-            mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=16).reshape(-1,28*28)
-    for name in dataset_files[-2:]:
-        with gzip.open(name[1], 'rb') as f:
-            mnist[name[0]] = np.frombuffer(f.read(), np.uint8, offset=8)
-    with open("fashion.pkl", 'wb') as f:
-        pickle.dump(mnist,f)
-    print("Save complete.")
-
-def mnist_download() -> None:
-    """Download data set if it doesnt already exist."""
-    if any(not exists(file[1]) for file in (dataset_files)):
-        download_mnist()
-        save_mnist()
-
-def load() -> list[list[int]]:
-    """Loads the unpacked pickel data that was saved from converting
-     the downloaded byte data."""
-
-    with open("fashion.pkl",'rb') as f:
-        mnist = pickle.load(f)
-
-    return  mnist["training_images"], \
-            mnist["training_labels"],\
-            mnist["test_images"], \
-            mnist["test_labels"]
-
 
 def __getattr__(name):
     """Used to give the user more understanding names while loading the features."""
     if name == "model":        
         return model
     if name == "dataset":
-        mnist_download()
-        return load()
+        # Download and return the dataset variables.
+        download(
+            data_filename,
+            data_url
+        )
+        return load(data_filename)
+
     if name == "trained_model":
-        download_trained_model()
+        # Download the model and return the model class to be used.
+        download(
+            model_filename,
+            model_url
+        )
         return model
         
     raise AttributeError(f"module {__name__} has no attribute {name}")
-
 
         
 

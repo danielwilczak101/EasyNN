@@ -21,6 +21,26 @@ from EasyNN.optimizer import *
 from EasyNN.loss import *
 from EasyNN.accuracy import *
 
+model_filename = "number.model"
+model_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.model"
+
+data_filename = "number.npz"
+data_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.npz"
+
+# Label index -> Label name
+number_mnist_labels = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9
+}
+
 def model(user_image) -> int:
     """Main function that creates the model for the MNIST dataset."""
 
@@ -45,32 +65,17 @@ def model(user_image) -> int:
     model.finalize()
 
     # Check model file exists:
-    if exists("number.model") == False:
+    if exists(model_filename) == False:
         # Get the data
-        x1, y1, x2, y2 = load()
+        x1, y1, x2, y2 = load(data_filename)
         # Train the model
         model.train(x1, y1, validation_data=(x2, y2), epochs=100)
         model.evaluate(x1,y1)
         # If you want to save your model
-        model.save_parameters('number.model')
+        model.save_parameters(model_filename)
 
     # load the model to make it better.
-    model.load_parameters('number.model')
-
-    # Label index to label name relation
-    number_mnist_labels = {
-        0: 0,
-        1: 1,
-        2: 2,
-        3: 3,
-        4: 4,
-        5: 5,
-        6: 6,
-        7: 7,
-        8: 8,
-        9: 9
-    }
-
+    model.load_parameters(model_filename)
     # Predict on the image
     confidences = model.predict(user_image)
     # Get prediction instead of confidence levels

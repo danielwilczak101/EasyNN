@@ -86,7 +86,7 @@ def load(file_path: str):
             return  data['train_data'], \
                     data['train_labels'],\
                     data['test_data'],\
-                    data['test_label']
+                    data['test_labels']
     except FileNotFoundError:
         print("File doesnt exist or you haven't downloaded the dataset yet.")
 
