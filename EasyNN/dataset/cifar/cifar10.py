@@ -47,7 +47,7 @@ def model(user_image) -> int:
     # Set loss, optimizer and accuracy objects
     model.set(
         loss=Loss_CategoricalCrossentropy(),
-        optimizer=Optimizer_Adam(decay=1e-6),
+        optimizer=Optimizer_Adam(decay=1e-3),
         accuracy=Accuracy_Categorical()
     )
 
@@ -57,9 +57,9 @@ def model(user_image) -> int:
     # Check model file exists:
     if exists(model_filename) == False:
         # Get the dataset
-        x1, y1, x2, y2 = load(data_filename)
+        y1, x1, x2, y2 = load(data_filename)
         # Train the model
-        model.train(x1, y1, validation_data=(x2, y2), epochs=100)
+        model.train(x1, y1, validation_data=(x2, y2), epochs=10000)
         model.evaluate(x1,y1)
         # If you want to save your model
         model.save_parameters(model_filename)
