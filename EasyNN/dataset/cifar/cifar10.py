@@ -1,5 +1,3 @@
-import gzip
-import pickle
 from os.path import exists
 from urllib import request
 
