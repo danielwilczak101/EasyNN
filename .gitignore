@@ -5,9 +5,13 @@ __pycache__/
 
 # C extensions
 *.so
-#*.model
+
+# To prevent accidental upload of model/dataset files
+*.model
 *.gz
-#*.pkl
+*.pkl
+
+# Mac related
 *.DS_Store
 
 # Distribution / packaging
