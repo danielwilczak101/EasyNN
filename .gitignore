@@ -10,7 +10,7 @@ __pycache__/
 *.model
 *.gz
 *.pkl
-
+*.npz
 # Mac related
 *.DS_Store
 

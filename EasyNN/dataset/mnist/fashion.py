@@ -75,6 +75,61 @@ def model(user_image) -> int:
 
     return prediction
 
+def preprocess(image_path:str, rotate: int = 0) -> list[int]:
+    """Used for taking in a user image and preprocessing 
+    it to look similar to the 28x28  dataset image.
+
+    TODO:
+    Args:
+        image_path: The file path where the image can be found.
+        rotate: If the image needs to be rotated by a multiple of 90.
+            rotate = 1 -> rotate image 90 degrees
+            rotate = 3 -> rotate image 270 degrees
+    
+    Returns:
+        An image that has been preprocessed and is of array shape [1,784].
+
+    Raises:
+        If the file doesnt exist then tell the user you cant find the image.
+     """
+
+    # We opened the image and converted to grey scale
+    user_img = Image.open(image_path).convert('L')
+    # We inverted the color to look like our dataset images
+    user_img = ImageOps.invert(user_img)
+    # Resized the large image so it's shape is like our dataset and rotate using k
+    user_img = np.rot90(np.array(user_img.resize([28, 28])), k=rotate)
+    # Filtered out all the grey noise in our image using the mean value
+    user_img = np.where(user_img < np.mean(user_img),0,user_img)
+    # Reshape so its like the dataset image
+    return user_img.reshape((1,784))
+
+
+def show(user_image:list[int], image_type: str = None) -> None:
+    """Show the image as either array data or a matplotlib image.
+    
+    Args:
+        user_image: Users image or image from dataset.
+        image_type: Tells whether to show the image as an image or print out.
+            image: Show as matplotlib image. (default use.)
+            array: Show as numpy formated array print out.
+
+    Returns:
+        Either an matplotlib graphed image or numpy print of the image pixel values.
+
+    TODO:
+        Rasises:
+            Check to make sure the image is the correct size of either [28,28] or [1,784] 
+    """
+
+    if image_type is None or image_type == "image":
+        # Should check if the image is [28,28] or [1,784] 
+        plt.imshow(user_image.reshape((28, 28)), cmap='gray')
+        plt.show()
+    elif image_type == "array":
+        np.set_printoptions(linewidth=114)
+        print(user_image)
+        np.set_printoptions(linewidth=75)
 
 def __getattr__(name):
     """Used to give the user more understanding names while loading the features."""
