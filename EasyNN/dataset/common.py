@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
+import matplotlib.image as mping
 import numpy as np
+from EasyNN.dataset.mnist.number import  dataset, trained_model
 
+from PIL import Image, ImageOps
 from urllib import request
 from os.path import exists
 
@@ -20,6 +23,46 @@ def preprocess(image_path:str) -> list[int]:
     Raises:
         If the file doesnt exist then tell the user you cant find the image.
      """
+
+    # We opened the image and converted to grey scale
+    user_img = Image.open("four.jpg").convert('L')
+    # We inverted the color to look like our dataset images
+    user_img = ImageOps.invert(user_img)
+    # Resized the large image so it's shape is like our dataset
+    user_img = np.rot90(np.array(user_img.resize([28, 28])), k=3)
+
+
+    # Filtered out all the grey noise in our image
+    user_img = np.where(user_img < 150,0,user_img)
+
+    #refine ^^
+
+
+
+
+
+    # We reshaped to fit the input of the NN and fed it through the model
+    print(trained_model(user_img.reshape((1,784))))
+
+    # Show the array data and actual plotted image.
+    show(user_img, "array")  
+    show(user_img, "image")
+
+    #Class variables
+    opt_size = [28, 28]
+
+    #Check image and saves as variable
+    try:
+        user_img = Image.open(image_path)
+    except IOError:
+        pass
+
+    #Checks to see if image is correct size, and if not, shrinks it down to the correct size
+    if user_img.size[0] == opt_size[0] & user_img.size[1] == opt_size[1]:
+        print('Image is already 28 x 28')
+    else:
+        processed_img = user_img.resize([28, 28])
+
     pass
 
 def show(user_image:list[int], image_type: str = None) -> None:
