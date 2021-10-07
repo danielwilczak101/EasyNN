@@ -1,11 +1,18 @@
-from EasyNN.dataset.mnist.number import  dataset, preprocess, show
-import numpy as np
-from PIL import Image, ImageOps
+from EasyNN.dataset.mnist.fashion import trained_model
+from EasyNN.preprocess.image import Image
 
 # Downloads dataset to computer
-train_data,train_labels,test_data,test_labels = dataset
+train_data,train_labels,test_data,test_labels = trained_model.dataset
 
-user_img = np.array(Image.open("three.jpg").convert('L'))
+# RGB
+#image = Image("ship.png").format(resize=[32,32],flatten='F',rotate=1)
 
-show(user_img)
+# Grayscale
+image = Image("three.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
 
+# Show the image
+trained_model.show(image)
+
+print(trained_model.classify(image))
+
+# compare("three.jpg",train_data[0])

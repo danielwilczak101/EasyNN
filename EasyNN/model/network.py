@@ -22,6 +22,13 @@ class Network:
     def add(self, layer):
         self.layers.append(layer)
 
+    def classify(self, user_image):
+        # Predict on the image
+        confidences = self.predict(user_image)
+        # Get prediction instead of confidence levels
+        predictions = self.output_layer_activation.predictions(confidences)
+        # Get label name from label index
+        return self.labels[predictions[0]]
 
     # Set loss, optimizer and accuracy
     def set(self, *, loss=None, optimizer=None, accuracy=None):

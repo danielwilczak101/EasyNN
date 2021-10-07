@@ -6,6 +6,38 @@ from os.path import exists
 
 # Used for common functions that are used across multiple model files.
 
+def make_model(model, model_filename, data_filename, data_url,epochs):
+    """Used for training a skelition NN."""
+    
+    # Download the dataset and setup for model.
+    if not exists(data_filename):
+        download(data_filename, data_url)
+
+    model.dataset = load(data_filename)
+    x1, y1, x2, y2 = model.dataset
+    # Train the model
+    model.train(x1, y1, validation_data=(x2, y2), epochs=epochs)
+    model.evaluate(x2,y2)
+    # If you want to save your model
+    model.save_parameters(model_filename)
+    model.load_parameters(model_filename)
+
+    return model
+
+
+def make_trained_model(model, model_filename, model_url,data_filename,data_url):
+    """Used for creating the trained model."""
+
+    if not exists(model_filename):
+        download(model_filename, model_url)
+    if not exists(data_filename):
+        download(data_filename, data_url)
+    
+    model.dataset = load(data_filename)
+    model.load_parameters(model_filename)
+
+    return model
+
 def download(file_name: str,url: str) -> None:
     """Used for downloading dataset files to be used in the models.
 
