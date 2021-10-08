@@ -64,9 +64,9 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             # At the start of optimization, compile the model.
             self.on_optimization_start(lambda: self(self.training[0][0]))
             # At the start of each callback, get the next batch sample from the datasets.
-            self.callbacks["on_training_start"].append(lambda: next(self.training))
-            self.callbacks["on_testing_start"].append(lambda: next(self.testing))
-            self.callbacks["on_validation_start"].append(lambda: next(self.validation))
+            self.on_training_start(lambda: next(self.training))
+            self.on_testing_start(lambda: next(self.testing))
+            self.on_validation_start(lambda: next(self.validation))
         return self._callbacks
 
     @property
