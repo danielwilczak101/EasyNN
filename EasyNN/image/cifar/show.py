@@ -1,5 +1,5 @@
+import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib as plt
 
 # Establish show and data.
 def show(image):
