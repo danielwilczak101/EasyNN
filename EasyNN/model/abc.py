@@ -215,8 +215,8 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             raise ValueError("requires len(model.training.data) >= 10 to train the model")
         # Apply the batches to each dataset.
         self.training.batch = self.batch
-        self.testing.batch = MiniBatch(1024)
-        self.validation.batch = MiniBatch(128)
+        self.testing.batch = MiniBatch(len(self.testing))
+        self.validation.batch = MiniBatch(256)
         # Shuffle the training dataset.
         self.training.data = self.training[np.random.permutation(len(self.training))]
         # Steal 15% of the testing data from the training data if necessary.
