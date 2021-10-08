@@ -61,6 +61,8 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         """Stores the callback commands."""
         if not hasattr(self, "_callbacks"):
             self._callbacks = defaultdict(list)
+            # At the start of optimization, compile the model.
+            self.on_optimization_start(lambda: self(self.training[0][0]))
             # At the start of each callback, get the next batch sample from the datasets.
             self.callbacks["on_training_start"].append(lambda: next(self.training))
             self.callbacks["on_testing_start"].append(lambda: next(self.testing))
