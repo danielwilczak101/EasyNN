@@ -5,8 +5,8 @@ from EasyNN.dataset.load import load
 
 model_filename = "fashion.model"
 data_filename = "fashion.npz"
-model_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.model"
-data_url = "https://github.com/danielwilczak101/EasyNN/raw/main/EasyNN/dataset/mnist/fashion_/fashion.npz"
+model_url = "#"
+data_url = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/fashion/fashion.npz"
 labels = {
     0 :	'T-shirt/top',
     1 :	'Trouser',
