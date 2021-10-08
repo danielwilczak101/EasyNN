@@ -18,9 +18,7 @@ def load(file_path: str):
     
     try:
         with np.load(file_path) as data:
-            return  data['train_data'], \
-                    data['train_labels'],\
-                    data['test_data'],\
-                    data['test_labels']
+            return  data['x'], \
+                    data['y']
     except FileNotFoundError:
         print("File doesnt exist or you haven't downloaded the dataset yet.")

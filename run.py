@@ -5,8 +5,7 @@ from EasyNN.dataset.mnist.fashion import dataset
 model = Network(128, ReLU, 128, ReLU, 10, LogSoftMax)
 
 # Assign it some training/testing data.
-model.training.data = dataset[:2]
-model.testing.data = dataset[2:]
+model.training.data = dataset
 
 # Reduce the default learning rate.
 model.optimizer.lr /= 3
