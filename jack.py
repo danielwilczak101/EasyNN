@@ -1,5 +1,5 @@
 from EasyNN.model import Network, ReLU, LogSoftMax
-from EasyNN.dataset.mnist.fashion import dataset
+from EasyNN.dataset.cifar import dataset
 import numpy as np
 
 # Create the mnist model.
