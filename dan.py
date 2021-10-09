@@ -1,6 +1,8 @@
 
 from EasyNN.model import Network, ReLU, LogSoftMax
 from EasyNN.dataset.mnist.number import dataset, labels
+from EasyNN.image.image import Image
+from EasyNN.image.mnist.show import show
 import numpy as np
 
 # Create the mnist model.
@@ -9,6 +11,7 @@ model = Network(128, ReLU, 128, ReLU, 10, LogSoftMax)
 # Assign it some training/testing data.
 model.training.data = dataset
 model.labels = labels
+model.show = show
 
 # Reduce the default learning rate.
 model.optimizer.lr /= 3
@@ -24,7 +27,7 @@ def callback():
 @model.on_training_end
 def callback():
     # Terminate after 10000 iterations.
-    model.stop_training |= model.training.iteration >= 10000 - 1
+    model.stop_training |= model.training.iteration >= 2000 - 1
 
 #=============================#
 # Data augmentation examples: #
@@ -71,6 +74,7 @@ def callback():
     model.validation.sample = normalize(*model.validation.sample)
     print(f"  {model.loss(*model.training.sample)     = }")
     print(f"    {model.loss(*model.validation.sample) = }")
+    print(f'Validation Accuracy: {model.accuracy(*normalize(model.validation.data[0],model.validation.data[1]))}')
 
 # Noramlize other inputs, but don't update the mean and variance.
 @model.on_testing_start
@@ -78,9 +82,10 @@ def callback():
     model.training.sample = normalize(*model.training.sample)
     model.validation.sample = normalize(*model.validation.sample)
     model.testing.sample = normalize(*model.testing.sample)
-    print(f"  {model.loss(*model.training.sample)     = }")
-    print(f"    {model.loss(*model.validation.sample) = }")
-    print(f"      {model.loss(*model.testing.sample)  = }")
+    #print(f"  {model.loss(*model.training.sample)     = }")
+    #print(f"    {model.loss(*model.validation.sample) = }")
+    #print(f"      {model.loss(*model.testing.sample)  = }")
+    print(f'Model Accuracy: {model.accuracy(*normalize(model.training.data[0],model.training.data[1]))}')
 
 #----------------------------#
 # Apply noise to the inputs: #
@@ -97,10 +102,10 @@ def callback():
 # Train the model.
 model.train()
 
-image = dataset[0][0]
-label = dataset[1][0]
+
+
+image = Image("EasyNN/dataset/mnist/number/images/four.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
 
 print(model.labels[model.classify(image)])
-print(model.labels[label])
 
-print(f'Accuracy: {model.accuracy(dataset[0][:100],dataset[1][:100])}')
+model.show(image)
