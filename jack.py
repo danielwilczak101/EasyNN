@@ -1,5 +1,6 @@
 from EasyNN.model import Network, ReLU, LogSoftMax
 from EasyNN.dataset.cifar import dataset
+import matplotlib.pyplot as plt
 import numpy as np
 from time import sleep
 
@@ -66,35 +67,19 @@ def callback():
     model.variance -= model.anti_momentum * (model.variance - (x ** 2).mean(axis=0))
     model.training.sample = rescale(x, y)
 
-# Noramlize other inputs, but don't update the mean and variance.
 @model.on_validation_start
 def callback():
-    model.training.sample = normalize(*model.training.sample)
     model.validation.sample = normalize(*model.validation.sample)
-    print(f"  {model.loss(*model.training.sample)     = }")
-    print(f"    {model.loss(*model.validation.sample) = }")
 
-@model.on_validation_start
-def callback():
-    print("You have 10 seconds to use `[control] + C` to pause the program...")
-    print("If you do, use `cont` to continue running or `quit()` to stop.")
-    sleep(10)
-
-# Noramlize other inputs, but don't update the mean and variance.
 @model.on_testing_start
 def callback():
-    model.training.sample = normalize(*model.training.sample)
-    model.validation.sample = normalize(*model.validation.sample)
     model.testing.sample = normalize(*model.testing.sample)
-    print(f"  {model.loss(*model.training.sample)     = }")
-    print(f"    {model.loss(*model.validation.sample) = }")
-    print(f"      {model.loss(*model.testing.sample)  = }")
 
 #----------------------------#
 # Apply noise to the inputs: #
 #----------------------------#
 
-model.noise = 1e-4
+model.noise = 1e-1
 
 @model.on_training_start
 def callback():
@@ -103,6 +88,47 @@ def callback():
     x, y = model.training.sample
     x = x + np.random.normal(scale=scale, size=x.shape)
     model.training.sample = (x, y)
+
+#------------------#
+# Collect results: #
+#------------------#
+
+@model.on_validation_start
+def callback():
+    print(f"  {model.loss(*model.training.sample)     = }")
+    print(f"    {model.loss(*model.validation.sample) = }")
+
+# Uncomment the following line to enable editing as the model trains:
+#@model.on_validation_start
+def callback():
+    print("You have 10 seconds to use `[control] + C` to pause the program...")
+    print("If you do, use `cont` to continue running or `quit()` to stop.")
+    sleep(10)
+
+@model.on_testing_start
+def callback():
+    print(f"  {model.loss(*model.training.sample)     = }")
+    print(f"    {model.loss(*model.validation.sample) = }")
+    print(f"      {model.loss(*model.testing.sample)  = }")
+
+model.validation_losses = []
+model.validation_smooth = []
+model.validation_average = 0.0
+model.validation_weight = 0.0
+
+@model.on_validation_start
+def callback():
+    model.validation_losses.append(model.loss(*model.validation.sample))
+    model.validation_weight -= model.anti_momentum * (model.validation_weight - 1)
+    model.validation_average -= model.anti_momentum * (model.validation_average - model.validation_losses[-1])
+    model.validation_smooth.append(model.validation_average / model.validation_weight)
+
+@model.on_testing_start
+def callback():
+    plt.plot(model.validation_losses)
+    plt.plot(model.validation_smooth)
+    plt.title("validation / iteration")
+    plt.show()
 
 # Train the model.
 model.train()
