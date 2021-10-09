@@ -1,6 +1,10 @@
 from EasyNN.model import Network, ReLU, LogSoftMax
 from EasyNN.dataset.cifar import dataset
 import numpy as np
+from time import sleep
+
+print("Type `cont` to start:")
+breakpoint()
 
 # Create the cifar model.
 model = Network(256, ReLU, 64, ReLU, 10, LogSoftMax)
@@ -69,6 +73,12 @@ def callback():
     model.validation.sample = normalize(*model.validation.sample)
     print(f"  {model.loss(*model.training.sample)     = }")
     print(f"    {model.loss(*model.validation.sample) = }")
+
+@model.on_validation_start
+def callback():
+    print("You have 10 seconds to use `[control] + C` to pause the program...")
+    print("If you do, use `cont` to continue running or `quit()` to stop.")
+    sleep(10)
 
 # Noramlize other inputs, but don't update the mean and variance.
 @model.on_testing_start
