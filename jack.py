@@ -43,16 +43,14 @@ model.mean = 0.0
 model.variance = 1e-3
 model.weight = 0.0
 
-def recenter(x, y):
-    x = x - model.mean / model.weight
-    return x, y
+def recenter(x):
+    return x - model.mean / model.weight
 
 def rescale(x, y):
-    x /= np.sqrt(model.variance / model.weight)
-    return x, y
+    return x * np.sqrt(model.weight / model.variance)
 
-def normalize(x, y):
-    return rescale(*recenter(x, y))
+def normalize(x):
+    return rescale(recenter(x))
 
 # Update the mean and variance when training.
 @model.on_training_start
@@ -62,18 +60,18 @@ def callback():
     model.weight -= model.anti_momentum * (model.weight - 1)
     # Recenter the training input.
     model.mean -= model.anti_momentum * (model.mean - x.mean(axis=0))
-    x, y = recenter(x, y)
+    x = recenter(x)
     # Rescale the training input.
     model.variance -= model.anti_momentum * (model.variance - (x ** 2).mean(axis=0))
-    model.training.sample = rescale(x, y)
+    model.training.sample = rescale(x), y
 
 @model.on_validation_start
 def callback():
-    model.validation.sample = normalize(*model.validation.sample)
+    model.validation.sample = normalize(model.validation.sample[0]), model.validation.sample[1]
 
 @model.on_testing_start
 def callback():
-    model.testing.sample = normalize(*model.testing.sample)
+    model.testing.sample = normalize(model.testing.sample[0]), model.testing.sample[1]
 
 #----------------------------#
 # Apply noise to the inputs: #
