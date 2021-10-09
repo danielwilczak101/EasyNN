@@ -1,8 +1,8 @@
 
 from EasyNN.model import Network, ReLU, LogSoftMax
 from EasyNN.dataset.mnist.number import dataset, labels
-from EasyNN.image.image import Image
-from EasyNN.image.mnist.show import show
+from EasyNN.utilities.image.image import Image
+from EasyNN.utilities.image.mnist.show import show
 from EasyNN.utilities.parameters.save import save
 from EasyNN.utilities.parameters.load import load
 

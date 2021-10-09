@@ -1,7 +1,7 @@
-from EasyNN.image.image import Image
+from EasyNN.utilities.image.image import Image
 import numpy as np
-from EasyNN.image.mnist.show import show as mnist_show
-from EasyNN.image.cifar.show import show as cifar_show
+from EasyNN.utilities.image.mnist.show import show as mnist_show
+from EasyNN.utilities.image.cifar.show import show as cifar_show
 
 # RGB
 image = Image("EasyNN/dataset/cifar/images/ship.png").format(resize=[32,32],flatten='F',rotate=1)
