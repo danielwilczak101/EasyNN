@@ -16,6 +16,7 @@ from EasyNN.loss.abc import Loss
 from EasyNN.loss.mean_square_error import MeanSquareError
 from EasyNN.optimizer.abc import Optimizer
 from EasyNN.optimizer.gradient_descent import GradientDescent
+from EasyNN.classifier.classifier import Classifier
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
 
 T = TypeVar("T")
@@ -54,6 +55,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _default_batch: Factory[Batch] = MiniBatch
     _default_loss: Factory[Loss[ArrayIn, ArrayOut]] = MeanSquareError
     _default_optimizer: Factory[Optimizer] = GradientDescent
+    _default_classifier: Factory[Classifier] = Classifier
     stop_training: bool = False
 
     @property

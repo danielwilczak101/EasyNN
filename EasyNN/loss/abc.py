@@ -5,7 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any
 from EasyNN._abc import AutoDocumentation
-# TODO: from EasyNN.classifier.abc import Classifier
+from EasyNN.classifier.classifier import Classifier
 from EasyNN.typing import ArrayND, Factory
 import EasyNN.model.abc
 
@@ -30,7 +30,7 @@ class Loss(AutoDocumentation, ABC):
     >>> model.backward(model.loss.dy(*batch.sample))
     """
     model: EasyNN.model.abc.Model
-    _default_classifier: Factory[Classifier]  # TODO: Make default classifier.
+    _default_classifier: Factory[Classifier] = Classifier
 
     @abstractmethod
     def __call__(self: Loss, x: Array1D, y: Array1D) -> float:

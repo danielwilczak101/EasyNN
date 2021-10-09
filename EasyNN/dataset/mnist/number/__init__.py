@@ -6,7 +6,7 @@ from EasyNN.dataset.load import load
 model_filename = "number.model"
 data_filename  = "number.npz"
 model_url = "#"
-data_url  = "hhttps://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
+data_url  = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
 
 labels = {
     0: 0,
