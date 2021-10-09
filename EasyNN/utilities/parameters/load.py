@@ -17,6 +17,7 @@ def load(file_path: str):
     """
 
     try:
-        np.load(file_path)
+        print(f"{file_path} parameters loaded.")
+        return np.load(file_path)
     except FileNotFoundError:
         print("File doesnt exist or you haven't downloaded the model yet.")

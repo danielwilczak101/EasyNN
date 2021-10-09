@@ -21,3 +21,4 @@ def save(parameters:Array1D, file_name :str):
     
     with open(file_name, 'wb') as f:
         np.save(f, parameters)
+    print("Parameters saved.")
