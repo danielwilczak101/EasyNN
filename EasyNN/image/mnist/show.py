@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image, ImageOps
 
 def show(user_image: list[list[int]], image_type: str = None) -> None:
     """Show mnist 28 by 28 images as either array data or a matplotlib image.

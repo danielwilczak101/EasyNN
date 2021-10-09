@@ -61,10 +61,12 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         """Stores the callback commands."""
         if not hasattr(self, "_callbacks"):
             self._callbacks = defaultdict(list)
+            # At the start of optimization, compile the model.
+            self.on_optimization_start(lambda: self(self.training[0][0]))
             # At the start of each callback, get the next batch sample from the datasets.
-            self.callbacks["on_training_start"].append(lambda: next(self.training))
-            self.callbacks["on_testing_start"].append(lambda: next(self.testing))
-            self.callbacks["on_validation_start"].append(lambda: next(self.validation))
+            self.on_training_start(lambda: next(self.training))
+            self.on_testing_start(lambda: next(self.testing))
+            self.on_validation_start(lambda: next(self.validation))
         return self._callbacks
 
     @property
@@ -213,10 +215,6 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             raise ValueError("requires model.training.data to be set to train the model")
         elif len(self.training) < 10:
             raise ValueError("requires len(model.training.data) >= 10 to train the model")
-        # Apply the batches to each dataset.
-        self.training.batch = self.batch
-        self.testing.batch = MiniBatch(1024)
-        self.validation.batch = MiniBatch(128)
         # Shuffle the training dataset.
         self.training.data = self.training[np.random.permutation(len(self.training))]
         # Steal 15% of the testing data from the training data if necessary.
@@ -227,6 +225,10 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         if not hasattr(self.validation, "data"):
             self.validation.data = self.training[:int(len(self.training) * 0.15)]
             self.training.data = self.training[int(len(self.training) * 0.15):]
+        # Apply the batches to each dataset.
+        self.training.batch = self.batch
+        self.testing.batch = MiniBatch(len(self.testing))
+        self.validation.batch = MiniBatch(256)
 
     def fit(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
         """

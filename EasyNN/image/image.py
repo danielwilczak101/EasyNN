@@ -1,5 +1,5 @@
 import numpy as np
-import PIL
+from PIL import ImageOps,Image as pil_image
 
 class Image:
     """Used for preprocessing images to a specific look.
@@ -11,7 +11,7 @@ class Image:
     def __init__(self, image_path: str):
         try: 
             # We opened the image
-            self.image = PIL.Image.open(image_path)
+            self.image = pil_image.open(image_path)
         except FileNotFoundError:
             raise FileNotFoundError(f"{image_path} not found.") from None
 
@@ -47,7 +47,7 @@ class Image:
             self.image = self.image.convert('L')
         if invert:
             # Inverted the color to look like our dataset images.
-            self.image = PIL.ImageOps.invert(self.image)
+            self.image = ImageOps.invert(self.image)
         if resize:
             # Resize the iamge.
             self.image = self.image.resize(resize)
@@ -55,7 +55,7 @@ class Image:
         # Convert to numpy array and not an image.
         self.image = np.array(self.image)
         
-        if rotate is not 0:
+        if rotate:
             # Transofrm the image into a numpy array and apply rotation if needed.
             self.image = np.rot90(self.image, k=rotate)
         if process:
