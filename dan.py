@@ -3,15 +3,22 @@ from EasyNN.model import Network, ReLU, LogSoftMax
 from EasyNN.dataset.mnist.number import dataset, labels
 from EasyNN.image.image import Image
 from EasyNN.image.mnist.show import show
+from EasyNN.utilities.parameters.save import save
+from EasyNN.utilities.parameters.load import load
+
 import numpy as np
 
 # Create the mnist model.
 model = Network(128, ReLU, 128, ReLU, 10, LogSoftMax)
 
 # Assign it some training/testing data.
+# Assign it some training/testing data.
 model.training.data = dataset
 model.labels = labels
 model.show = show
+model.save = save
+#print(np.shape(load("number_parameters.npy")))
+model.save = save
 
 # Reduce the default learning rate.
 model.optimizer.lr /= 3
@@ -27,7 +34,7 @@ def callback():
 @model.on_training_end
 def callback():
     # Terminate after 10000 iterations.
-    model.stop_training |= model.training.iteration >= 2000 - 1
+    model.stop_training |= model.training.iteration >= 500 - 1
 
 #=============================#
 # Data augmentation examples: #
@@ -102,10 +109,10 @@ def callback():
 # Train the model.
 model.train()
 
+#model.save(,model.parameters)
 
+#image = Image("EasyNN/dataset/mnist/number/images/four.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
 
-image = Image("EasyNN/dataset/mnist/number/images/four.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
+#print(model.labels[model.classify(image)])
 
-print(model.labels[model.classify(image)])
-
-model.show(image)
+#model.show(image)

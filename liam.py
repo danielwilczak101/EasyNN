@@ -9,7 +9,7 @@ image = Image("EasyNN/dataset/cifar/images/ship.png").format(resize=[32,32],flat
 cifar_show(image)
 
 # Grayscale
-image = Image("EasyNN/dataset/mnist/number/images/three.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
+image = Image("EasyNN/dataset/mnist/number/images/four.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
 
 mnist_show(image)
 

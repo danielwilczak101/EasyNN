@@ -7,14 +7,17 @@ def load(file_path: str):
         file_path: Path to file to be loaded.
         
     Returns:
-        train_data: Training data used to train models.
-        train_model: Training data labels.
-        test_data: Testing data to find out how accurate the model is.
-        test_labels: Testing data labels.
-    
-    Raises:
-        FileNotFoundError:
-            Suggest them to run the download first."""
+        x: Data used to train models.
+        y: Dataset labels.
+
+   Example:
+        >>> data,labels = load("model/mnist.npz")
+        >>> # Print first dataset example and first label
+        >>> print(data[0])
+        >>> print(label[0])
+        [0 200 ... 15  0]
+        5
+    """
     
     try:
         with np.load(file_path) as data:

@@ -1,7 +1,8 @@
 import numpy as np
 
-from EasyNN.dataset.download import download
-from EasyNN.dataset.load import load
+from EasyNN.utilities.download import download
+from EasyNN.utilities.data.load import load as load_data
+from EasyNN.utilities.parameters.load import load as load_model
 
 model_filename = "fashion.model"
 data_filename = "fashion.npz"
@@ -24,7 +25,7 @@ def __getattr__(name):
     """Used to give the user more understanding names while loading the features."""
     if name == "dataset":
         download(data_filename,data_url)
-        return load(data_filename)
+        return load_data(data_filename)
     if name == "labels":
         return labels
     raise AttributeError(f"module {__name__} has no attribute {name}")
