@@ -84,10 +84,12 @@ def callback():
 # Apply noise to the inputs: #
 #----------------------------#
 
+model.noise = 1e-4
+
 @model.on_training_start
 def callback():
     # Apply data augmentation by adding noise to the training samples.
-    scale = 0.001 / (1 + 1e-2 * model.training.iteration) ** 0.3
+    scale = model.noise / (1 + 1e-2 * model.training.iteration) ** 0.3
     x, y = model.training.sample
     x = x + np.random.normal(scale=scale, size=x.shape)
     model.training.sample = (x, y)
