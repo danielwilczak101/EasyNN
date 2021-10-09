@@ -6,8 +6,11 @@ ArrayOut = TypeVar("ArrayOut")
 LabelType = TypeVar("LabelType")
 
 
-class Classify:
-    """Used for giving users the ability to tell accuracy and classify images."""
+class Classifier:
+    """Used for giving users the ability to tell model accuracy using
+     validation data from the dataset. It also and classify images using
+      the predictions and labels."""
+
     labels: list[LabelType]
     
     def accuracy(self, y_pred: ArrayOut, y: ArrayOut)-> float:
@@ -24,20 +27,13 @@ class Classify:
             0.92
         """
 
-        # Take in validation dataset -> x,y
+        correct = 0
 
-            # For loop throw validation data
-                # probabilities = model(x)
-                # if argmax(probabilities) == y
-                    # +1 correct
-        # (correct / len(validation data)) 
-
-        # sparse y = [3, 6, 0, 2, 4]
-        # dense y  = [[0, 0, 0, 1, 0, 0, 0], ...]
-
-
-        #if y_pred.ndim == y.ndim:
-        pass
+        for predictions,label in zip(y_pred,y):
+            if np.argmax(predictions) == label:
+                correct += 1
+        
+        return correct / len(y_pred)
 
         
 
@@ -46,6 +42,6 @@ class Classify:
         Takes the labels and prediction from the model and 
         
         """
-        pass
+        return np.argmax(y_pred)
 
         
