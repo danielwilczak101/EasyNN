@@ -2,14 +2,14 @@ from EasyNN.model import Network, ReLU, LogSoftMax
 from EasyNN.dataset.cifar import dataset
 import numpy as np
 
-# Create the mnist model.
-model = Network(128, ReLU, 128, ReLU, 10, LogSoftMax)
+# Create the cifar model.
+model = Network(256, ReLU, 64, ReLU, 10, LogSoftMax)
 
 # Assign it some training/testing data.
 model.training.data = dataset
 
-# Reduce the default learning rate.
-model.optimizer.lr /= 3
+# Increase the default learning rate.
+model.optimizer.lr *= 3
 
 #===================#
 # Create callbacks: #
