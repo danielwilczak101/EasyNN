@@ -43,6 +43,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     TODO: documentation.
     """
     _callbacks: dict[Command, list[Callback]]
+    _command: Command
     _derivatives: Array1D
     _parameters: Array1D
     _x: ArrayIn
@@ -70,6 +71,19 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             self.on_testing_start(lambda: next(self.testing))
             self.on_validation_start(lambda: next(self.validation))
         return self._callbacks
+
+    @property
+    def command(self: Model[ArrayIn, ArrayOut]) -> Command:
+        """Stores the current command being run."""
+        return self._command
+
+    @command.setter
+    def command(self: Model[ArrayIn, ArrayOut], command: Command) -> None:
+        if len(self.layers) == 1:
+            self._command = command
+            return
+        for layer in self.layers:
+            layer.command = command
 
     @property
     def layers(self: Model[ArrayIn, ArrayOut]) -> tuple[Model, ...]:
@@ -230,7 +244,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         # Apply the batches to each dataset.
         self.training.batch = self.batch
         self.testing.batch = MiniBatch(len(self.testing))
-        self.validation.batch = MiniBatch(256)
+        self.validation.batch = MiniBatch(64)
 
     def fit(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
         """
@@ -362,11 +376,11 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         # Prepare the datasets before optimizing.
         self.prepare_datasets()
         # Run all of the commands.
-        for command in self._optimizer_commands():
+        for self.command in self._optimizer_commands():
             # Run all of the callbacks.
-            for callback in self.callbacks[command]:
+            for callback in self.callbacks[self.command]:
                 callback()
-            yield command
+            yield self.command
 
     def accuracy(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> float:
         """Returns the classification accuracy of the data."""
