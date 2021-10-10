@@ -38,7 +38,7 @@ def callback():
 #-----------------------#
 
 # Keep track of the training mean and variance.
-model.anti_momentum = 0.001
+model.anti_momentum = 0.03
 model.mean = 0.0
 model.variance = 1e-3
 model.weight = 0.0
