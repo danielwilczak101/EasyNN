@@ -83,6 +83,14 @@ class Network(Model[ArrayIn, ArrayOut], Generic[ArrayIn, ArrayOut]):
 
     @_parameters.setter
     def _parameters(self: Network[ArrayIn, ArrayOut], parameters: Array1D) -> None:
+        if not all(hasattr(layer, "parameters") for layer in self.layers):
+            raise AttributeError(
+                f"'{type(self).__name__}' object has no attribute 'parameters' because a layer did not setup its parameters,\n"
+                f"give the model some data to set itself up.\n"
+                f"Example:\n"
+                f">>> model(np.empty(28 * 28))     # Setting the input size."
+                f">>> model(model.training[0][0])  # Using the training dataset."
+            )
         self.__parameters = parameters
         i = 0
         for layer in self.layers:
