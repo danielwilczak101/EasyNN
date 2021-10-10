@@ -79,8 +79,8 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
 
     @command.setter
     def command(self: Model[ArrayIn, ArrayOut], command: Command) -> None:
-        if len(self.layers) == 1:
-            self._command = command
+        self._command = command
+        if self.layers[0] is self:
             return
         for layer in self.layers:
             layer.command = command
