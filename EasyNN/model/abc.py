@@ -43,7 +43,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     TODO: documentation.
     """
     _callbacks: dict[Command, list[Callback]]
-    _command: Command
+    _command: Command = "off"
     _derivatives: Array1D
     _parameters: Array1D
     _x: ArrayIn
@@ -381,6 +381,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             for callback in self.callbacks[self.command]:
                 callback()
             yield self.command
+        self.command = "off"
 
     def accuracy(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> float:
         """Returns the classification accuracy of the data."""

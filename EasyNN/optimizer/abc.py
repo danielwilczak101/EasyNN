@@ -43,7 +43,7 @@ class Optimizer(AutoDocumentation, ABC):
         # Setup the model commands.
         for model in models:
             # Add on the optimizer commands.
-            for command in get_args(Command):
+            for command in set(get_args(Command)) - {"off"}:
                 model.callback(command)(partial(getattr(self, command), model))
             # Begin running model commands.
             model.commands = model.optimizer_commands()
