@@ -11,32 +11,18 @@ import numpy as np
 model = Network(128, ReLU, 128, ReLU, 10, LogSoftMax)
 
 # Assign it some training/testing data.
-# Assign it some training/testing data.
 model.training.data = dataset
 model.labels = labels
 model.show = show
-model.parameters = load("number_parameters.npy")
 
-#-----------------------#
-# Normalize the inputs: #
-#-----------------------#
 
-# Keep track of the training mean and variance.
-model.anti_momentum = 0.001
-model.mean = 0.0
-model.variance = 1e-3
-model.weight = 0.0
+model(model.training[0][0])
+model.parameters = load("mnist_paramaters.npy")
+model.validation.data = dataset
+print(f'Validation Accuracy: {model.accuracy(model.validation.data[0],model.validation.data[1])}')
 
-def recenter(x, y):
-    x = x - model.mean / model.weight
-    return x, y
+image = Image("EasyNN/dataset/mnist/number/images/four.jpg").format(grayscale=True,invert=True,process=True,contrast=30,resize=[28,28],rotate=3)
 
-def rescale(x, y):
-    x /= np.sqrt(model.variance / model.weight)
-    return x, y
+print(model.classify(image))
 
-def normalize(x, y):
-    return rescale(*recenter(x, y))
-
-print(f'Validation Accuracy: {model.accuracy(*normalize(model.validation.data[0],model.validation.data[1]))}')
-
+model.show(image)

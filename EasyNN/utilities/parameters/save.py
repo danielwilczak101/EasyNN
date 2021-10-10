@@ -6,8 +6,8 @@ def save(parameters:Array1D, file_name :str):
     """Used for saving model parameters that can been downloaded/used later.
     
     Args:
-        file_name: Name file is to be saved under.
         parameters: Numpy array with shape [1,N] filled with model parameters.
+        file_name: Name file is to be saved under.
         
     Returns:
         A file saved with the paramaters with the name specified in file_name.
