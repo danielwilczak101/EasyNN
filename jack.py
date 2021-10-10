@@ -6,6 +6,7 @@ from time import sleep
 
 print("Type `cont` to start:")
 breakpoint()
+prompt = "Type `cont` to start:"
 
 # Create the cifar model.
 model = Network(256, ReLU, 64, ReLU, 10, LogSoftMax)
@@ -38,7 +39,7 @@ def callback():
 #-----------------------#
 
 # Keep track of the training mean and variance.
-model.anti_momentum = 0.001
+model.anti_momentum = 0.03
 model.mean = 0.0
 model.variance = 1e-3
 model.weight = 0.0
@@ -46,7 +47,7 @@ model.weight = 0.0
 def recenter(x):
     return x - model.mean / model.weight
 
-def rescale(x, y):
+def rescale(x):
     return x * np.sqrt(model.weight / model.variance)
 
 def normalize(x):
@@ -77,12 +78,12 @@ def callback():
 # Apply noise to the inputs: #
 #----------------------------#
 
-model.noise = 1e-1
+model.noise = 3e-1
 
 @model.on_training_start
 def callback():
     # Apply data augmentation by adding noise to the training samples.
-    scale = model.noise / (1 + 1e-2 * model.training.iteration) ** 0.3
+    scale = model.noise / (1 + 1e-2 * model.training.iteration) ** 0.2
     x, y = model.training.sample
     x = x + np.random.normal(scale=scale, size=x.shape)
     model.training.sample = (x, y)
@@ -130,3 +131,8 @@ def callback():
 
 # Train the model.
 model.train()
+
+print("Any future things you might want to check out at the end of the program?")
+print("Type 'cont' to finish the program.")
+breakpoint()
+prompt = "Type 'cont' to finish the program."
