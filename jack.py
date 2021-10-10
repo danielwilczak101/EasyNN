@@ -6,6 +6,7 @@ from time import sleep
 
 print("Type `cont` to start:")
 breakpoint()
+prompt = "Type `cont` to start:"
 
 # Create the cifar model.
 model = Network(256, ReLU, 64, ReLU, 10, LogSoftMax)
@@ -130,3 +131,8 @@ def callback():
 
 # Train the model.
 model.train()
+
+print("Any future things you might want to check out at the end of the program?")
+print("Type 'cont' to finish the program.")
+breakpoint()
+prompt = "Type 'cont' to finish the program."
