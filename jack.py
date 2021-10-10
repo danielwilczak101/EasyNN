@@ -46,7 +46,7 @@ model.weight = 0.0
 def recenter(x):
     return x - model.mean / model.weight
 
-def rescale(x, y):
+def rescale(x):
     return x * np.sqrt(model.weight / model.variance)
 
 def normalize(x):
