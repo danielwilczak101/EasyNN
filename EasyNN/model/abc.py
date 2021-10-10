@@ -244,7 +244,11 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         # Apply the batches to each dataset.
         self.training.batch = self.batch
         self.testing.batch = MiniBatch(len(self.testing))
-        self.validation.batch = MiniBatch(64)
+        self.validation.batch = MiniBatch(128)
+        for layer in self.layers:
+            layer._training = self.training
+            layer._testing = self.testing
+            layer._validation = self.validation
 
     def fit(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
         """

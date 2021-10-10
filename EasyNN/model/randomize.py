@@ -18,7 +18,8 @@ class Randomize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
 
     def __forward__(self: Randomize[ArrayShape], x: ArrayShape) -> ArrayShape:
         if self.command.startswith("on_training_"):
-            return x + np.random.normal(scale=self.noise, size=x.shape)
+            scale = self.noise / (1 + 1e-2 * self.training.iteration) ** 0.2
+            return x + np.random.normal(scale=scale, size=x.shape)
         return x
 
     def __backward__(self: Randomize[ArrayShape], dy: ArrayShape, y: ArrayShape = None, use_y: bool = False) -> ArrayShape:
