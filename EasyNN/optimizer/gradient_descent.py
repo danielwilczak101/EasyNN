@@ -10,5 +10,4 @@ class GradientDescent(Optimizer):
     """Gradient Descent uses parameters -= lr * derivatives."""
 
     def on_training_start(self: GradientDescent, model: EasyNN.model.abc.Model) -> None:
-        model.sample_derivatives(*model.training.sample)
-        model.parameters -= self.lr / (1 + 1e-2 * model.training.iteration) ** 0.3 * model.derivatives
+        model.parameters -= model._optimizer_lr / (1 + 1e-2 * model.training.iteration) ** 0.3 * self.get_derivatives(model)
