@@ -46,7 +46,7 @@ def callback():
     model.validation_smooth.append(model.validation_average / model.validation_weight)
 
 @model.on_testing_start
-def callback():
+def plot_validation():
     plt.plot(model.validation_losses)
     plt.plot(model.validation_smooth)
     plt.title("validation / iteration")
@@ -54,10 +54,10 @@ def callback():
 
 @model.on_validation_start
 def callback():
-    print("You have 3 seconds to use `[control] + C` to pause the program...")
+    print("You have 1.5 seconds to use `[control] + C` to pause the program...")
     print("If you do, use `cont` to continue running or `quit()` to stop.")
     print("Use this to set `model.stop_training = True` to stop training.")
-    sleep(3)
+    sleep(1.5)
 
 print("Type `cont` to start:")
 breakpoint()
