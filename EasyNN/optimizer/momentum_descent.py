@@ -21,6 +21,6 @@ class MomentumDescent(GradientDescent):
         super().setup(model)
         model._derivative_momentum = Momentum(self._momentum_lr)
 
-    def get_derivatives(self: Optimizer, model: EasyNN.model.abc.Model) -> Array1D[float]:
+    def get_derivatives(self: MomentumDescent, model: EasyNN.model.abc.Model) -> Array1D[float]:
         """Computes the derivatives for the optimizer."""
         return model._derivative_momentum.update(super().get_derivatives(model))
