@@ -5,7 +5,7 @@ import numpy as np
 from time import sleep
 
 # Create the cifar model.
-model = Network(Normalize(3e-3), Randomize(0.2), 256, ReLU, Randomize(0.01), 128, ReLU, Randomize(0.003), 10, LogSoftMax)
+model = Network(Normalize(3e-3), Randomize(0.4), 256, ReLU, Randomize(0.01), 128, ReLU, Randomize(0.003), 10, LogSoftMax)
 
 # Assign it some training/testing data.
 model.training.data = dataset

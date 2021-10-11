@@ -15,7 +15,7 @@ from EasyNN.batch.mini import MiniBatch
 from EasyNN.loss.abc import Loss
 from EasyNN.loss.mean_square_error import MeanSquareError
 from EasyNN.optimizer.abc import Optimizer
-from EasyNN.optimizer.momentum_descent import MomentumDescent
+from EasyNN.optimizer.adam import Adam
 from EasyNN.classifier.classifier import Classifier
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
 
@@ -55,7 +55,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _optimizer: Optimizer
     _default_batch: Factory[Batch] = MiniBatch
     _default_loss: Factory[Loss[ArrayIn, ArrayOut]] = MeanSquareError
-    _default_optimizer: Factory[Optimizer] = MomentumDescent
+    _default_optimizer: Factory[Optimizer] = Adam
     _default_classifier: Factory[Classifier] = Classifier
     stop_training: bool = False
 
