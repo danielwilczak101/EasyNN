@@ -10,9 +10,6 @@ model = Network(Normalize(3e-3), Randomize(0.2), 256, ReLU, Randomize(0.01), 128
 # Assign it some training/testing data.
 model.training.data = dataset
 
-# Increase the default learning rate.
-model.optimizer.lr *= 2
-
 #===================#
 # Create callbacks: #
 #===================#
