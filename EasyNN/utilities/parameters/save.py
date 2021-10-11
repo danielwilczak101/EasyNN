@@ -7,7 +7,7 @@ def save(parameters:Array1D, file_name :str):
     
     Args:
         parameters: Numpy array with shape [1,N] filled with model parameters.
-        file_name: Name file is to be saved under.
+        file_name: File name is to be saved under.
         
     Returns:
         A file saved with the paramaters with the name specified in file_name.
@@ -15,8 +15,8 @@ def save(parameters:Array1D, file_name :str):
     Example:
         >>>
         >>> 
-        >>> save(model.parameters, "mnist_paramaters.npz")
-        Parameters saved to file named mnist_paramaters.npz
+        >>> save(model.parameters, "mnist_paramaters.npy")
+        Parameters saved to file named mnist_paramaters.npy
     """
     
     with open(file_name, 'wb') as f:
