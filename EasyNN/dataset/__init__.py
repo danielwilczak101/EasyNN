@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import Generic, IO, Iterator, NoReturn, TypeVar, Union
+from EasyNN.utilities.download import download
+from EasyNN.utilities.data.load import load
 from EasyNN.typing import ArrayND
 
 ArrayIn = TypeVar("ArrayIn", bound=ArrayND)
@@ -64,8 +66,16 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         The dataset's data. If the data is not found, this first checks
         for a file storing the data, then a url to load the data from.
         """
-        # TODO: Dan implementation for using the file and url.
-        return self._data
+        if hasattr(self, "_data"):
+            return self._data
+        else:
+            try:
+                return load(self.file)
+            except FileNotFoundError:
+                download(self.file,self.url)
+                return load(self.file)
+            except:
+                print("Dataset was not set from variable, file or url. Please set one with model.training.data,file or url.")
 
     @data.setter
     def data(self: Dataset[ArrayIn, ArrayOut], data: tuple[ArrayIn, ArrayOut]) -> None:
