@@ -15,7 +15,7 @@ from EasyNN.batch.mini import MiniBatch
 from EasyNN.loss.abc import Loss
 from EasyNN.loss.mean_square_error import MeanSquareError
 from EasyNN.optimizer.abc import Optimizer
-from EasyNN.optimizer.gradient_descent import GradientDescent
+from EasyNN.optimizer.adam import Adam
 from EasyNN.classifier.classifier import Classifier
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
 
@@ -43,6 +43,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     TODO: documentation.
     """
     _callbacks: dict[Command, list[Callback]]
+    _command: Command = "off"
     _derivatives: Array1D
     _parameters: Array1D
     _x: ArrayIn
@@ -54,7 +55,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _optimizer: Optimizer
     _default_batch: Factory[Batch] = MiniBatch
     _default_loss: Factory[Loss[ArrayIn, ArrayOut]] = MeanSquareError
-    _default_optimizer: Factory[Optimizer] = GradientDescent
+    _default_optimizer: Factory[Optimizer] = Adam
     _default_classifier: Factory[Classifier] = Classifier
     stop_training: bool = False
 
@@ -64,12 +65,25 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         if not hasattr(self, "_callbacks"):
             self._callbacks = defaultdict(list)
             # At the start of optimization, compile the model.
-            self.on_optimization_start(lambda: self(self.training[0][0]))
+            self.on_optimization_start(lambda model: model(model.training[0][0]))
             # At the start of each callback, get the next batch sample from the datasets.
-            self.on_training_start(lambda: next(self.training))
-            self.on_testing_start(lambda: next(self.testing))
-            self.on_validation_start(lambda: next(self.validation))
+            self.on_training_start(lambda model: next(model.training))
+            self.on_testing_start(lambda model: next(model.testing))
+            self.on_validation_start(lambda model: next(model.validation))
         return self._callbacks
+
+    @property
+    def command(self: Model[ArrayIn, ArrayOut]) -> Command:
+        """Stores the current command being run."""
+        return self._command
+
+    @command.setter
+    def command(self: Model[ArrayIn, ArrayOut], command: Command) -> None:
+        self._command = command
+        if self.layers[0] is self:
+            return
+        for layer in self.layers:
+            layer.command = command
 
     @property
     def layers(self: Model[ArrayIn, ArrayOut]) -> tuple[Model, ...]:
@@ -231,6 +245,10 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         self.training.batch = self.batch
         self.testing.batch = MiniBatch(len(self.testing))
         self.validation.batch = MiniBatch(256)
+        for layer in self.layers:
+            layer._training = self.training
+            layer._testing = self.testing
+            layer._validation = self.validation
 
     def fit(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
         """
@@ -300,11 +318,6 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         self.callbacks["on_epoch_start"].append(cb)
         return cb
 
-    def on_training_end(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
-        """Shortcut for model.callback('on_training_end')."""
-        self.callbacks["on_training_end"].append(cb)
-        return cb
-
     def training_validation_commands(self: Model[ArrayIn, ArrayOut]) -> Iterator[Command]:
         """Generates the training/validation commands in an even manner."""
         # Set commands = (step, "start"), (step, "end"), (2 * step, "start"), (2 * step, "end"), ...
@@ -362,11 +375,12 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         # Prepare the datasets before optimizing.
         self.prepare_datasets()
         # Run all of the commands.
-        for command in self._optimizer_commands():
+        for self.command in self._optimizer_commands():
             # Run all of the callbacks.
-            for callback in self.callbacks[command]:
-                callback()
-            yield command
+            for callback in self.callbacks[self.command]:
+                callback(self)
+            yield self.command
+        self.command = "off"
 
     def accuracy(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> float:
         """Returns the classification accuracy of the data."""

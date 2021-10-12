@@ -20,6 +20,7 @@ Sample = tuple[ArrayND, ...]
 
 Callback = Callable[[], Any]
 Command = Literal[
+    "off",
     "on_optimization_start",
     "on_optimization_end",
     "on_training_start",

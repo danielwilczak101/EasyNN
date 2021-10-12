@@ -3,11 +3,10 @@ TODO: Not complete.
 """
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from functools import partial
 from itertools import count, cycle
 from typing import get_args
 from EasyNN._abc import AutoDocumentation
-from EasyNN.typing import Command
+from EasyNN.typing import Array1D, Command
 import EasyNN.model.abc
 
 
@@ -42,16 +41,34 @@ class Optimizer(AutoDocumentation, ABC):
             models = tuple(self.models.values())
         # Setup the model commands.
         for model in models:
-            # Add on the optimizer commands.
-            for command in get_args(Command):
-                model.callback(command)(partial(getattr(self, command), model))
-            # Begin running model commands.
-            model.commands = model.optimizer_commands()
+            self.setup(model)
         # Cycle through each model.
         for model in cycle(models):
             # Run the next command for the model and stop if there are no more.
             if next(model.commands, None) is None:
                 return models
+
+    def setup(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
+        """Setup a model."""
+        # Assign learning rates.
+        model._optimizer_lr = self.lr
+        # Add on the optimizer commands.
+        for command in set(get_args(Command)) - {"off"}:
+            model.callback(command)(getattr(self, command))
+        # Begin running model commands.
+        model.commands = model.optimizer_commands()
+
+    def get_derivatives(self: Optimizer, model: EasyNN.model.abc.Model) -> Array1D[float]:
+        """Computes the derivatives for the optimizer."""
+        # Use the testing/validation samples.
+        if model.command.startswith("on_testing"):
+            model.sample_derivatives(*model.testing.sample)
+        elif model.command.startswith("on_validation"):
+            model.sample_derivatives(*model.validation.sample)
+        # Use the training sample by default.
+        else:
+            model.sample_derivatives(*model.training.sample)
+        return model.derivatives
 
     def on_optimization_start(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
         """Ran at the start of optimization."""
