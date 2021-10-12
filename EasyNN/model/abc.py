@@ -16,7 +16,7 @@ from EasyNN.loss.abc import Loss
 from EasyNN.loss.mean_square_error import MeanSquareError
 from EasyNN.optimizer.abc import Optimizer
 from EasyNN.optimizer.adam import Adam
-from EasyNN.classifier.classifier import Classifier
+from EasyNN.classifier.classifier import Classifier, LabelType
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
 
 T = TypeVar("T")
@@ -53,6 +53,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _validation: Dataset[ArrayIn, ArrayOut]
     _classifier: Classifier[T]
     _optimizer: Optimizer
+    _labels: LabelType
     _default_batch: Factory[Batch] = MiniBatch
     _default_loss: Factory[Loss[ArrayIn, ArrayOut]] = MeanSquareError
     _default_optimizer: Factory[Optimizer] = Adam

@@ -19,9 +19,6 @@ def load(file_path: str):
         5
     """
     
-    try:
-        with np.load(file_path) as data:
-            return  data['x'], \
-                    data['y']
-    except FileNotFoundError:
-        print("File doesnt exist or you haven't downloaded the dataset yet.")
+    with np.load(file_path) as data:
+        return  data['x'], \
+                data['y']
