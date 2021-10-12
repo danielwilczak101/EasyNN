@@ -11,7 +11,7 @@ class Normalize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
     """Normalizes the input based on the training data."""
     __lr: float
     _mean: ArrayIn = 0.0
-    _variance: ArrayIn = 0.0
+    _variance: ArrayIn = 1e-4
     _weight: float = 0.0
     _parameters: ArrayND = np.empty(0, dtype=float)
     _derivatives: ArrayND = np.empty(0, dtype=float)
