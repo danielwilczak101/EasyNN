@@ -392,10 +392,17 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             yield self.command
         self.command = "off"
 
-    def accuracy(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> float:
+    def accuracy(self: Model[ArrayIn, ArrayOut], x: ArrayIn=None, y: ArrayOut=None) -> float:
         """Returns the classification accuracy of the data."""
-        return self.classifier.accuracy(self(x), y)
-
+        # If the user doesnt specify the dataset. We will try to give it them using the training data
+        try:
+            return self.classifier.accuracy(self(x), y)
+        except:
+            return self.classifier.accuracy(self(self.training.data[0]), self.training.data[1])
+        else:
+            print("Could not load training data to calculate accuracy data.")
+            raise
+            
     def classify(self: Model[ArrayIn, ArrayOut], x: ArrayIn) -> T:
         """Returns the classification of the input data."""
         return self.classifier.classify(self(x), self.labels)

@@ -16,5 +16,4 @@ def load(file_path: str):
         [-0.03679278 0.07100084 ... -0.00449589  -0.00858782]
     """
 
-    print(f"{file_path} parameters loaded.")
     return np.load(file_path)
