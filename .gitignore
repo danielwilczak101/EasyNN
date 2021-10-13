@@ -13,6 +13,8 @@ __pycache__/
 *.npz
 # Mac related
 *.DS_Store
+*.jpg
+*.png
 
 # Distribution / packaging
 .Python
