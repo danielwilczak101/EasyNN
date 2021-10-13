@@ -61,7 +61,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     stop_training: bool = False
 
     @property
-    def callbacks(self: Model[ArrayIn, ArrayOut]) -> dict[Command, list[Callback]]:
+    def callbacks(self) -> dict[Command, list[Callback]]:
         """Stores the callback commands."""
         if not hasattr(self, "_callbacks"):
             self._callbacks = defaultdict(list)
@@ -74,12 +74,12 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         return self._callbacks
 
     @property
-    def command(self: Model[ArrayIn, ArrayOut]) -> Command:
+    def command(self) -> Command:
         """Stores the current command being run."""
         return self._command
 
     @command.setter
-    def command(self: Model[ArrayIn, ArrayOut], command: Command) -> None:
+    def command(self, command: Command) -> None:
         self._command = command
         if self.layers[0] is self:
             return
@@ -87,132 +87,132 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             layer.command = command
 
     @property
-    def layers(self: Model[ArrayIn, ArrayOut]) -> tuple[Model, ...]:
+    def layers(self) -> tuple[Model, ...]:
         """Returns the layers of the model."""
         # By default only one layer. Networks and DenseLayers should override this property.
         return (self,)
 
     @property
-    def derivatives(self: Model[ArrayIn, ArrayOut]) -> Array1D:
+    def derivatives(self) -> Array1D:
         """Model derivatives are a 1D array used to store parameter derivatives during model.backward(dy)."""
         return self._derivatives
 
     @derivatives.setter
-    def derivatives(self: Model[ArrayIn, ArrayOut], derivatives: Array1D) -> None:
+    def derivatives(self, derivatives: Array1D) -> None:
         if hasattr(self, "derivatives"):
             self._derivatives[...] = np.reshape(derivatives, -1)
         else:
             self._derivatives = np.asarray(derivatives, dtype=float).reshape(-1)
 
     @property
-    def parameters(self: Model[ArrayIn, ArrayOut]) -> Array1D:
+    def parameters(self) -> Array1D:
         """Model parameter values are a 1D array which can be modified to change the model."""
         return self._parameters
 
     @parameters.setter
-    def parameters(self: Model[ArrayIn, ArrayOut], parameters: Array1D) -> None:
+    def parameters(self, parameters: Array1D) -> None:
         if hasattr(self, "parameters"):
             self._parameters[...] = np.reshape(parameters, -1)
         else:
             self._parameters = np.asarray(parameters, dtype=float).reshape(-1)
 
     @property
-    def batch(self: Model[ArrayIn, ArrayOut]) -> Batch:
+    def batch(self) -> Batch:
         """Used to generate samples from the dataset."""
         if not hasattr(self, "_batch"):
             self.batch = self._default_batch()
         return self._batch
 
     @batch.setter
-    def batch(self: Model[ArrayIn, ArrayOut], batch: Batch) -> None:
+    def batch(self, batch: Batch) -> None:
         self._batch = batch
 
     @property
-    def classifier(self: Model[ArrayIn, ArrayOut]) -> Classifier[T]:
+    def classifier(self) -> Classifier[T]:
         """Used to classify the outputs of the model."""
         if not hasattr(self, "_classifier"):
             self.classifier = self.loss._default_classifier()
         return self._classifier
 
     @classifier.setter
-    def classifier(self: Model[ArrayIn, ArrayOut], classifier: Classifier[T]) -> None:
+    def classifier(self, classifier: Classifier[T]) -> None:
         self._classifier = classifier
 
     @property
-    def loss(self: Model[ArrayIn, ArrayOut]) -> Loss[ArrayIn, ArrayOut]:
+    def loss(self) -> Loss[ArrayIn, ArrayOut]:
         """Reference to the loss stored in the optimizer."""
         if not hasattr(self, "_loss"):
             self.loss = self._default_loss()
         return self._loss
 
     @loss.setter
-    def loss(self: Model[ArrayIn, ArrayOut], loss: Loss[ArrayIn, ArrayOut]) -> None:
+    def loss(self, loss: Loss[ArrayIn, ArrayOut]) -> None:
         self._loss = copy(loss)
         self.loss.model = self
 
     @property
-    def labels(self: Model[ArrayIn, ArrayOut]) -> dict[int, Labels]:
+    def labels(self) -> dict[int, Labels]:
         return self.training.labels
 
     @labels.setter
-    def labels(self: Model[ArrayIn, ArrayOut], labels) -> None:
+    def labels(self, labels) -> None:
         """Sets the labels when asked for them."""
         self.training.labels = labels
 
     @property
-    def optimizer(self: Model[ArrayIn, ArrayOut]) -> Optimizer:
+    def optimizer(self) -> Optimizer:
         """Stores the optimizer being used for training."""
         if not hasattr(self, "_optimizer"):
             self.optimizer = self._default_optimizer()
         return self._optimizer
 
     @optimizer.setter
-    def optimizer(self: Model[ArrayIn, ArrayOut], optimizer: Optimizer) -> None:
+    def optimizer(self, optimizer: Optimizer) -> None:
         optimizer.add(self)
         self._optimizer = optimizer
 
     @property
-    def iteration(self: Model[ArrayIn, ArrayOut]) -> int:
+    def iteration(self) -> int:
         """Returns the current iteration from training."""
         return self.training.iteration
 
     @property
-    def epoch(self: Model[ArrayIn, ArrayOut]) -> int:
+    def epoch(self) -> int:
         """Returns the current epoch from training."""
         return self.training.epoch
 
     @property
-    def training(self: Model[ArrayIn, ArrayOut]) -> Dataset[ArrayIn, ArrayOut]:
+    def training(self) -> Dataset:
         """
         The training dataset the main dataset used during training.
         Use model.training.data = (x, y) to set the training data.
         """
         if not hasattr(self, "_training"):
-            self._training = Dataset[ArrayIn, ArrayOut]()
+            self._training = Dataset()
         return self._training
 
     @property
-    def testing(self: Model[ArrayIn, ArrayOut]) -> Dataset[ArrayIn, ArrayOut]:
+    def testing(self) -> Dataset:
         """
         The testing dataset is used to produce unbiased evaluation of the model.
         Use model.tsting.data = (x, y) to set the testing data.
         """
         if not hasattr(self, "_testing"):
-            self._testing = Dataset[ArrayIn, ArrayOut]()
+            self._testing = Dataset()
         return self._testing
 
     @property
-    def validation(self: Model[ArrayIn, ArrayOut]) -> Dataset[ArrayIn, ArrayOut]:
+    def validation(self) -> Dataset:
         """
         The validation dataset is used as a pseudo testing dataset during training.
         Use model.validation.data = (x, y) to set the validation data.
         """
         if not hasattr(self, "_validation"):
-            self._validation = Dataset[ArrayIn, ArrayOut]()
+            self._validation = Dataset()
         return self._validation
 
     @property
-    def x(self: Model[ArrayIn, ArrayOut]) -> ArrayIn:
+    def x(self) -> ArrayIn:
         """
         Stores the x values from the previous call for future use,
         such as for backpropagation.
@@ -220,11 +220,11 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         return self._x
 
     @x.setter
-    def x(self: Model[ArrayIn, ArrayOut], x: ArrayIn) -> None:
+    def x(self, x: ArrayIn) -> None:
         self._x = np.asarray(x, dtype=float)
 
     @property
-    def y(self: Model[ArrayIn, ArrayOut]) -> ArrayOut:
+    def y(self) -> ArrayOut:
         """
         Stores the y values from the previous call for future use,
         such as for backpropagation.
@@ -232,10 +232,10 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         return self._y
 
     @y.setter
-    def y(self: Model[ArrayIn, ArrayOut], y: ArrayOut) -> None:
+    def y(self, y: ArrayOut) -> None:
         self._y = np.asarray(y, dtype=float)
 
-    def prepare_datasets(self: Model[ArrayIn, ArrayOut]) -> None:
+    def prepare_datasets(self) -> None:
         """Prepares the datasets before optimizing."""
         if not hasattr(self.training, "data"):
             raise ValueError("requires model.training.data to be set to train the model")
@@ -260,7 +260,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             layer._testing = self.testing
             layer._validation = self.validation
 
-    def fit(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
+    def fit(self, x: ArrayIn, y: ArrayOut) -> None:
         """
         Fit the model to the provided training data.
 
@@ -269,11 +269,11 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         self.training.data = (x, y)
         self.train()
 
-    def train(self: Model[ArrayIn, ArrayOut]) -> None:
+    def train(self) -> None:
         """Train the model."""
         self.optimizer.train(self)
 
-    def callback(self: Model[ArrayIn, ArrayOut], command: Command) -> Callable[[Callback], Callback]:
+    def callback(self, command: Command) -> Callable[[Callback], Callback]:
         """model.callback(...) returns a decorator for saving callbacks."""
         def get_callback(cb: Callback) -> Callback:
             # Save the new callback to the given command.
@@ -283,52 +283,52 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         # Return the decorator.
         return get_callback
 
-    def on_optimization_start(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_optimization_start(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_optimization_start')."""
         self.callbacks["on_optimization_start"].append(cb)
         return cb
 
-    def on_optimization_end(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_optimization_end(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_optimization_end')."""
         self.callbacks["on_optimization_end"].append(cb)
         return cb
 
-    def on_training_start(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_training_start(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_training_start')."""
         self.callbacks["on_training_start"].append(cb)
         return cb
 
-    def on_training_end(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_training_end(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_training_end')."""
         self.callbacks["on_training_end"].append(cb)
         return cb
 
-    def on_testing_start(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_testing_start(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_testing_start')."""
         self.callbacks["on_testing_start"].append(cb)
         return cb
 
-    def on_testing_end(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_testing_end(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_testing_end')."""
         self.callbacks["on_testing_end"].append(cb)
         return cb
 
-    def on_validation_start(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_validation_start(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_validation_start')."""
         self.callbacks["on_validation_start"].append(cb)
         return cb
 
-    def on_epoch_end(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_epoch_end(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_epoch_end')."""
         self.callbacks["on_epoch_end"].append(cb)
         return cb
 
-    def on_epoch_start(self: Model[ArrayIn, ArrayOut], cb: Callback) -> Callback:
+    def on_epoch_start(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_epoch_start')."""
         self.callbacks["on_epoch_start"].append(cb)
         return cb
 
-    def training_validation_commands(self: Model[ArrayIn, ArrayOut]) -> Iterator[Command]:
+    def training_validation_commands(self) -> Iterator[Command]:
         """Generates the training/validation commands in an even manner."""
         # Set commands = (step, "start"), (step, "end"), (2 * step, "start"), (2 * step, "end"), ...
         # The step is used to control how frequently each command occurs.
@@ -348,7 +348,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         for step, command in merge(training_commands, validation_commands, key=lambda step_command: step_command[0]):
             yield command
 
-    def _optimizer_commands(self: Model[ArrayIn, ArrayOut]) -> Iterator[Command]:
+    def _optimizer_commands(self) -> Iterator[Command]:
         """
         Generates all of the commands for the optimizer.
 
@@ -380,7 +380,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         yield "on_testing_start"
         yield "on_testing_end"
 
-    def optimizer_commands(self: Model[ArrayIn, ArrayOut]) -> Iterator[Command]:
+    def optimizer_commands(self) -> Iterator[Command]:
         """Generates all of the commands and runs their callbacks for the optimizer."""
         # Prepare the datasets before optimizing.
         self.prepare_datasets()
@@ -392,7 +392,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             yield self.command
         self.command = "off"
 
-    def accuracy(self: Model[ArrayIn, ArrayOut], x: ArrayIn=None, y: ArrayOut=None) -> float:
+    def accuracy(self, x: ArrayIn=None, y: ArrayOut=None) -> float:
         """Returns the classification accuracy of the data."""
         # If the user doesnt specify the dataset. We will try to give it them using the training data
         try:
@@ -403,15 +403,15 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             print("Could not load training data to calculate accuracy data.")
             raise
             
-    def classify(self: Model[ArrayIn, ArrayOut], x: ArrayIn) -> T:
+    def classify(self, x: ArrayIn) -> T:
         """Returns the classification of the input data."""
         return self.classifier.classify(self(x), self.labels)
 
-    def sample_derivatives(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
+    def sample_derivatives(self, x: ArrayIn, y: ArrayOut) -> None:
         """Shortcut for `model.loss.backward(y, model(x), model)`."""
         self.loss.backward(y, self(x), self)
 
-    def __call__(self: Model[ArrayIn, ArrayOut], x: ArrayIn) -> ArrayOut:
+    def __call__(self, x: ArrayIn) -> ArrayOut:
         """
         Implements y = model(x) for feed-forward propagation.
         Parses the input as a numpy array before using the forward implementation method.
@@ -424,7 +424,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             self.__setup__()
         return self.y
 
-    def backward(self: Model[ArrayIn, ArrayOut], dy: ArrayOut, y: ArrayOut = None, use_y: bool = False) -> ArrayIn:
+    def backward(self, dy: ArrayOut, y: ArrayOut = None, use_y: bool = False) -> ArrayIn:
         """
         Implements dx = model.backward(dy) for backpropagation.
         Parses the input as a numpy array before using the backward implementation method.
@@ -436,17 +436,17 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         )
 
     @abstractmethod
-    def __backward__(self: Model[ArrayIn, ArrayOut], dy: ArrayOut, y: ArrayOut = None, use_y: bool = False) -> ArrayIn:
+    def __backward__(self, dy: ArrayOut, y: ArrayOut = None, use_y: bool = False) -> ArrayIn:
         """Implements the backpropagation after the input has been parsed."""
         raise NotImplementedError
 
     @abstractmethod
-    def __forward__(self: Model[ArrayIn, ArrayOut], x: ArrayIn) -> ArrayOut:
+    def __forward__(self, x: ArrayIn) -> ArrayOut:
         """Implements the feed-forward propagation after the input has been parsed."""
         raise NotImplementedError
 
     @abstractmethod
-    def __setup__(self: Model[ArrayIn, ArrayOut]) -> None:
+    def __setup__(self) -> None:
         """
         Implements the setup procedure for the values, derivatives, shapes in, and shapes
         out.

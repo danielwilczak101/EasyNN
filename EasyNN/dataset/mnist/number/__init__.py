@@ -13,6 +13,13 @@ trained_model.layers[0]._mean = load("mnist_number_mean.npy")
 trained_model.layers[0]._variance = load("mnist_number_variance.npy")
 trained_model.layers[0]._weight = 1.0
 
+# I will need the name of every veriable to load.
+    # parameters => parameters
+    # layer[0]._mean = > mean
+    # layer[0]._variance => variance
+    # layer[0]._weight => weight
+
+
 # Set the dataset requirements
 trained_model.training.file = "numbers.npz"
 trained_model.training.url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
