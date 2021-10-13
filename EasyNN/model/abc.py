@@ -318,6 +318,11 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         self.callbacks["on_validation_start"].append(cb)
         return cb
 
+    def on_validation_end(self, cb: Callback) -> Callback:
+        """Shortcut for model.callback('on_validation_end')."""
+        self.callbacks["on_validation_end"].append(cb)
+        return cb
+
     def on_epoch_end(self, cb: Callback) -> Callback:
         """Shortcut for model.callback('on_epoch_end')."""
         self.callbacks["on_epoch_end"].append(cb)
