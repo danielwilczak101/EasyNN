@@ -1,17 +1,20 @@
+from genericpath import exists
 from EasyNN.model import Network, Normalize, ReLU, LogSoftMax
 from EasyNN.utilities.image.image import Image
+from EasyNN.utilities.download import download
+from EasyNN.utilities.data.load import load as load_data
 from EasyNN.utilities.parameters.load import load
 import matplotlib.pyplot as plt
 import numpy as np
 
 # Create the mnist model.
-trained_model = Network(Normalize, 256, ReLU, 128, ReLU, 10, LogSoftMax)
+model = Network(Normalize, 256, ReLU, 128, ReLU, 10, LogSoftMax)
 # Set the parameters and stuff.
-trained_model(np.empty(28 * 28))
-trained_model.parameters = load("mnist_number_parameters.npy")
-trained_model.layers[0]._mean = load("mnist_number_mean.npy")
-trained_model.layers[0]._variance = load("mnist_number_variance.npy")
-trained_model.layers[0]._weight = 1.0
+model(np.empty(28 * 28))
+model.parameters = load("mnist_number_parameters.npy")
+model.layers[0]._mean = load("mnist_number_mean.npy")
+model.layers[0]._variance = load("mnist_number_variance.npy")
+model.layers[0]._weight = 1.0
 
 # I will need the name of every veriable to load.
     # parameters => parameters
@@ -21,9 +24,9 @@ trained_model.layers[0]._weight = 1.0
 
 
 # Set the dataset requirements
-trained_model.training.file = "numbers.npz"
-trained_model.training.url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
-trained_model.labels = {
+model.training.file = "numbers.npz"
+model.training.url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
+model.labels = {
     0: 0,
     1: 1,
     2: 2,
@@ -35,10 +38,6 @@ trained_model.labels = {
     8: 8,
     9: 9
 }
-
-trained_model.prepare_datasets()
-breakpoint()
-prompt = "Try running something like `trained_model.testing.data[0].shape` to see if it is working. Use `cont` to continue running."
 
 # Image related functions.
 def show(user_image: list[list[int]], image_type: str = None) -> None:
@@ -75,4 +74,13 @@ def show(user_image: list[list[int]], image_type: str = None) -> None:
         # Return the print to the default 75.
         np.set_printoptions(linewidth=75)
 
-trained_model.show = show
+model.show = show
+
+def __getattr__(name):
+    """Used to give the user more understanding names while loading the features."""
+    if name == "dataset":
+        if not exists(model.training.file):
+            download(model.training.file,model.training.url)
+            model.training.data = load_data(model.training.file)
+        return load_data(model.training.file)
+    raise AttributeError(f"module {__name__} has no attribute {name}")
