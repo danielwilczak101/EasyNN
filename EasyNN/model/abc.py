@@ -8,7 +8,7 @@ from copy import copy
 from heapq import merge
 from itertools import count, repeat
 import numpy as np
-from typing import Any, Callable, Generic, Sequence, TypeVar, overload
+from typing import Any, Callable, Generic, TypeVar, overload
 from EasyNN._abc import AutoDocumentation
 from EasyNN.batch.abc import Batch, Dataset
 from EasyNN.batch.mini import MiniBatch
@@ -19,7 +19,7 @@ from EasyNN.optimizer.adam import Adam
 from EasyNN.classifier.classifier import Classifier, LabelType
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
 
-T = TypeVar("T")
+Labels = TypeVar("Labels")
 ArrayIn = TypeVar("ArrayIn", bound=ArrayND)
 ArrayOut = TypeVar("ArrayOut", bound=ArrayND)
 
@@ -51,9 +51,9 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _training: Dataset[ArrayIn, ArrayOut]
     _testing: Dataset[ArrayIn, ArrayOut]
     _validation: Dataset[ArrayIn, ArrayOut]
-    _classifier: Classifier[T]
+    _classifier: Classifier[Labels]
     _optimizer: Optimizer
-    _labels: LabelType
+    _labels: Labels
     _default_batch: Factory[Batch] = MiniBatch
     _default_loss: Factory[Loss[ArrayIn, ArrayOut]] = MeanSquareError
     _default_optimizer: Factory[Optimizer] = Adam
@@ -149,6 +149,15 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     def loss(self: Model[ArrayIn, ArrayOut], loss: Loss[ArrayIn, ArrayOut]) -> None:
         self._loss = copy(loss)
         self.loss.model = self
+
+    @property
+    def labels(self: Model[ArrayIn, ArrayOut]) -> dict[int, Labels]:
+        return self.training.labels
+
+    @labels.setter
+    def labels(self: Model[ArrayIn, ArrayOut], labels) -> None:
+        """Sets the labels when asked for them."""
+        self.training.labels = labels
 
     @property
     def optimizer(self: Model[ArrayIn, ArrayOut]) -> Optimizer:
@@ -389,7 +398,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
 
     def classify(self: Model[ArrayIn, ArrayOut], x: ArrayIn) -> T:
         """Returns the classification of the input data."""
-        return self.classifier.classify(self(x))
+        return self.classifier.classify(self(x), self.labels)
 
     def sample_derivatives(self: Model[ArrayIn, ArrayOut], x: ArrayIn, y: ArrayOut) -> None:
         """Shortcut for `model.loss.backward(y, model(x), model)`."""

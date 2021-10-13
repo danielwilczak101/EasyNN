@@ -37,11 +37,11 @@ class Classifier:
 
         
 
-    def classify(self, y_pred: ArrayOut) -> LabelType:
+    def classify(self, y_pred: ArrayOut, labels) -> LabelType:
         """
         Takes the labels and prediction from the model and 
         
         """
-        return np.argmax(y_pred)
+        return labels[np.argmax(y_pred)]
 
         

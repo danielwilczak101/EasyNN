@@ -66,9 +66,7 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         The dataset's data. If the data is not found, this first checks
         for a file storing the data, then a url to load the data from.
         """
-        if hasattr(self, "_data"):
-            return self._data
-        else:
+        if not hasattr(self, "_data"):
             try:
                 return load(self.file)
             except FileNotFoundError:
@@ -76,6 +74,7 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
                 return load(self.file)
             except:
                 print("Dataset was not set from variable, file or url. Please set one with model.training.data,file or url.")
+        return self._data
 
     @data.setter
     def data(self: Dataset[ArrayIn, ArrayOut], data: tuple[ArrayIn, ArrayOut]) -> None:
