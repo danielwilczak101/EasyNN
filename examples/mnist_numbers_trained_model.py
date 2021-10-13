@@ -11,10 +11,13 @@ format_options = dict(
     rotate=3,
 )
 
+file = "four.jpg"
+url = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/examples/four.jpg"
+
 # Download an example image.
-download("four.jpg","https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/examples/four.jpg")
+download(file, url)
 
 # Converting your image into the correct format for the mnist number dataset.
-image = Image("four.jpg").format(**format_options)
+image = Image(file).format(**format_options)
 
 print(model.classify(image))
