@@ -36,6 +36,10 @@ trained_model.labels = {
     9: 9
 }
 
+trained_model.prepare_datasets()
+breakpoint()
+prompt = "Try running something like `trained_model.testing.data[0].shape` to see if it is working. Use `cont` to continue running."
+
 # Image related functions.
 def show(user_image: list[list[int]], image_type: str = None) -> None:
     """Show mnist 28 by 28 images as either array data or a matplotlib image.
