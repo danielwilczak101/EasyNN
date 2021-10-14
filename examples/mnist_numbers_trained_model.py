@@ -1,4 +1,4 @@
-from EasyNN.dataset.mnist.number import model
+from examples.mnist.number.trained import model
 from EasyNN.utilities.image.image import Image
 from EasyNN.utilities.download import download
 
@@ -21,3 +21,4 @@ download(file, url)
 image = Image(file).format(**format_options)
 
 print(model.classify(image))
+
