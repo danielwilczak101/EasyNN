@@ -5,6 +5,7 @@ from EasyNN.optimizer import MomentumDescent
 from EasyNN.utilities.momentum import Momentum
 from EasyNN.utilities.image.image import Image
 from EasyNN.utilities.download import download
+from EasyNN.utilities.parameters.save import save
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -13,7 +14,15 @@ import numpy as np
 #==================#
 
 # Create the mnist model.
-model = Network(Normalize(1e-3), Randomize(0.5), 256, ReLU, Randomize(0.3), 128, ReLU, Randomize(0.1), 10, LogSoftMax)
+model = Network(
+    Normalize(1e-3),
+    Randomize(0.5),
+    256, ReLU,
+    Randomize(0.3),
+    128, ReLU,
+    Randomize(0.1),
+    10, LogSoftMax
+)
 
 # Assign it some training/testing data.
 model.training.data = dataset
@@ -33,9 +42,9 @@ model.labels = {
 # Use gradient descent with momentum.
 model.optimizer = MomentumDescent()
 
-# Aim for 85% validation accuracy for 5 validation iterations in a row.
+# Aim for 90% validation accuracy for 5 validation iterations in a row.
 model.validation.accuracy_patience = 5
-model.validation.accuracy_limit = 0.85
+model.validation.accuracy_limit = 0.90
 model.validation.successes = 0
 
 #===================#
@@ -53,6 +62,10 @@ def terminate(model):
     else:
         model.validation.successes = 0
     model.stop_training |= model.validation.successes >= model.validation.accuracy_patience
+
+    save(model.parameters, "mnist_number_parameters.npy")
+    save(model.mean, "mnist_number_parameters.npy")
+    save(model.variance, "mnist_number_parameters.npy")
 
 @model.on_training_start
 def print_training_iteration(model):
@@ -95,8 +108,8 @@ def plot_validation(model):
     plt.plot(x, y_smooth, label="smoothened")
     # Setup the plot.
     plt.title("Validation Accuracy")
-    plt.xlabel("Accuracy")
-    plt.ylabel("Epochs")
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
     plt.ylim(-0.1, 1.1)
     plt.legend(loc="lower right")
     plt.show()
@@ -122,7 +135,7 @@ def main():
 
     # Train the model.
     model.train()
-
+        
     # Download an example image.
     download(file, url)
 
