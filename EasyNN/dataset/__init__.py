@@ -67,14 +67,6 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         The dataset's data. If the data is not found, this first checks
         for a file storing the data, then a url to load the data from.
         """
-        if not hasattr(self, "_data"):
-            try:
-                self._data = load(self.file)
-            except FileNotFoundError:
-                download(self.file,self.url)
-                self._data = load(self.file)
-            except:
-                print("Dataset was not set from variable, file or url. Please set one with model.training.data,file or url.")
         return self._data
 
     @data.setter

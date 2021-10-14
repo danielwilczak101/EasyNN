@@ -1,64 +1,104 @@
-from EasyNN.model import Network, Normalize, ReLU, LogSoftMax
-from EasyNN.utilities.parameters.load import load
+from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
+
+from EasyNN.dataset.mnist.number import dataset
+from EasyNN.dataset.mnist.number.extras import labels, show
+
+from EasyNN.batch import MiniBatch
+from EasyNN.optimizer import MomentumDescent
+from EasyNN.utilities import parameters
+from EasyNN.utilities.momentum import Momentum
+from EasyNN.utilities.parameters import save, load 
 import matplotlib.pyplot as plt
 import numpy as np
 
+#==================#
+# Setup the model: #
+#==================#
+
 # Create the mnist model.
-model = Network(Normalize, 256, ReLU, 128, ReLU, 10, LogSoftMax)
-# Set the parameters and stuff.
-model(np.empty(28 * 28))
-model.parameters = load("mnist_number_parameters.npy")
-model.layers[0]._mean = load("mnist_number_mean.npy")
-model.layers[0]._variance = load("mnist_number_variance.npy")
-model.layers[0]._weight = 1.0
+model = Network(
+    Normalize(1e-3),
+    Randomize(0.5), 256, ReLU,
+    Randomize(0.3), 128, ReLU,
+    Randomize(0.1), 10,  LogSoftMax
+)
 
-# Set the dataset requirements
-model.labels = {
-    0: 0,
-    1: 1,
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9
-}
+# Assign it some training/testing data.
+model.training.data = dataset
 
-# Image related functions.
-def show(user_image: list[list[int]], image_type: str = None) -> None:
-    """Show mnist 28 by 28 images as either array data or a matplotlib image.
-    
-    Args:
-        user_image: User image to be shown or the path of the image is handled in the exceptions
-        image_type: Tells whether to show the image as an image or print out.
-            image: Show as matplotlib image. (default use.)
-            array: Show as numpy formated array print out.
-
-    Returns:
-        Either an matplotlib graphed image or numpy print of the image pixel values.
-
-    Example:
-        >>> show(model.training.data[0])
-        Shows plotted image of data point
-        >>> show(model.training.data[0],"array")
-        Shows print out of properly spaved numpy array data.
-    """
-
-    if image_type is None or image_type == "image":
-        try:
-            plt.imshow(user_image.reshape((28, 28)), cmap='gray')
-            plt.show()
-        except ValueError:
-            raise ValueError(f"Image is not sized to [28,28] or [1,784].\n \
-            Try: image = Image(user_image).format(resized=[28,28])") from None
-    elif image_type == "array":
-        # Show the array with corrected print width.
-        np.set_printoptions(linewidth=114)
-        # Show the image array data.
-        print(user_image)
-        # Return the print to the default 75.
-        np.set_printoptions(linewidth=75)
-
+# Extra features.
+model.labels = labels
 model.show = show
+
+# Use gradient descent with momentum.
+model.optimizer = MomentumDescent()
+
+# Aim for 90% validation accuracy for 5 validation iterations in a row.
+model.validation.accuracy_patience = 5
+model.validation.accuracy_limit = 0.70
+model.validation.successes = 0
+
+#===================#
+# Create callbacks: #
+#===================#
+
+@model.on_optimization_start
+def setup(model):
+    model.validation.batch = MiniBatch(1024)
+
+@model.on_validation_end
+def terminate(model):
+    if model.accuracy(*model.validation.sample) > model.validation.accuracy_limit:
+        model.validation.successes += 1
+    else:
+        model.validation.successes = 0
+    model.stop_training |= model.validation.successes >= model.validation.accuracy_patience
+    
+@model.on_training_start
+def print_training_iteration(model):
+    if model.training.iteration % 10 == 0:
+        print(f"  {model.training.iteration = }")
+
+@model.on_validation_start
+def print_validation_results(model):
+    print(f"    {model.loss(*model.training.sample)   = }")
+    print(f"    {model.loss(*model.validation.sample) = }")
+    print(f"    {model.accuracy(*model.training.sample)   = }")
+    print(f"    {model.accuracy(*model.validation.sample) = }")
+
+@model.on_testing_start
+def print_test_results(model):
+    print(f"      {model.loss(*model.training.sample)   = }")
+    print(f"      {model.loss(*model.validation.sample) = }")
+    print(f"      {model.loss(*model.testing.sample)    = }")
+    print(f"      {model.accuracy(*model.training.sample)   = }")
+    print(f"      {model.accuracy(*model.validation.sample) = }")
+    print(f"      {model.accuracy(*model.testing.sample)    = }")
+
+model.validation_lr = 0.3
+model.validation.accuracy = []
+
+@model.on_validation_start
+def save_validation_accuracy(model):
+    accuracy = model.accuracy(*model.validation.sample)
+    model.validation.accuracy.append(accuracy)
+
+@model.on_testing_start
+def plot_validation(model):
+    # Plot the validation accuracies.
+    x = np.arange(model.validation.iteration + 1) * model.validation._batch_size / len(model.validation)
+    y = model.validation.accuracy
+    plt.plot(x, y, label="raw data")
+    # Plot a smoothened version of the validation accuracies.
+    smoothener = Momentum(0.3)
+    y_smooth = [smoothener.update(accuracy) for accuracy in model.validation.accuracy]
+    plt.plot(x, y_smooth, label="smoothened")
+    # Setup the plot.
+    plt.title("Validation Accuracy")
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.ylim(-0.1, 1.1)
+    plt.legend(loc="lower right")
+    plt.show()
+
+
