@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import ImageOps,Image as pil_image
 
-class Image:
+class image:
     """Used for preprocessing images to a specific look.
 
     Args:

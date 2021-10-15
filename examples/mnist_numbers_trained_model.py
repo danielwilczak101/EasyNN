@@ -1,7 +1,13 @@
 from examples.mnist.number.trained import model
-from EasyNN.utilities.image.image import Image
+from EasyNN.utilities.image.preprocess import image
 from EasyNN.utilities.download import download
 
+# Download and example image.
+file = "four.jpg"
+url = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/examples/four.jpg"
+download(file, url)
+
+# Establish formating options
 format_options = dict(
     grayscale=True,
     invert=True,
@@ -11,14 +17,8 @@ format_options = dict(
     rotate=3,
 )
 
-file = "four.jpg"
-url = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/examples/four.jpg"
-
-# Download an example image.
-download(file, url)
-
 # Converting your image into the correct format for the mnist number dataset.
-image = Image(file).format(**format_options)
+image = image(file).format(**format_options)
 
+# Tell me what the image is.
 print(model.classify(image))
-
