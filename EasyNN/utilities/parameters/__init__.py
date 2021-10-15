@@ -2,7 +2,7 @@ import numpy as np
 from os.path import exists
 from EasyNN.utilities.download import download
 
-def load(file_path: str, url = None):
+def load(file_path: str, url: str = None):
     """Used for loading model files that have been downloaded.
     
     Args:
@@ -21,28 +21,28 @@ def load(file_path: str, url = None):
     if not exists("file_path"):
         # If the file doesnt exist but user has given a url.
         if url:
-            download(file_path,url)
+            download(file_path, url)
     # Load the data.
     return np.load(file_path)
 
 
-def save(file_name :str,**kwargs:dict) -> None:
+def save(file_name: str, *args: ArrayND, **kwargs: ArrayND) -> None:
     """Used for saving model parameters that can been downloaded/used later.
     
     Args:
         file_name: File name is to be saved under.
-        variables: Dictinary of numpy arrays to be saved.
+        variables: numpy arrays to be saved.
 
     Example:
-        >>>
-        >>> dct = dict(
+
+        Save variables to file named "model.npz".
+        >>> variables = dict(
         >>>    parameters = model.parameters,
         >>>    mean = model.mean,
         >>>    variance = model.variance
         >>> )
-        >>> save("model",dct)
-        All variables saved to file named model.npz
+        >>> save("model", **variables)
     """
-
-    np.savez_compressed(file_name, **kwargs)
-    print("Parameters saved.")   
+    np.savez_compressed(file_name, *args, **kwargs)
+    print("Parameters saved.")  
+ 
