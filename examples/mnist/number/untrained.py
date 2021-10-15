@@ -1,13 +1,9 @@
-from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
-
+from EasyNN.batch import MiniBatch
 from EasyNN.dataset.mnist.number import dataset
 from EasyNN.dataset.mnist.number.extras import labels, show
-
-from EasyNN.batch import MiniBatch
+from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.utilities import parameters
 from EasyNN.utilities.momentum import Momentum
-from EasyNN.utilities.parameters import save, load 
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -100,5 +96,3 @@ def plot_validation(model):
     plt.ylim(-0.1, 1.1)
     plt.legend(loc="lower right")
     plt.show()
-
-

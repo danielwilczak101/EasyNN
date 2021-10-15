@@ -15,13 +15,7 @@ model = Network(
 model(np.empty(28 * 28))
 
 # Download model.npz from EasyNN dataset branch and load it.
-arrays = load("model.npz","https://bit.ly/3FQlTLa")
-
-# Set all the models trained parameters.
-model.parameters = arrays['parameters']
-model.layers[0]._mean = arrays['mean']
-model.layers[0]._variance = arrays['variance']
-model.layers[0]._weight = 1.0
+model.set_arrays(**load("model.npz", "https://bit.ly/3FQlTLa"))
 
 # Establish the models labels
 model.labels = labels
