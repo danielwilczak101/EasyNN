@@ -110,6 +110,31 @@ class Network(Model[ArrayIn, ArrayOut], Generic[ArrayIn, ArrayOut]):
             layer._derivatives = derivatives[i:i+len(layer.derivatives)]
             i += len(layer.derivatives)
 
+    def get_arrays(self) -> dict[str, ArrayND]:
+        """Returns the arrays stored in the model."""
+        arrays = {
+            f"{name}_{i}": arr
+            for layer in self.layers
+            for name, arr in layer.get_arrays().items()
+            if name != "parameters"
+        }
+        arrays["parameters"] = self.parameters
+        return arrays
+
+    def set_arrays(self, *, parameters: ArrayND = None, **layer_arrays: ArrayND) -> None:
+        """Sets the arrays stored in the model."""
+        # Set the parameters, if any.
+        if parameters is not None:
+            self.parameters = parameters
+        # Set the arrays for each individual layer.
+        for i, layer in enumerate(self.layers):
+            # Only use the arrays which match the current layer.
+            layer.set_arrays(**{
+                name.removesuffix(f"_{i}"): arr
+                for name, arr in layer_arrays.items()
+                if name.endswith(f"_{i}")
+            })
+
     def __forward__(self: Network[ArrayIn, ArrayOut], x: ArrayIn) -> ArrayOut:
         # Pass the value through every layer.
         for layer in self._layers:

@@ -1,10 +1,11 @@
 from __future__ import annotations
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, TypedDict, overload
 from EasyNN.model.abc import Model
 from EasyNN.typing import ArrayND
 import numpy as np
 
 ArrayShape = TypeVar("ArrayShape", bound=ArrayND)
+ArrayDict = TypedDict("ArrayDict", parameters=ArrayND, mean=ArrayShape, variance=ArrayShape)
 
 
 class Normalize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
@@ -33,6 +34,40 @@ class Normalize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
     def deviation(self: Normalize[ArrayShape]) -> ArrayShape:
         """Returns an approximation for the deviation of the provided training data."""
         return np.sqrt(self.variance)
+
+    def get_arrays(self) -> ArrayDict:
+        """Returns the arrays stored in the model."""
+        if len(self.layers) == 1 and self.layers[0] is self:
+            return {"parameters": self.parameters}
+        arrays = {
+            f"{name}_{i}": arr
+            for layer in self.layers
+            for name, arr in layer.get_arrays()
+        }
+        arrays["parameters"] = self.parameters
+        return arrays
+
+    @overload
+    def set_arrays(self, *, parameters: ArrayND = None) -> None:
+        ...
+
+    @overload
+    def set_arrays(self, *, parameters: ArrayND = None, mean: ArrayND, variance: ArrayND) -> None:
+        ...
+
+    def set_arrays(self, *, parameters=None, mean=None, variance=None) -> None:
+        """Sets the arrays stored in the model."""
+        # Set the parameters, if any.
+        if parameters is not None:
+            self.parameters = parameters
+        if mean is None and variance is None:
+            return
+        elif mean is None or variance is None:
+            raise TypeError("either both the mean and variance must be given or neither, not just one")
+        else:
+            self._mean = mean
+            self._variance = variance
+            self._weight = 1.0
 
     def __forward__(self: Normalize[ArrayShape], x: ArrayShape) -> ArrayShape:
         if self.command.startswith("on_training_"):

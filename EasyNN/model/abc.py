@@ -81,7 +81,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     @command.setter
     def command(self, command: Command) -> None:
         self._command = command
-        if self.layers[0] is self:
+        if len(self.layers) == 1 and self.layers[0] is self:
             return
         for layer in self.layers:
             layer.command = command
@@ -234,6 +234,15 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     @y.setter
     def y(self, y: ArrayOut) -> None:
         self._y = np.asarray(y, dtype=float)
+
+    def get_arrays(self) -> dict[str, ArrayND]:
+        """Returns the arrays stored in the model."""
+        return dict(parameters=self.parameters)
+
+    def set_arrays(self, *, parameters: ArrayND = None) -> None:
+        """Sets the arrays stored in the model."""
+        if parameters is not None:
+            self.parameters = parameters
 
     def prepare_datasets(self) -> None:
         """Prepares the datasets before optimizing."""
