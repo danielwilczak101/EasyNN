@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = "numbers.npz"
-url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
+file = "number_dataset.npz"
+url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number_dataset.npz"
 
 labels = {
     0: 0,
