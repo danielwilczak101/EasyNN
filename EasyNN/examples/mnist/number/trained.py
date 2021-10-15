@@ -16,7 +16,7 @@ model = Network(
 model(np.empty(28 * 28))
 
 # Download model.npz from EasyNN dataset branch and load it.
-model.set_arrays(**load("number_model.npz", "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/model.npz"))
+model.set_arrays(**load("number_model.npz", "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number_model.npz"))
 
 # Establish the models labels
 model.labels = labels
