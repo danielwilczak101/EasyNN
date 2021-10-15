@@ -1,6 +1,6 @@
 from EasyNN.batch import MiniBatch
-from EasyNN.dataset.mnist.number.data import dataset
-from EasyNN.dataset.mnist.number import labels, show
+from EasyNN.examples.mnist.number.data import dataset
+from EasyNN.examples.mnist.number import labels, show
 from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
 from EasyNN.optimizer import MomentumDescent
 from EasyNN.utilities.momentum import Momentum

@@ -1,5 +1,5 @@
-from examples.mnist.number.trained import model
-from EasyNN.dataset.mnist.number.data import dataset
+from EasyNN.examples.mnist.number.trained import model
+from EasyNN.examples.mnist.number.data import dataset
 
 images,labels = dataset
 

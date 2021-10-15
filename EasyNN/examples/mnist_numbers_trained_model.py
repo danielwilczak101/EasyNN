@@ -1,4 +1,4 @@
-from examples.mnist.number.trained import model
+from EasyNN.examples.mnist.number.trained import model
 from EasyNN.utilities.image.preprocess import image
 from EasyNN.utilities.download import download
 
