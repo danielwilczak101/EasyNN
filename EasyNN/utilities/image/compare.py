@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
+import random
 
-def compare(*args, width=3, dataset=None) -> None:
+def compare(*args, width=3, height=3, dataset=None) -> None:
     """
     Used to compare matplotlib images to eachother.
 
@@ -29,11 +30,20 @@ def compare(*args, width=3, dataset=None) -> None:
         # Put the label above the images.
             # User definded one is not required.
 
+    args_count = len(args)
 
-    for i in range(len(args)):
+    for i in range(args_count):
         # define subplot
         plt.subplot(width * 110 + 1 + i)
         # plot raw pixel data
         plt.imshow(args[i].reshape([28, 28]), cmap=plt.get_cmap('gray'))
+    
+    if dataset:
+        for i in range(args_count, width * height):
+            # define subplot
+            plt.subplot(width * 110 + 1 + i)
+            # plot raw pixel data
+            plt.imshow(random.choice(dataset[0]).reshape([28, 28]), cmap=plt.get_cmap('gray'))
+
     # show the figure
-    plt.show()   
+    plt.show()

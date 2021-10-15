@@ -37,15 +37,11 @@ class Normalize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
 
     def get_arrays(self) -> ArrayDict:
         """Returns the arrays stored in the model."""
-        if len(self.layers) == 1 and self.layers[0] is self:
-            return {"parameters": self.parameters}
-        arrays = {
-            f"{name}_{i}": arr
-            for layer in self.layers
-            for name, arr in layer.get_arrays()
-        }
-        arrays["parameters"] = self.parameters
-        return arrays
+        return dict(
+            parameters=self.parameters,
+            mean=self.mean,
+            variance=self.variance,
+        )
 
     @overload
     def set_arrays(self, *, parameters: ArrayND = None) -> None:

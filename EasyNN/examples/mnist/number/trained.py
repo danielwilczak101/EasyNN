@@ -6,16 +6,17 @@ import numpy as np
 
 # Create the mnist model.
 model = Network(
-    Normalize,
+    Normalize(1e-3),
     256, ReLU,
     128, ReLU,
     10, LogSoftMax
 )
+
 # Finilize the model.
 model(np.empty(28 * 28))
 
 # Download model.npz from EasyNN dataset branch and load it.
-model.set_arrays(**load("model.npz", "https://bit.ly/3FQlTLa"))
+model.set_arrays(**load("model.npz", "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/model.npz"))
 
 # Establish the models labels
 model.labels = labels

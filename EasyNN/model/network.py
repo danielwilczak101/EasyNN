@@ -114,7 +114,7 @@ class Network(Model[ArrayIn, ArrayOut], Generic[ArrayIn, ArrayOut]):
         """Returns the arrays stored in the model."""
         arrays = {
             f"{name}_{i}": arr
-            for layer in self.layers
+            for i, layer in enumerate(self.layers)
             for name, arr in layer.get_arrays().items()
             if name != "parameters"
         }
@@ -143,7 +143,7 @@ class Network(Model[ArrayIn, ArrayOut], Generic[ArrayIn, ArrayOut]):
         self.__setup__()
         return x
 
-    def __backward__(self: [ArrayIn, ArrayOut], dy: ArrayOut, y: ArrayOut = None, use_y: bool = False):
+    def __backward__(self: Network[ArrayIn, ArrayOut], dy: ArrayOut, y: ArrayOut = None, use_y: bool = False):
         # Pass the derivative through every layer in reversed order.
         for layer in reversed(self._layers):
             dy = layer.backward(dy, y, use_y)
