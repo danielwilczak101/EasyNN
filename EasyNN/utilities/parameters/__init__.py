@@ -26,7 +26,7 @@ def load(file_path: str, url: str = None):
     return np.load(file_path)
 
 
-def save(file_name: str, *args: ArrayND, **kwargs: ArrayND) -> None:
+def save(file_name: str, *args, **kwargs) -> None:
     """Used for saving model parameters that can been downloaded/used later.
     
     Args:
