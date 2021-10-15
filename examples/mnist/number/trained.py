@@ -1,5 +1,5 @@
 from EasyNN.model import Network, Normalize, ReLU, LogSoftMax
-from EasyNN.dataset.mnist.number.extras import labels, show
+from EasyNN.dataset.mnist.number import labels, show
 from EasyNN.utilities.parameters import load
 import matplotlib.pyplot as plt
 import numpy as np

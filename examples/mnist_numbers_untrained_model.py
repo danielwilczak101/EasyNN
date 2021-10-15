@@ -6,12 +6,7 @@ from examples.mnist.number.untrained import model
 # Once training has been finished save the model to use later
 @model.on_testing_end
 def save_data(model):
-    arrays = dict(
-        parameters = model.parameters,
-        mean = model.layers[0]._mean,
-        variance = model.layers[0]._variance
-    )
-    save("model.npz",**arrays) 
+    save("model.npz", **model.get_arrays())
 
 # Train the model.
 model.train()

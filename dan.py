@@ -18,3 +18,4 @@ format_options = dict(
 image = Image("four.jpg").format(**format_options)
 
 print(model.classify(image))
+print()
