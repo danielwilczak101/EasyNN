@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 file = "numbers.npz"
-url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.np"
+url =  "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number.npz"
 
 labels = {
     0: 0,

@@ -31,7 +31,7 @@ model.optimizer = MomentumDescent()
 
 # Aim for 90% validation accuracy for 5 validation iterations in a row.
 model.validation.accuracy_patience = 5
-model.validation.accuracy_limit = 0.70
+model.validation.accuracy_limit = 0.90
 model.validation.successes = 0
 
 #===================#
