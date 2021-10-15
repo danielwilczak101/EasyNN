@@ -1,6 +1,7 @@
 from examples.mnist.number.trained import model
 from EasyNN.utilities.image.image import Image
 from EasyNN.utilities.download import download
+from EasyNN.dataset.mnist.number.data import dataset
 
 # Download an example image.
 download("four.jpg","https://bit.ly/3lAJrMe")
@@ -16,6 +17,7 @@ format_options = dict(
 
 # Converting your image into the correct format for the mnist number dataset.
 image = Image("four.jpg").format(**format_options)
-
+print(len(model.training))
+x,y = dataset
 print(model.classify(image))
-print()
+print(model.accuracy(x,y))
