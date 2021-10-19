@@ -18,6 +18,7 @@ from EasyNN.optimizer.abc import Optimizer
 from EasyNN.optimizer.adam import Adam
 from EasyNN.classifier.classifier import Classifier, LabelType
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
+from EasyNN.utilities.parameters import save,load
 
 Labels = TypeVar("Labels")
 ArrayIn = TypeVar("ArrayIn", bound=ArrayND)
@@ -59,19 +60,6 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _default_optimizer: Factory[Optimizer] = Adam
     _default_classifier: Factory[Classifier] = Classifier
     stop_training: bool = False
-
-    @property
-    def callbacks(self) -> dict[Command, list[Callback]]:
-        """Stores the callback commands."""
-        if not hasattr(self, "_callbacks"):
-            self._callbacks = defaultdict(list)
-            # At the start of optimization, compile the model.
-            self.on_optimization_start(lambda model: model(model.training[0][0]))
-            # At the start of each callback, get the next batch sample from the datasets.
-            self.on_training_start(lambda model: next(model.training))
-            self.on_testing_start(lambda model: next(model.testing))
-            self.on_validation_start(lambda model: next(model.validation))
-        return self._callbacks
 
     @property
     def command(self) -> Command:

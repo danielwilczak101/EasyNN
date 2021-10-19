@@ -9,6 +9,7 @@ def download(file_name: str,url: str) -> None:
         file_name: Name for file to be saved under.
 
     Returns:
+        file_name: Returns the name of the file downloaded.
         File in the same directory where it is being run.
     """
 
@@ -16,3 +17,5 @@ def download(file_name: str,url: str) -> None:
         print(f"Downloading {file_name}...")
         request.urlretrieve(url, file_name)
         print("Download complete.")
+    
+    return file_name

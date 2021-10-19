@@ -14,8 +14,3 @@ model(np.empty(28 * 28))
 model.set_arrays(**load("number_model.npz", "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number_model.npz"))
 
 print(model.accuracy(x,y))
-
-
-
-
-
