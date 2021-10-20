@@ -17,19 +17,28 @@ pip3 install EasyNN
 ## Getting started with EasyNN(Basic Example):
 To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
 ```Python
-from EasyNN.dataset.mnist.number import trained_model, dataset, show
+from EasyNN.examples.mnist.number.trained import model
+from EasyNN.utilities.image.preprocess import image
+from EasyNN.utilities.download import download
 
-# Downloads dataset to computer
-train_data,train_labels,test_data,test_labels = dataset
+# Download an example image.
+download("four.jpg","https://bit.ly/3lAJrMe")
 
-# Grab a training data image
-image = test_data[0]
+format_options = dict(
+    grayscale=True,
+    invert=True,
+    process=True,
+    contrast=30,
+    resize=(28, 28),
+    rotate=3,
+)
 
-# Uses the EasyNN train model on an example test image.
-print(trained_model(image))
+# Converting your image into the correct format for the mnist number dataset.
+image = image("four.jpg").format(**format_options)
 
-# Show the image
-show(image, "image")
+model.show(image)
+
+print(model.classify(image))
 ```
 
 ### Output:
