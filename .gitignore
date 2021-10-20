@@ -10,7 +10,7 @@ __pycache__/
 *.model
 *.gz
 *.pkl
-#*.npz
+*.npz
 # Mac related
 *.DS_Store
 
@@ -144,3 +144,4 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+mnist/number/number_parameters.npz
