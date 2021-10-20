@@ -36,9 +36,9 @@ format_options = dict(
 # Converting your image into the correct format for the mnist number dataset.
 image = image("four.jpg").format(**format_options)
 
-model.show(image)
-
 print(model.classify(image))
+
+model.show(image)
 ```
 
 ### Output:
@@ -53,17 +53,6 @@ Downloading - four.jpg:
 ```
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/number_7_example.png">
+  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/example_four.png">
 </p>
 
-### Future goals for non known datasets:
-```Python
-from EasyNN.model import model
-
-xtrain = "My images"
-ytrain = "My labels"
-
-model.dataset = xtrain, ytrain
-
-model(xtrain[0])
-```
