@@ -2,7 +2,7 @@
 
 # EasyNN - Neural Networks made Easy
 EasyNN is a python package designed to provide an easy-to-use Neural Network. The package is designed to work right out of the box with multiple datasets, while also allowing the user to customize features as they see fit. 
-## EasyNN requires Python version 3.9.7 or greater.
+### EasyNN requires Python version 3.9.7 or greater.
 
 ## See our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
 
