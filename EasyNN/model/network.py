@@ -118,7 +118,8 @@ class Network(Model[ArrayIn, ArrayOut], Generic[ArrayIn, ArrayOut]):
             for name, arr in layer.get_arrays().items()
             if name != "parameters"
         }
-        arrays["parameters"] = self.parameters
+        if hasattr(self, "parameters"):
+            arrays["parameters"] = self.parameters
         return arrays
 
     def set_arrays(self, *, parameters: ArrayND = None, **layer_arrays: ArrayND) -> None:

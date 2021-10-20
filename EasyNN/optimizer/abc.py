@@ -4,7 +4,7 @@ TODO: Not complete.
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from itertools import count, cycle
-from typing import get_args
+from typing import Hashable, get_args
 from EasyNN._abc import AutoDocumentation
 from EasyNN.typing import Array1D, Command
 import EasyNN.model.abc

@@ -1,26 +1,9 @@
-from EasyNN.model import Network, Normalize, ReLU, LogSoftMax
-from EasyNN.examples.mnist.number import labels, show
-import numpy as np
-import pickle
+from EasyNN.model import Model
+from EasyNN.utilities.download import download
 
-# Create the mnist model.
-model = Network(
-    Normalize(1e-3),
-    256, ReLU,
-    128, ReLU,
-    10, LogSoftMax
-)
+# Required for the trained model.
+download("number_parameters.npz","https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number_parameters.npz")
+download("number_structure.pkl","https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/number/number_structure.pkl")
 
-# Establish the models labels
-model.labels = labels
-
-# Use the pre-created show function to 
-model.show = show
-
-# Save the model as a pick file to be used later.
-# Its important to use binary mode
-dbfile = open('number_model.pkl', 'wb')
-    
-# source, destination
-pickle.dump(model, dbfile)                     
-dbfile.close()
+# Load the saved model
+model = Model.load("number")

@@ -37,11 +37,14 @@ class Normalize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
 
     def get_arrays(self) -> ArrayDict:
         """Returns the arrays stored in the model."""
-        return dict(
-            parameters=self.parameters,
-            mean=self.mean,
-            variance=self.variance,
-        )
+        arrays = dict()
+        if hasattr(self, "parameters"):
+            arrays["parameters"] = self.parameters
+        if hasattr(self, "mean"):
+            arrays["mean"] = self.mean
+        if hasattr(self, "variance"):
+            arrays["variance"] = self.variance
+        return arrays
 
     @overload
     def set_arrays(self, *, parameters: ArrayND = None) -> None:

@@ -6,9 +6,10 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 from copy import copy
 from heapq import merge
-from itertools import count, repeat
+from itertools import count
 import numpy as np
-from typing import Any, Callable, Generic, TypeVar, overload
+import pickle
+from typing import Any, Callable, Generator, Generic, Iterator, TypeVar, overload
 from EasyNN._abc import AutoDocumentation
 from EasyNN.batch.abc import Batch, Dataset
 from EasyNN.batch.mini import MiniBatch
@@ -18,7 +19,7 @@ from EasyNN.optimizer.abc import Optimizer
 from EasyNN.optimizer.adam import Adam
 from EasyNN.classifier.classifier import Classifier, LabelType
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND, Callback, Command, Factory
-from EasyNN.utilities.parameters import save,load
+from EasyNN.utilities.parameters import save, load
 
 Labels = TypeVar("Labels")
 ArrayIn = TypeVar("ArrayIn", bound=ArrayND)
@@ -60,6 +61,64 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _default_optimizer: Factory[Optimizer] = Adam
     _default_classifier: Factory[Classifier] = Classifier
     stop_training: bool = False
+
+    def __getstate__(self) -> dict[str, Any]:
+        """Pickle the non-array variables."""
+        
+        attributes = {
+            name: attribute
+            for name, attribute in vars(self).items()
+            if name != "commands"
+            if not isinstance(attribute, np.ndarray)
+        }
+        if hasattr(self, "x"):
+            attributes["x_shape"] = self.x.shape
+        elif hasattr(self, "parameters"):
+            attributes["parameters_shape"] = self.parameters.shape
+        return attributes
+
+    def save(self, file: str) -> None:
+        save(file + "_parameters.npz", **self.get_arrays())
+        with open(file + "_structure.pkl", "wb") as f:
+            pickle.dump(self, f)
+
+    @staticmethod
+    def load(file: str) -> Model:
+        with open(file + "_structure.pkl", "rb") as f:
+            self = pickle.load(f)
+        if hasattr(self, "x_shape"):
+            x_shape = vars(self).pop("x_shape")
+            self(np.empty(x_shape))
+        elif hasattr(self, "parameters_shape"):
+            parameters_shape = vars(self).pop("parameters_shape")
+            self.parameters = np.empty(parameters_shape)
+        self.set_arrays(**load(file + "_parameters.npz"))
+        return self
+
+    def _on_optimization_start(self) -> None:
+        self(self.training[0][0])
+
+    def _on_training_start(self) -> None:
+        next(self.training)
+
+    def _on_testing_start(self) -> None:
+        next(self.testing)
+
+    def _on_validation_start(self) -> None:
+        next(self.validation)
+
+    @property
+    def callbacks(self) -> dict[Command, list[Callback]]:
+        """Stores the callback commands."""
+        if not hasattr(self, "_callbacks"):
+            self._callbacks = defaultdict(list)
+            # At the start of optimization, compile the model.
+            self.on_optimization_start(type(self)._on_optimization_start)
+            # At the start of each callback, get the next batch sample from the datasets.
+            self.on_training_start(type(self)._on_training_start)
+            self.on_testing_start(type(self)._on_testing_start)
+            self.on_validation_start(type(self)._on_validation_start)
+        return self._callbacks
 
     @property
     def command(self) -> Command:
@@ -225,7 +284,10 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
 
     def get_arrays(self) -> dict[str, ArrayND]:
         """Returns the arrays stored in the model."""
-        return dict(parameters=self.parameters)
+        if hasattr(self, "parameters"):
+            return dict(parameters=self.parameters)
+        else:
+            return dict()
 
     def set_arrays(self, *, parameters: ArrayND = None) -> None:
         """Sets the arrays stored in the model."""

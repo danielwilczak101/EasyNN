@@ -20,6 +20,6 @@ format_options = dict(
 # Converting your image into the correct format for the mnist number dataset.
 image = image("four.jpg").format(**format_options)
 
-compare(image,dataset=dataset)
+model.show(dataset[0][0])
 
 print(model.classify(image))

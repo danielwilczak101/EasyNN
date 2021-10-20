@@ -3,6 +3,7 @@ from typing import Generic, IO, Iterator, NoReturn, TypeVar, Union
 from EasyNN.utilities.download import download
 from EasyNN.utilities.data.load import load
 from EasyNN.typing import ArrayND
+from typing import Any
 
 ArrayIn = TypeVar("ArrayIn", bound=ArrayND)
 ArrayOut = TypeVar("ArrayOut", bound=ArrayND)
@@ -21,12 +22,19 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
     """
 
     _batch_size: int
-    _data: tuple[ArrayIn, ArrayOut]
+    _data: tuple[ArrayIn, ArrayOut]  # Don't save
     file: Union[str, IO]
     url: str
     sample: tuple[ArrayIn, ArrayOut]
-    samples: Iterator[tuple[ArrayIn, ArrayOut]]
+    samples: Iterator[tuple[ArrayIn, ArrayOut]]  # Don't save
     iteration: int = -1
+
+    def __getstate__(self) -> dict[str, Any]:
+        return {
+            name: attribute
+            for name, attribute in vars(self).items()
+            if name not in ("_data", "samples")
+        }
 
     def __getitem__(self, indexes: Union[int, tuple[int, ...]]) -> tuple[ArrayIn, ArrayOut]:
         """Get a sample from the data."""
