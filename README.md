@@ -34,15 +34,13 @@ show(image, "image")
 
 ### Output:
 ```bash
-Downloading Trained MNIST model...
-Download complete.
-Downloading number_train-images-idx3-ubyte.gz...
-Downloading number_t10k-images-idx3-ubyte.gz...
-Downloading number_train-labels-idx1-ubyte.gz...
-Downloading number_t10k-labels-idx1-ubyte.gz...
-Download complete.
-Save complete.
-7
+Downloading - number_parameters.npz:
+[################################] 1769/1769 - 00:00:00
+Downloading - number_structure.pkl:
+[################################] 10700/10700 - 00:00:00
+Downloading - four.jpg:
+[################################] 1371/1371 - 00:00:00
+4
 ```
 ### Image output:
 <p align="center">
