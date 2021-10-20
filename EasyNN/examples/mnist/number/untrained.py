@@ -1,15 +1,11 @@
 from EasyNN.examples.mnist.number.data import dataset
 from EasyNN.examples.mnist.number import labels, show
 from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
-from EasyNN.utilities.momentum import Momentum
 from EasyNN.optimizer import MomentumDescent
 from EasyNN.utilities.callbacks.printer import printer
 import EasyNN.utilities.callbacks.plot as plot
 from EasyNN.typing import Callback
 from EasyNN.batch import MiniBatch
-from dataclasses import dataclass
-import matplotlib.pyplot as plt
-import pickle
 import numpy as np
 
 

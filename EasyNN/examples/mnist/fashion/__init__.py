@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = "fashion.npz"
-url = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/fashion/fashion.npz"
+file = "fashion_dataset.npz"
+url = "https://github.com/danielwilczak101/EasyNN/raw/datasets/mnist/fashion/fashion_dataset.npz"
 
 labels = {
     0 :	'T-shirt/top',
