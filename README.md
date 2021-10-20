@@ -2,9 +2,9 @@
 
 # EasyNN - Neural Networks made Easy
 EasyNN is a python package designed to provide an easy-to-use Neural Network. The package is designed to work right out of the box with multiple datasets, while also allowing the user to customize features as they see fit. 
-### Requires Python version 3.9.7 or greater.
+### EasyNN requires Python version 3.9.7 or greater.
 
-## Check out our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
+## See our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
 
 ## Installation:
 
@@ -17,46 +17,43 @@ pip3 install EasyNN
 ## Getting started with EasyNN(Basic Example):
 To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
 ```Python
-from EasyNN.dataset.mnist.number import trained_model, dataset, show
+from EasyNN.examples.mnist.number.trained import model
+from EasyNN.utilities.image.preprocess import image
+from EasyNN.utilities.download import download
 
-# Downloads dataset to computer
-train_data,train_labels,test_data,test_labels = dataset
+# Download an example image.
+download("four.jpg","https://bit.ly/3lAJrMe")
 
-# Grab a training data image
-image = test_data[0]
+format_options = dict(
+    grayscale=True,
+    invert=True,
+    process=True,
+    contrast=30,
+    resize=(28, 28),
+    rotate=3,
+)
 
-# Uses the EasyNN train model on an example test image.
-print(trained_model(image))
+# Converting your image into the correct format for the mnist number dataset.
+image = image("four.jpg").format(**format_options)
 
-# Show the image
-show(image, "image")
+print(model.classify(image))
+
+model.show(image)
 ```
 
 ### Output:
 ```bash
-Downloading Trained MNIST model...
-Download complete.
-Downloading number_train-images-idx3-ubyte.gz...
-Downloading number_t10k-images-idx3-ubyte.gz...
-Downloading number_train-labels-idx1-ubyte.gz...
-Downloading number_t10k-labels-idx1-ubyte.gz...
-Download complete.
-Save complete.
-7
+Downloading - number_parameters.npz:
+[################################] 1769/1769 - 00:00:00
+Downloading - number_structure.pkl:
+[################################] 10700/10700 - 00:00:00
+Downloading - four.jpg:
+[################################] 1371/1371 - 00:00:00
+4
 ```
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/number_7_example.png">
+  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/example_four.png">
 </p>
 
-### Future goals for non known datasets:
-```Python
-from EasyNN.model import model
-
-xtrain = "My images"
-ytrain = "My labels"
-
-model.dataset = xtrain, ytrain
-
-model(xtrain[0])
-```
+## To see more examples with many other datasets. Please visit our [wiki](https://github.com/danielwilczak101/EasyNN/wiki).
