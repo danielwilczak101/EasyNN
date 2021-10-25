@@ -1,11 +1,12 @@
+from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
+from EasyNN.utilities.callbacks.printer import printer
 from EasyNN.examples.mnist.number.data import dataset
 from EasyNN.examples.mnist.number import labels, show
-from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.utilities.callbacks.printer import printer
-import EasyNN.utilities.callbacks.plot as plot
 from EasyNN.typing import Callback
 from EasyNN.batch import MiniBatch
+
+import EasyNN.utilities.callbacks.plot as plot
 import numpy as np
 
 
