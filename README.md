@@ -14,6 +14,14 @@ Run python's pip3 to install:
 pip3 install EasyNN
 ```
 
+## Minimum Required
+```Python
+from EasyNN.examples.mnist.fashion.trained import model
+
+# Classify the an image in the dataset
+print(model.classify(image))
+```
+
 ## Getting started with EasyNN(Basic Example):
 To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
 ```Python
