@@ -4,7 +4,7 @@
 EasyNN is a python package designed to provide an easy-to-use Neural Network. The package is designed to work right out of the box with multiple datasets, while also allowing the user to customize features as they see fit. 
 ### EasyNN requires Python version 3.9.7 or greater.
 
-## See our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information.
+## See our [wiki](https://github.com/danielwilczak101/EasyNN/wiki) for more information and [Datasets](https://github.com/danielwilczak101/EasyNN/wiki).
 
 ## Installation:
 
@@ -12,6 +12,14 @@ Run python's pip3 to install:
 
 ```Python
 pip3 install EasyNN
+```
+
+## Minimum Required
+```Python
+from EasyNN.examples.mnist.fashion.trained import model
+
+# Classify the an image in the dataset
+print(model.classify(image))
 ```
 
 ## Getting started with EasyNN(Basic Example):

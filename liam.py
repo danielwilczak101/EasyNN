@@ -1,4 +1,3 @@
-from EasyNN.examples.mnist.number.trained import model
 from EasyNN.utilities.image.preprocess import image
 from EasyNN.utilities.image.compare import compare
 from EasyNN.utilities.download import download
@@ -20,6 +19,5 @@ format_options = dict(
 # Converting your image into the correct format for the mnist number dataset.
 image = image("four.jpg").format(**format_options)
 
-model.show(dataset[0][0])
+compare(image,dataset = dataset)
 
-print(model.classify(image))
