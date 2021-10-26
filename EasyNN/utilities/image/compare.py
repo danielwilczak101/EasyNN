@@ -18,17 +18,11 @@ def compare(*args, width=3, height=3, dataset=None) -> None:
     Example:
         >>> compare(image1,image2,image3)
         Returns subplot of image1,image2,image3
+
+        >>> compare(image, dataset = dataset)
+        Returns subplot of users image and the rest fill in
+        from the datasets images.
     """
-
-        # First images are the user defined ones.
-            # If the dataset variable is set we fill in using dataset.
-        
-        # The maximum images we use is set by width.
-
-        # Each image take up 110pixels width on the plot.
-
-        # Put the label above the images.
-            # User definded one is not required.
 
     args_count = len(args)
 
