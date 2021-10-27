@@ -1,4 +1,5 @@
 from __future__ import annotations
+from copy import copy
 from EasyNN.typing import ArrayND
 from typing import Generic, TypeVar
 
@@ -27,3 +28,12 @@ class Momentum(Generic[Array]):
         """Update and return the momentum value."""
         self.value = value
         return self.value
+
+    def peek(self: Momentum[Array], value: Array) -> Array:
+        """Peek at the result of `momentum.update(value)` without updating the momentum."""
+        _weight = copy(self._weight)
+        _value = copy(self._value)
+        value = self.update(value)
+        self._weight = _weight
+        self._value = _value
+        return value

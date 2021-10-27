@@ -23,4 +23,7 @@ class MomentumDescent(GradientDescent):
 
     def get_derivatives(self: MomentumDescent, model: EasyNN.model.abc.Model) -> Array1D[float]:
         """Computes the derivatives for the optimizer."""
-        return model._derivative_momentum.update(super().get_derivatives(model))
+        if model.command.startswith("on_training"):
+            return model._derivative_momentum.update(super().get_derivatives(model))
+        else:
+            return model._derivative_momentum.peek(super().get_derivatives(model))
