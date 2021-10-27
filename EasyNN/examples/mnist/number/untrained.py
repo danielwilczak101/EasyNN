@@ -12,15 +12,15 @@ import numpy as np
 
 # Create the mnist model.
 model = Network(
-    Normalize(1e-3),
-    Randomize(0.5), 256, ReLU,
-    Randomize(0.3), 128, ReLU,
-    Randomize(0.1), 10,  LogSoftMax
+    Normalize(1e-3), Randomize(0.01),
+    1024, ReLU,
+    256, ReLU,
+    10, LogSoftMax,
 )
 
-# Aim for 90% validation accuracy for 5 validation iterations in a row.
-model.validation.accuracy_patience = 1
-model.validation.accuracy_limit = 0.90
+# Aim for 94% validation accuracy for 5 validation iterations in a row.
+model.validation.accuracy_patience = 5
+model.validation.accuracy_limit = 0.94
 model.validation.successes = 0
 model.validation_lr = 0.3
 model.validation.accuracy = []
@@ -33,6 +33,7 @@ model.show = show
 
 # Use gradient descent with momentum.
 model.optimizer = MomentumDescent()
+model.optimizer.lr = 0.03
 
 @model.on_optimization_start
 def setup(model):
@@ -61,5 +62,3 @@ def save_validation_accuracy(model):
     model.validation.accuracy.append(accuracy)
 
 model.on_testing_start(plot.validation.accuracy)
-
-
