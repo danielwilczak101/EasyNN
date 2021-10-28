@@ -91,7 +91,21 @@ class Optimizer(AutoDocumentation, ABC):
         """Ran at the end of every testing iteration."""
 
     def on_validation_start(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
-        """Ran at the start of every validation iteration."""
+        """Ran at the start of every validation iteration. By default, attempts to tune the learning rate."""
+        parameters = model.parameters.copy()
+        model._optimizer_lr *= 2
+        self.on_training_start(model)
+        loss_1 = model.loss(*model.validation.sample)
+        model.parameters = parameters
+        model._optimizer_lr *= 0.25
+        self.on_training_start(model)
+        loss_2 = model.loss(*model.validation.sample)
+        model.parameters = parameters
+        if loss_1 < loss_2:
+            model._optimizer_lr *= 1.0625 / 0.5
+        else:
+            model._optimizer_lr *= 0.875 / 0.5
+        print(f"    {model._optimizer_lr = }")
 
     def on_validation_end(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
         """Ran at the end of every validation iteration."""
