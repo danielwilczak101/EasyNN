@@ -30,17 +30,6 @@ from EasyNN.examples.mnist.fashion.data import dataset
 images, labels = dataset
 
 # Classify what the second image is in the dataset.
-print(model.classify(images[1]))
-```
-
-### Dataset Example:
-```Python
-from EasyNN.examples.mnist.fashion.trained import model
-from EasyNN.examples.mnist.fashion.data import dataset
-
-images, labels = dataset
-
-# Classify what the second image is in the dataset.
 print(model.classify(images[0]))
 ```
 
