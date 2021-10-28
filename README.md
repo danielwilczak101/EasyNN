@@ -61,7 +61,7 @@ Downloading - four.jpg:
 ```
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/example_four.png">
+  <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_four.png">
 </p>
 
 ## To see more examples with many other datasets. Please visit our [wiki](https://github.com/danielwilczak101/EasyNN/wiki).
