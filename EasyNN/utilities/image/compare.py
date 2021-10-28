@@ -24,8 +24,14 @@ def compare(*args, width=3, height=3, dataset=None) -> None:
         from the datasets images.
     """
 
-    args_count = len(args)
+    # Check if all the images are the same size.
+        # If not raise - Images are not in the same format or size.
 
+    # Maybe this should also be a model function to add simplicity to the function.
+        # This is because each one changes its requirements based on the type of the image.
+
+    args_count = len(args)
+        
     for i in range(args_count):
         # define subplot
         plt.subplot(width * 110 + 1 + i)
