@@ -14,9 +14,9 @@ Run python's pip3 to install:
 pip3 install EasyNN
 ```
 
-## Minimum Required
+### Model:
 ```Python
-from EasyNN.examples.mnist.fashion.trained import model
+from EasyNN.examples.mnist.number.trained import model
 
 # Classify the an image in the dataset
 print(model.classify(image))
@@ -24,28 +24,28 @@ print(model.classify(image))
 
 ### Dataset Example:
 ```Python
-from EasyNN.examples.mnist.fashion.trained import model
-from EasyNN.examples.mnist.fashion.data import dataset
+from EasyNN.examples.mnist.number.trained import model
+from EasyNN.examples.mnist.number.data import dataset
 
 images, labels = dataset
 
 # Classify what the second image is in the dataset.
-print(model.classify(images[0]))
+print(model.classify(images[1]))
 ```
 
 ### Dataset example output:
 ```
-Downloading - fashion_parameters.npz:
-[################################] 4765/4765 - 00:00:00
-Downloading - fashion_structure.pkl:
-[################################] 13831/13831 - 00:00:00
-Downloading - fashion_dataset.npz:
-[################################] 30147/30147 - 00:00:00
-Ankle boot
+Downloading - number_parameters.npz:
+[################################] 1769/1769 - 00:00:00
+Downloading - number_structure.pkl:
+[################################] 10700/10700 - 00:00:00
+Downloading - number_dataset.npz:
+[################################] 11221/11221 - 00:00:00
+0
 ```
 
-## Getting started with EasyNN(Basic Example):
-To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
+### Full example:
+More info can be found about [converting images](https://github.com/danielwilczak101/EasyNN/wiki/Image-Utility) in the utilities section.
 ```Python
 from EasyNN.examples.mnist.number.trained import model
 from EasyNN.utilities.image.preprocess import image
@@ -70,7 +70,6 @@ print(model.classify(image))
 
 model.show(image)
 ```
-
 ### Output:
 ```bash
 Downloading - number_parameters.npz:
@@ -81,6 +80,7 @@ Downloading - four.jpg:
 [################################] 1371/1371 - 00:00:00
 4
 ```
+
 ### Image output:
 <p align="center">
   <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_four.png">
