@@ -22,6 +22,39 @@ from EasyNN.examples.mnist.fashion.trained import model
 print(model.classify(image))
 ```
 
+### Dataset Example:
+```Python
+from EasyNN.examples.mnist.fashion.trained import model
+from EasyNN.examples.mnist.fashion.data import dataset
+
+images, labels = dataset
+
+# Classify what the second image is in the dataset.
+print(model.classify(images[1]))
+```
+
+### Dataset Example:
+```Python
+from EasyNN.examples.mnist.fashion.trained import model
+from EasyNN.examples.mnist.fashion.data import dataset
+
+images, labels = dataset
+
+# Classify what the second image is in the dataset.
+print(model.classify(images[0]))
+```
+
+### Dataset example output:
+```
+Downloading - fashion_parameters.npz:
+[################################] 4765/4765 - 00:00:00
+Downloading - fashion_structure.pkl:
+[################################] 13831/13831 - 00:00:00
+Downloading - fashion_dataset.npz:
+[################################] 30147/30147 - 00:00:00
+Ankle boot
+```
+
 ## Getting started with EasyNN(Basic Example):
 To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
 ```Python
