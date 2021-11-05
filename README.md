@@ -14,16 +14,38 @@ Run python's pip3 to install:
 pip3 install EasyNN
 ```
 
-## Minimum Required
+### Model:
 ```Python
-from EasyNN.examples.mnist.fashion.trained import model
+from EasyNN.examples.mnist.number.trained import model
 
 # Classify the an image in the dataset
 print(model.classify(image))
 ```
 
-## Getting started with EasyNN(Basic Example):
-To see more documention please see our wiki's infomation on the [number mnist](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) dataset.
+### Dataset Example:
+```Python
+from EasyNN.examples.mnist.number.trained import model
+from EasyNN.examples.mnist.number.data import dataset
+
+images, labels = dataset
+
+# Classify what the second image is in the dataset.
+print(model.classify(images[1]))
+```
+
+### Dataset example output:
+```
+Downloading - number_parameters.npz:
+[################################] 1769/1769 - 00:00:00
+Downloading - number_structure.pkl:
+[################################] 10700/10700 - 00:00:00
+Downloading - number_dataset.npz:
+[################################] 11221/11221 - 00:00:00
+0
+```
+
+### Full example:
+More info can be found about [converting images](https://github.com/danielwilczak101/EasyNN/wiki/Image-Utility) in the utilities section.
 ```Python
 from EasyNN.examples.mnist.number.trained import model
 from EasyNN.utilities.image.preprocess import image
@@ -48,7 +70,6 @@ print(model.classify(image))
 
 model.show(image)
 ```
-
 ### Output:
 ```bash
 Downloading - number_parameters.npz:
@@ -59,9 +80,10 @@ Downloading - four.jpg:
 [################################] 1371/1371 - 00:00:00
 4
 ```
+
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/example_four.png">
+  <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_four.png">
 </p>
 
 ## To see more examples with many other datasets. Please visit our [wiki](https://github.com/danielwilczak101/EasyNN/wiki).

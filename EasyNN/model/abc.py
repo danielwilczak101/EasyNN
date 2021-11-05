@@ -332,64 +332,71 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         """Train the model."""
         self.optimizer.train(self)
 
-    def callback(self, command: Command) -> Callable[[Callback], Callback]:
-        """model.callback(...) returns a decorator for saving callbacks."""
-        def get_callback(cb: Callback) -> Callback:
-            # Save the new callback to the given command.
-            self.callbacks[command].append(cb)
-            # Return the callback for decorator usage.
-            return cb
-        # Return the decorator.
-        return get_callback
+    def callback(self, *callbacks: Callback) -> None:
+        """model.callback(...) consumes a callback object.."""
+        for cb in callbacks:
+            for method in dir(type(cb)):
+                if method.startswith("on_"):
+                    self.callbacks[method].append(getattr(cb, method))
 
-    def on_optimization_start(self, cb: Callback) -> Callback:
+    def on_optimization_start(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_optimization_start')."""
-        self.callbacks["on_optimization_start"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_optimization_start"].append(cb)
         return cb
 
-    def on_optimization_end(self, cb: Callback) -> Callback:
+    def on_optimization_end(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_optimization_end')."""
-        self.callbacks["on_optimization_end"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_optimization_end"].append(cb)
         return cb
 
-    def on_training_start(self, cb: Callback) -> Callback:
+    def on_training_start(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_training_start')."""
-        self.callbacks["on_training_start"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_training_start"].append(cb)
         return cb
 
-    def on_training_end(self, cb: Callback) -> Callback:
+    def on_training_end(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_training_end')."""
-        self.callbacks["on_training_end"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_training_end"].append(cb)
         return cb
 
-    def on_testing_start(self, cb: Callback) -> Callback:
+    def on_testing_start(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_testing_start')."""
-        self.callbacks["on_testing_start"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_testing_start"].append(cb)
         return cb
 
-    def on_testing_end(self, cb: Callback) -> Callback:
+    def on_testing_end(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_testing_end')."""
-        self.callbacks["on_testing_end"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_testing_end"].append(cb)
         return cb
 
-    def on_validation_start(self, cb: Callback) -> Callback:
+    def on_validation_start(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_validation_start')."""
-        self.callbacks["on_validation_start"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_validation_start"].append(cb)
         return cb
 
-    def on_validation_end(self, cb: Callback) -> Callback:
+    def on_validation_end(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_validation_end')."""
-        self.callbacks["on_validation_end"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_validation_end"].append(cb)
         return cb
 
-    def on_epoch_end(self, cb: Callback) -> Callback:
+    def on_epoch_end(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_epoch_end')."""
-        self.callbacks["on_epoch_end"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_epoch_end"].append(cb)
         return cb
 
-    def on_epoch_start(self, cb: Callback) -> Callback:
+    def on_epoch_start(self, *callbacks: Callback) -> Callback:
         """Shortcut for model.callback('on_epoch_start')."""
-        self.callbacks["on_epoch_start"].append(cb)
+        for cb in callbacks:
+            self.callbacks["on_epoch_start"].append(cb)
         return cb
 
     def training_validation_commands(self) -> Iterator[Command]:

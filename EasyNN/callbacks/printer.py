@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class printer:
+class Printer:
     iteration: bool = False
     training_loss: bool = False
     validation_loss: bool = False

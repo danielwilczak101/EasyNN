@@ -53,8 +53,7 @@ class Optimizer(AutoDocumentation, ABC):
         # Assign learning rates.
         model._optimizer_lr = self.lr
         # Add on the optimizer commands.
-        for command in set(get_args(Command)) - {"off"}:
-            model.callback(command)(getattr(self, command))
+        model.callback(self)
         # Begin running model commands.
         model.commands = model.optimizer_commands()
 
@@ -95,11 +94,11 @@ class Optimizer(AutoDocumentation, ABC):
         parameters = model.parameters.copy()
         model._optimizer_lr *= 2
         self.on_training_start(model)
-        loss_1 = model.loss(*model.validation.sample)
+        loss_1 = model.loss(*model.training.sample)
         model.parameters = parameters
         model._optimizer_lr *= 0.25
         self.on_training_start(model)
-        loss_2 = model.loss(*model.validation.sample)
+        loss_2 = model.loss(*model.training.sample)
         model.parameters = parameters
         if loss_1 < loss_2:
             model._optimizer_lr *= 1.0625 / 0.5

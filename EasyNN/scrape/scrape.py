@@ -11,6 +11,16 @@ Code downloaded from:
     Author:Fabian Bosler
 """
 
+"""
+from EasyNN.google.image import scrape
+
+scrape("dog",100,path="./images")
+
+# TODO:
+    # Format shown above
+    # Chromedriver try catches for getting which version you need.
+"""
+
 def fetch_image_urls(query:str, max_links_to_fetch:int, wd:webdriver, sleep_between_interactions:int=1):
     def scroll_to_end(wd):
         wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
