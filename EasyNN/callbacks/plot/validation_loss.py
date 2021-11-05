@@ -10,7 +10,11 @@ from EasyNN.model.abc import Model
 @dataclass
 class PlotValidationLoss(Plotter):
     """
-    PlotValidationLoss(lr: float = 0.3, name: str = "validation loss", x_axis: Literal["epochs", "iterations", "validation", "training"] = "epochs")
+    PlotValidationLoss(
+        lr: float = 0.3,
+        name: str = "validation loss",
+        x_axis: Literal["epochs", "iterations", "validation", "training"] = "epochs"
+    )
 
     A Plotter callback for plotting the validation loss.
 

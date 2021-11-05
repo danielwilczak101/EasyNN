@@ -1,5 +1,5 @@
-from EasyNN.examples.mnist.fashion.untrained import model
-from EasyNN.examples.mnist.fashion.data import dataset
+from EasyNN.examples.mnist.number.untrained import model
+from EasyNN.examples.mnist.number.data import dataset
 from EasyNN.callbacks import ReachValidationAccuracy
 
 images, labels = dataset
