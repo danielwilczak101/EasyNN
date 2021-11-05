@@ -22,9 +22,10 @@ class image:
         rotate:int=0,
         contrast:int=0,
         resize:list[int]=False,
-        flatten:str= 'C',
+        flatten:str='C',
         process: bool=False,
-        convert: str=None
+        convert: str=None,
+        intensity: int=0
         ):
         """Used to specify how they want the format of the image to look like.
         
@@ -64,6 +65,9 @@ class image:
         # Flatten the image so it can be used in the image and show functions.
         if flatten:
             self.image = self.image.flatten(flatten)
+        if intensity:
+            # Expose / brighten the pixels that are non zero.
+            self.image[self.image!=0] += intensity
         
         return self.image
 
