@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
 import numpy as np
 
-from EasyNN.model.abc import Model
+#from EasyNN.model.abc import Model
 from EasyNN.utilities.momentum import Momentum
 
 
@@ -14,10 +14,10 @@ class Plotter:
     data: list = field(default_factory=list, init=False)
 
     @abstractmethod
-    def x_values(self, model: Model) -> np.ndarray:
+    def x_values(self, model) -> np.ndarray:
         """Rescales the iteration into another format (e.g. validation iteration, training iteration, or epoch)."""
 
-    def on_testing_start(self, model: Model) -> None:
+    def on_testing_start(self, model) -> None:
         x = self.x_values(model)
         y = self.data
         plt.plot(x, y, label=f"raw {self.name}")
@@ -27,5 +27,5 @@ class Plotter:
         plt.title(self.name.title())
         plt.legend(loc="lower left")
 
-    def on_testing_end(self, model: Model) -> None:
+    def on_testing_end(self, model) -> None:
         plt.show()

@@ -74,8 +74,6 @@ class Optimizer(AutoDocumentation, ABC):
 
     def on_optimization_end(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
         """Ran at the end of optimization."""
-        # To help with formatting. Temporary. Gonna forget. Add it the tasks.
-        print()
 
     @abstractmethod
     def on_training_start(self: Optimizer, model: EasyNN.model.abc.Model) -> None:

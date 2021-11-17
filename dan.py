@@ -37,19 +37,22 @@ model.callback(
     cb.PlotTrainingAccuracy()
 )
 
-# Current form of the printer.
-model.on_training_start(
-    cb.Printer(start="\n", iteration=True, end="", frequency=10)
-)
 
-model.on_validation_end(
-    cb.Printer(indent=0, start=", ", validation_accuracy=True, end="")
-)
-
-
+# model.plot(validation_accuracy=True, validation_loss=True, training_accuracy=True, axis="epoch")
+model.print.on_validation_start(iteration=True,accuracy=True)
+model.print.on_training_start(iteration=True, frequency=10)
 
 # Always at the end of your setup
-model.train()
+#with model.save_with("xor"), model.plot_with(...):
+#    model.train()
+
+try:
+    model.train()
+    model.save("xor")
+except KeyboardInterrupt:
+    model.save("xor")
 
 # Save your model so that you can use it later.
-model.save("xor")
+#model.save("xor")
+
+#model.plot()

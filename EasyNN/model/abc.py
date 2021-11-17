@@ -13,6 +13,7 @@ from typing import Any, Callable, Generator, Generic, Iterator, TypeVar, overloa
 from EasyNN._abc import AutoDocumentation
 from EasyNN.batch.abc import Batch, Dataset
 from EasyNN.batch.mini import MiniBatch
+from EasyNN.callbacks.print  import Print
 from EasyNN.loss.abc import Loss
 from EasyNN.loss.mean_square_error import MeanSquareError
 from EasyNN.optimizer.abc import Optimizer
@@ -60,6 +61,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     _default_loss: Factory[Loss[ArrayIn, ArrayOut]] = MeanSquareError
     _default_optimizer: Factory[Optimizer] = Adam
     _default_classifier: Factory[Classifier] = Classifier
+    _print: Print
     stop_training: bool = False
 
     def __getstate__(self) -> dict[str, Any]:
@@ -281,6 +283,13 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     @y.setter
     def y(self, y: ArrayOut) -> None:
         self._y = np.asarray(y, dtype=float)
+
+    @property
+    def print(self) -> Print:
+        if not hasattr(self, "_print"):
+            self._print = Print()
+            self.callback(self._print)
+        return self._print
 
     def get_arrays(self) -> dict[str, ArrayND]:
         """Returns the arrays stored in the model."""

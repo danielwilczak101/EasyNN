@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from EasyNN.model.abc import Model
+#from EasyNN.model.abc import Model
 
 
 @dataclass
@@ -31,7 +31,7 @@ class ReachValidationAccuracy:
     patience: int = 1
     successes: int = field(default=0, init=False)
 
-    def on_validation_start(self, model: Model) -> None:
+    def on_validation_start(self, model) -> None:
         if model.accuracy(*model.validation.sample) > self.limit:
             self.successes += 1
         else:

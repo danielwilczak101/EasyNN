@@ -4,7 +4,7 @@ import numpy as np
 from typing import Literal
 
 from EasyNN.callbacks.plot.abc import Plotter
-from EasyNN.model.abc import Model
+# rom EasyNN.model.abc import Model
 
 
 @dataclass
@@ -38,7 +38,7 @@ class PlotTrainingAccuracy(Plotter):
     name: str = "Training accuracy"
     x_axis: Literal["epochs", "iterations", "validation", "training"] = "epochs"
 
-    def x_values(self, model: Model) -> np.ndarray:
+    def x_values(self, model) -> np.ndarray:
         if self.x_axis in ("iterations", "training"):
             return np.arange(len(self.data))
         elif self.x_axis == "validation":
@@ -47,10 +47,10 @@ class PlotTrainingAccuracy(Plotter):
             x = np.arange(len(self.data)) * model.training._batch_size / len(model.training)
             return x
 
-    def on_validation_start(self, model: Model) -> None:
+    def on_validation_start(self, model) -> None:
         self.data.append(model.accuracy(*model.training.sample))
 
-    def on_testing_start(self, model: Model) -> None:
+    def on_testing_start(self, model) -> None:
         super().on_testing_start(model)
         plt.xlabel(self.x_axis)
         plt.ylabel("accuracy")
