@@ -45,7 +45,6 @@ class PlotTrainingAccuracy(Plotter):
             return np.arange(len(self.data)) * model.training._batch_size / model.validation._batch_size
         else:
             x = np.arange(len(self.data)) * model.training._batch_size / len(model.training)
-            print(x[-1])
             return x
 
     def on_validation_start(self, model: Model) -> None:

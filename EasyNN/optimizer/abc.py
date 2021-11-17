@@ -74,6 +74,8 @@ class Optimizer(AutoDocumentation, ABC):
 
     def on_optimization_end(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
         """Ran at the end of optimization."""
+        # To help with formatting. Temporary. Gonna forget. Add it the tasks.
+        print()
 
     @abstractmethod
     def on_training_start(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
@@ -104,7 +106,7 @@ class Optimizer(AutoDocumentation, ABC):
             model._optimizer_lr *= 1.0625 / 0.5
         else:
             model._optimizer_lr *= 0.875 / 0.5
-        print(f"    {model._optimizer_lr = }")
+
 
     def on_validation_end(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
         """Ran at the end of every validation iteration."""

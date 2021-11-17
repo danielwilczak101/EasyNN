@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class Printer:
     iteration: bool = False
@@ -9,8 +10,12 @@ class Printer:
     training_accuracy: bool = False
     validation_accuracy: bool = False
     testing_accuracy: bool = False
+    learning_rate: bool = False
     frequency: int = 1
     i: int = -1
+    indent: int = 2
+    start: str = ""
+    end: str = "\n"
 
     def __call__(self, model) -> None:
         # Increment the counter and if it doesn't match the frequency,
@@ -20,16 +25,21 @@ class Printer:
             return
         # For the various variables, print the results.
         if self.iteration:
-            print(f"{  model.training.iteration = }")
+            self.formatted_print(f"Iteration: {model.training.iteration}")
         if self.training_loss:
-            print(f"{    model.loss(*model.training.sample)   = }")
+            self.formatted_print(f"Training Loss: {model.loss(*model.training.sample)}")
         if self.validation_loss:
-            print(f"{    model.loss(*model.validation.sample) = }")
+            self.formatted_print(f"Validation Loss: {model.loss(*model.validation.sample)}")
         if self.testing_loss:
-            print(f"{    model.loss(*model.testing.sample)    = }")
+            self.formatted_print(f"Testing Loss: {model.loss(*model.testing.sample)}")
         if self.training_accuracy:
-            print(f"{      model.accuracy(*model.training.sample)   = }")
+            self.formatted_print(f"Training Accuracy: {model.accuracy(*model.training.sample)}")
         if self.validation_accuracy:
-            print(f"{      model.accuracy(*model.validation.sample) = }")
+           self.formatted_print(f"Validation Accuracy: {model.accuracy(*model.validation.sample)}")
         if self.testing_accuracy:
-            print(f"{      model.accuracy(*model.testing.sample)    = }")
+            self.formatted_print(f"Testing Accuracy: {model.accuracy(*model.testing.sample)}")
+        if self.learning_rate:
+            self.formatted_print(f"Training Rate: {model._optimizer_lr}")
+
+    def formatted_print(self, message: str) -> None:
+        print(" " * self.indent + self.start + message, end=self.end)
