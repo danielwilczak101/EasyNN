@@ -27,40 +27,26 @@ model.optimizer.lr = 0.01
 
 model.callback(
     # Set when to terminate point. 
-    # In this case it will end once your validation accuracy hits above 90% five times.
+        # In this case it will end once your validation accuracy hits above 90% five times.
     cb.ReachValidationAccuracy(limit=0.90, patience=3),
+
     # Plot various metrics.
+        # Add smooth=False for plots.
     cb.PlotValidationAccuracy(),
     cb.PlotValidationLoss(),
     cb.PlotTrainingAccuracy()
 )
 
-# Print every 20 iterations.
+# Current form of the printer.
 model.on_training_start(
-    cb.Printer(
-        iteration=True,
-        frequency=20)
+    cb.Printer(start="\n", iteration=True, end="", frequency=10)
 )
-# On each validation step, print the training and validation loss/validation.
-model.on_validation_start(
-    cb.Printer(
-        #training_loss=True,
-        #training_accuracy=True,
-        #validation_loss=True,
-        validation_accuracy=True
-        )
+
+model.on_validation_end(
+    cb.Printer(indent=0, start=", ", validation_accuracy=True, end="")
 )
-# At the end during testing, check all of the losses.
-model.on_testing_start(
-    cb.Printer(
-        #training_loss=True,
-        #training_accuracy=True,
-        #validation_loss=True,
-        #validation_accuracy=True,
-        testing_loss=True,
-        testing_accuracy=True
-    )
-)
+
+
 
 # Always at the end of your setup
 model.train()
