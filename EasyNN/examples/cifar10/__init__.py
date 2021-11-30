@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 file  = "cifar10_dataset.npz"
-url  = "https://github.com/danielwilczak101/EasyNN/raw/datasets/cifar/cifar10.npz"
+url  = "https://github.com/danielwilczak101/EasyNN/raw/datasets/cifar/cifar10_dataset.npz"
 labels = {
             0: "airplane",
             1: "automobile",

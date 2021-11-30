@@ -26,7 +26,7 @@ model.labels = labels
 model.optimizer = MomentumDescent()
 
 # Change the default learning rate.
-model.optimizer.lr = 0.03
+model.optimizer.lr = 0.04
 
 # Test against 1024 validation images to see accuracy.
 @model.on_optimization_start
@@ -36,7 +36,7 @@ def setup(model):
 model.callback(
     # Set when to terminate point. 
         # In this case it will end once your validation accuracy hits above 90% five times.
-    cb.ReachValidationAccuracy(limit=0.90, patience=2),
+    cb.ReachValidationAccuracy(limit=0.80, patience=2),
 )
 
 # When the model hit a validation point it will print the iteration and accuracy of the model.
@@ -47,9 +47,7 @@ model.print.on_training_start(iteration=True, frequency=10)
 
 try:
     model.train()
-    model.save("xor")
+    model.save("cifar10")
 except KeyboardInterrupt:
-    model.save("xor")
+    model.save("cifar10")
 
-# Save your model so that you can use it later.
-model.save("xor")
