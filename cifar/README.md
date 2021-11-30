@@ -1,4 +1,4 @@
-Released: 
-Accurarcy: 
-Trained by: Dan
-Structure Created by: Dan
+Released:   
+Accurarcy:   
+Trained by: Dan  
+Structure Created by: Dan  
