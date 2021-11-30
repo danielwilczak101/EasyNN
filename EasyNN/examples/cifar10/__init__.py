@@ -1,7 +1,8 @@
-model_filename = "cifar10.model"
-data_filename  = "cifar10.npz"
-model_url = "#"
-data_url  = "https://github.com/danielwilczak101/EasyNN/raw/datasets/cifar/cifar10.npz"
+import matplotlib.pyplot as plt
+import numpy as np
+
+file  = "cifar10_dataset.npz"
+url  = "https://github.com/danielwilczak101/EasyNN/raw/datasets/cifar/cifar10.npz"
 labels = {
             0: "airplane",
             1: "automobile",
