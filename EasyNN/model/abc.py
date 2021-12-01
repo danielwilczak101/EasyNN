@@ -92,7 +92,7 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         self.set_arrays(**{name: array for name, array in arrays.items() if name != "parameters"})
         if hasattr(self, "x_shape"):
             x_shape = vars(self).pop("x_shape")
-            self(np.empty(x_shape))
+            self(np.zeros(x_shape))
         elif hasattr(self, "parameters_shape"):
             parameters_shape = vars(self).pop("parameters_shape")
             self.parameters = np.empty(parameters_shape)

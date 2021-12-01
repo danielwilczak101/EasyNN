@@ -69,7 +69,6 @@ class Normalize(Model[ArrayShape, ArrayShape], Generic[ArrayShape]):
             self._weight = 1.0
 
     def __forward__(self: Normalize[ArrayShape], x: ArrayShape) -> ArrayShape:
-        breakpoint()
         if self.command.startswith("on_training_"):
             self._weight += self.__lr * (1 - self._weight)
             self._mean += self.__lr * (x.mean(axis=0) - self._mean)
