@@ -1,8 +1,7 @@
-from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
-from EasyNN.examples.mnist.number.data import dataset
-from EasyNN.examples.mnist.number import labels, show
+from EasyNN.model import Model, Network, Normalize, Randomize, ReLU, LogSoftMax
+from EasyNN.examples.cifar10.data import dataset
+from EasyNN.examples.cifar10 import labels
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.typing import Callback
 from EasyNN.batch import MiniBatch
 
 import EasyNN.callbacks as cb
@@ -21,19 +20,18 @@ model.training.data = dataset
 
 # Establish the labels and show feature.
 model.labels = labels
-model.show = show 
+#model.show = show
 
 # Use gradient descent with momentum.
 model.optimizer = MomentumDescent()
 
 # Change the default learning rate.
-model.optimizer.lr = 0.03
+model.optimizer.lr = 0.4
 
 # Test against 1024 validation images to see accuracy.
 @model.on_optimization_start
 def setup(model):
     model.validation.batch = MiniBatch(1024)
-
 
 model.callback(
     # Set when to terminate point. 
@@ -45,4 +43,3 @@ model.callback(
 model.print.on_validation_start(iteration=True,accuracy=True)
 # When the model completes 10 iterations. It will print that iteration number.
 model.print.on_training_start(iteration=True, frequency=10)
-
