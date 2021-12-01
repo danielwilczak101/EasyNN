@@ -461,6 +461,8 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
         # Test the results.
         yield "on_testing_start"
         yield "on_testing_end"
+        # Disable training mode.
+        yield "off"
 
     def optimizer_commands(self) -> Iterator[Command]:
         """Generates all of the commands and runs their callbacks for the optimizer."""
