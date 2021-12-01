@@ -66,10 +66,10 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
 
     def __getstate__(self) -> dict[str, Any]:
         """Pickle the non-array variables."""
-        
         attributes = {
             name: attribute
             for name, attribute in vars(self).items()
+            if name != "command"
             if name != "commands"
             if not isinstance(attribute, np.ndarray)
         }
@@ -88,16 +88,15 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
     def load(file: str) -> Model:
         with open(file + "_structure.pkl", "rb") as f:
             self = pickle.load(f)
-        arrays = dict(load(file + "_parameters.npz"))
-        parameters = arrays.pop("parameters")
-        self.set_arrays(**arrays)
+        arrays = load(file + "_parameters.npz")
+        self.set_arrays(**{name: array for name, array in arrays.items() if name != "parameters"})
         if hasattr(self, "x_shape"):
             x_shape = vars(self).pop("x_shape")
             self(np.empty(x_shape))
         elif hasattr(self, "parameters_shape"):
             parameters_shape = vars(self).pop("parameters_shape")
             self.parameters = np.empty(parameters_shape)
-        self.set_arrays(parameters=parameters)
+        self.set_arrays(**arrays)
         return self
 
     def _on_optimization_start(self) -> None:
