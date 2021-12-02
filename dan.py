@@ -1,9 +1,7 @@
-from EasyNN.examples.cifar10.untrained import model
-from EasyNN.examples.cifar10.data import dataset
-
-images, labels = dataset
+from EasyNN.examples.mnist.fashion.untrained import model
+from EasyNN.utilities import Preprocess, download
 
 try:
     model.train()
 except KeyboardInterrupt:
-    model.save("cifar10")
+    model.save("fashion")

@@ -2,6 +2,8 @@ from clint.textui import progress
 from os.path import exists
 import requests
 
+__all__ = ["download"]
+
 def download(file_name: str,  url: str) -> str:
     """Used for downloading dataset files to be used in the models.
 

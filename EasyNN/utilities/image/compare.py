@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import random
 
+__all__ = ["compare"]
+
 def compare(*args, width=3, height=3, dataset=None) -> None:
     """
     Used to compare matplotlib images to eachother.

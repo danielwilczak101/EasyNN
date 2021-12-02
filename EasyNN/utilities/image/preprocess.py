@@ -1,7 +1,9 @@
 import numpy as np
-from PIL import ImageOps,Image as pil_image
+from PIL import ImageOps, Image as pil_image
 
-class image:
+__all__ = ["Preprocess"]
+
+class Preprocess:
     """Used for preprocessing images to a specific look.
 
     Args:
@@ -40,7 +42,7 @@ class image:
             resize: Specify an a desired pixel/image size.
                 Ex. resize([28,28]) -> Image will now be a 28x28 pixel image.   
         """
-        if convert is not None:
+        if convert:
             print(convert)
             self.image.convert(convert)
         if grayscale:
