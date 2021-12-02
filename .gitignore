@@ -9,7 +9,7 @@ __pycache__/
 # To prevent accidental upload of model/dataset files
 *.model
 *.gz
-.pkl
+*.pkl
 *.npz
 # Mac related
 *.DS_Store
