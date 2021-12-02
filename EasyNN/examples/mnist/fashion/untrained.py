@@ -1,12 +1,12 @@
 from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
-from EasyNN.callbacks import Printer, ReachValidationAccuracy
+from EasyNN.callbacks import ReachValidationAccuracy
 from EasyNN.examples.mnist.fashion.data import dataset
 from EasyNN.examples.mnist.fashion import labels, show
 from EasyNN.optimizer import MomentumDescent
 from EasyNN.typing import Callback
 from EasyNN.batch import MiniBatch
 
-import EasyNN.utilities.callbacks.plot as plot
+import EasyNN.callbacks as cb
 import numpy as np
 
 
@@ -40,25 +40,17 @@ model.optimizer = MomentumDescent()
 def setup(model):
     model.validation.batch = MiniBatch(1024)
 
-# Print every 20 iterations.
-model.on_training_start(Printer(iteration=True, frequency=20))
-# On each validation step, print the training and validation loss/validation.
-model.on_validation_start(
-    Printer(training_loss=True, validation_loss=True),
-    Printer(training_accuracy=True, validation_accuracy=True)
-)
-# At the end during testing, check all of the losses.
-model.on_testing_start(
-    Printer(training_loss=True, validation_loss=True, testing_loss=True),
-    Printer(training_accuracy=True, validation_accuracy=True, testing_accuracy=True)
+model.callback(
+    # Set when to terminate point. 
+        # In this case it will end once your validation accuracy hits above 90% five times.
+    cb.ReachValidationAccuracy(limit=0.30, patience=2),
 )
 
-#
-@model.on_validation_start
-def save_validation_accuracy(model):
-    accuracy = model.accuracy(*model.validation.sample)
-    model.validation.accuracy.append(accuracy)
+# When the model hit a validation point it will print the iteration and accuracy of the model.
+model.print.on_validation_start(iteration=True,accuracy=True)
+# When the model completes 10 iterations. It will print that iteration number.
+model.print.on_training_start(iteration=True, frequency=10)
 
-model.on_testing_start(plot.validation.accuracy)
+
 
 

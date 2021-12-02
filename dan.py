@@ -8,10 +8,14 @@ model = Model.load("cifar10")
 
 """
 
-from EasyNN.examples.cifar10.trained import model
-from EasyNN.examples.cifar10.data import dataset
+from EasyNN.examples.mnist.fashion.trained import model
+from EasyNN.examples.mnist.fashion.data import dataset
 
 images, labels = dataset
 
-print(model.classify(images[1]))
-#"""
+# Classify what the second image is in the dataset.
+print(model.classify(images[0]))
+
+model.show(images[0])
+
+model.accuracy(dataset)
