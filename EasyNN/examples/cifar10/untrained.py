@@ -1,6 +1,6 @@
 from EasyNN.model import Model, Network, Normalize, Randomize, ReLU, LogSoftMax
 from EasyNN.examples.cifar10.data import dataset
-from EasyNN.examples.cifar10 import labels
+from EasyNN.examples.cifar10 import labels, show
 from EasyNN.optimizer import MomentumDescent
 from EasyNN.batch import MiniBatch
 
@@ -20,7 +20,7 @@ model.training.data = dataset
 
 # Establish the labels and show feature.
 model.labels = labels
-#model.show = show
+model.show = show
 
 # Use gradient descent with momentum.
 model.optimizer = MomentumDescent()
