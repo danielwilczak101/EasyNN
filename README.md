@@ -48,8 +48,7 @@ Downloading - number_dataset.npz:
 More info can be found about [converting images](https://github.com/danielwilczak101/EasyNN/wiki/Image-Utility) in the utilities section.
 ```Python
 from EasyNN.examples.mnist.number.trained import model
-from EasyNN.utilities.image.preprocess import image
-from EasyNN.utilities.download import download
+from EasyNN.utilities import Preprocess, download
 
 # Download an example image.
 download("four.jpg","https://bit.ly/3lAJrMe")
@@ -64,10 +63,12 @@ format_options = dict(
 )
 
 # Converting your image into the correct format for the mnist number dataset.
-image = image("four.jpg").format(**format_options)
+image = Preprocess("four.jpg").format(**format_options)
 
+# Classify what the image is using the pretrained model.
 print(model.classify(image))
 
+# Show the image after it has been processed.
 model.show(image)
 ```
 ### Output:
