@@ -76,10 +76,6 @@ model.show(image)
 ```
 ### Output:
 ```bash
-Downloading - number_parameters.npz:
-[################################] 1769/1769 - 00:00:00
-Downloading - number_structure.pkl:
-[################################] 10700/10700 - 00:00:00
 Downloading - four.jpg:
 [################################] 1371/1371 - 00:00:00
 4
