@@ -5,7 +5,9 @@ https://www.youtube.com/watch?v=jbuDKwIiYBw
 
 #### Short clips for slideshow
 
-Trained Model:
-Untrained Model:
-TensorFlow Comparison:
-Compare:
+Dataset Example:  
+Trained Model:  
+Untrained Model:  
+Compare Function:  
+TensorFlow Comparison:  
+  
