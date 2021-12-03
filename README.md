@@ -78,7 +78,7 @@ model.show(image)
 ```bash
 Downloading - four.jpg:
 [################################] 1371/1371 - 00:00:00
-4
+3
 ```
 
 ### Image output:
