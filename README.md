@@ -31,6 +31,9 @@ images, labels = dataset
 
 # Classify what the second image is in the dataset.
 print(model.classify(images[1]))
+
+# Show the image.
+model.show(images[1])
 ```
 
 ### Dataset example output:
