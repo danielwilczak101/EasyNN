@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-from typing import overload
+from typing import Optional, overload
 from EasyNN.model.activation.abc import Activation
 from EasyNN.typing import Array1D, Array2D, Array3D, ArrayND
 

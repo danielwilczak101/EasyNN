@@ -31,13 +31,13 @@ class Network(Model[ArrayIn, ArrayOut], Generic[ArrayIn, ArrayOut]):
     __derivatives: Array1D
     _layers: list[Model]
 
-    def __init__(self: Network[ArrayIn, ArrayOut], *layers: Union[int, Model, Callable[[], Model]], base_layer: Callable[int, Model] = DenseLayer) -> None:
+    def __init__(self: Network[ArrayIn, ArrayOut], *layers: Union[int, Model, Callable[[], Model]], base_layer: Callable[[int], Model] = DenseLayer) -> None:
         self._layers = [
             self.as_layer(layer, base_layer)
             for layer in layers
         ]
 
-    def add(self: Network, layer: Union[int, Model, Callable[[], Model]], base_layer: Callable[int, Model] = DenseLayer) -> None:
+    def add(self: Network, layer: Union[int, Model, Callable[[], Model]], base_layer: Callable[[int], Model] = DenseLayer) -> None:
         """Append another layer to the end of the layers."""
         self._layers.append(self.as_layer(layer, base_layer))
 

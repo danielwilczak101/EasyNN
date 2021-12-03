@@ -33,7 +33,7 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         return {
             name: attribute
             for name, attribute in vars(self).items()
-            if name not in ("_data", "samples")
+            if name not in ("_data", "sample", "samples")
         }
 
     def __getitem__(self, indexes: Union[int, tuple[int, ...]]) -> tuple[ArrayIn, ArrayOut]:

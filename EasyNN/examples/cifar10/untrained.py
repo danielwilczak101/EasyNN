@@ -1,4 +1,4 @@
-from EasyNN.model import Model, Network, Normalize, Randomize, ReLU, LogSoftMax
+from EasyNN.examples.mnist.fashion.structure import model
 from EasyNN.examples.cifar10.data import dataset
 from EasyNN.examples.cifar10 import labels, show
 from EasyNN.optimizer import MomentumDescent
@@ -7,13 +7,6 @@ from EasyNN.batch import MiniBatch
 import EasyNN.callbacks as cb
 import numpy as np
 
-# Create the mnist model.
-model = Network(
-    Normalize(1e-3), Randomize(0.01),
-    1024, ReLU,
-    256, ReLU,
-    10, LogSoftMax,
-)
 
 # Set your models data
 model.training.data = dataset
@@ -28,8 +21,7 @@ model.optimizer = MomentumDescent()
 # Change the default learning rate.
 model.optimizer.lr = 0.4
 
-# Test against 1024 validation images to see accuracy.
-@model.on_optimization_start
+# Define the setup callback in here.
 def setup(model):
     model.validation.batch = MiniBatch(1024)
 

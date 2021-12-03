@@ -1,27 +1,18 @@
-from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
-from EasyNN.callbacks import ReachValidationAccuracy
+from EasyNN.examples.mnist.fashion.structure import model
 from EasyNN.examples.mnist.fashion.data import dataset
 from EasyNN.examples.mnist.fashion import labels, show
+from EasyNN.callbacks import ReachValidationAccuracy
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.typing import Callback
 from EasyNN.batch import MiniBatch
 
 import EasyNN.callbacks as cb
 import numpy as np
 
-
-# Create the Neural Network Model.
-model = Network(
-    Normalize(1e-3),
-    Randomize(0.5), 800, ReLU,
-    Randomize(0.1), 10,  LogSoftMax
-)
-
 # Assign it some training/testing data.
 model.training.data = dataset
 
 # Set when to terminate point. 
-# In this case it will end once your validation accuracy hits above 90% five times.
+# In this case it will end once your validation accuracy hits above 90% three times.
 model.callback(ReachValidationAccuracy(limit=0.90, patience=3))
 
 # Used for plotting
@@ -35,8 +26,7 @@ model.show = show
 # Use gradient descent with momentum.
 model.optimizer = MomentumDescent()
 
-#
-@model.on_optimization_start
+# Test against 1024 validation images to see accuracy.
 def setup(model):
     model.validation.batch = MiniBatch(1024)
 

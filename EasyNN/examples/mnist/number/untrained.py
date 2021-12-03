@@ -1,20 +1,11 @@
-from EasyNN.model import Network, Normalize, Randomize, ReLU, LogSoftMax
+from EasyNN.examples.mnist.fashion.structure import model
 from EasyNN.examples.mnist.number.data import dataset
 from EasyNN.examples.mnist.number import labels, show
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.typing import Callback
 from EasyNN.batch import MiniBatch
 
 import EasyNN.callbacks as cb
 import numpy as np
-
-# Create the mnist model.
-model = Network(
-    Normalize(1e-3), Randomize(0.01),
-    1024, ReLU,
-    256, ReLU,
-    10, LogSoftMax,
-)
 
 # Set your models data
 model.training.data = dataset
@@ -30,15 +21,13 @@ model.optimizer = MomentumDescent()
 model.optimizer.lr = 0.03
 
 # Test against 1024 validation images to see accuracy.
-@model.on_optimization_start
 def setup(model):
     model.validation.batch = MiniBatch(1024)
-
 
 model.callback(
     # Set when to terminate point. 
         # In this case it will end once your validation accuracy hits above 90% five times.
-    cb.ReachValidationAccuracy(limit=0.30, patience=2),
+    cb.ReachValidationAccuracy(limit=0.95, patience=2),
 )
 
 # When the model hit a validation point it will print the iteration and accuracy of the model.
