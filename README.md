@@ -37,7 +37,6 @@ model.show(images[1])
 ```
 
 ### Dataset example output:
-With trained models. Downloading will only happen once for the structure and paramaters files. See our next example doesnt require downloading of the dataset as well.
 ```
 Downloading - number_parameters.npz:
 [################################] 1769/1769 - 00:00:00
