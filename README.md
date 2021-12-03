@@ -54,7 +54,7 @@ from EasyNN.examples.mnist.number.trained import model
 from EasyNN.utilities import Preprocess, download
 
 # Download an example image.
-download("four.jpg","https://bit.ly/3lAJrMe")
+download("three.jpg","https://bit.ly/3dbO1eV")
 
 format_options = dict(
     grayscale=True,
@@ -66,7 +66,7 @@ format_options = dict(
 )
 
 # Converting your image into the correct format for the mnist number dataset.
-image = Preprocess("four.jpg").format(**format_options)
+image = Preprocess("three.jpg").format(**format_options)
 
 # Classify what the image is using the pretrained model.
 print(model.classify(image))
@@ -83,7 +83,7 @@ Downloading - four.jpg:
 
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_four.png">
+  <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_three.png">
 </p>
 
 ### Trained Models
