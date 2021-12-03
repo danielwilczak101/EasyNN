@@ -18,7 +18,7 @@ pip3 install EasyNN
 ```Python
 from EasyNN.examples.mnist.number.trained import model
 
-# Classify an image in the dataset
+# Classify an image.
 print(model.classify(image))
 ```
 
