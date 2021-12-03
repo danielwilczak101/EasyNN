@@ -86,4 +86,11 @@ Downloading - four.jpg:
   <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_four.png">
 </p>
 
+### Trained Models
+Use the trained models section to see EasyNN's datasets and pre-trained neural networks ready to run.  
+<br />
+[MNIST Number](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Numbers) Classifier network for images of handwritten single digits between 0 and 9.  
+[MNIST Fashion](https://github.com/danielwilczak101/EasyNN/wiki/MNIST-Fashion) Classifier network for ten classes of human clothing images of the size 28x28 pixels.  
+[Cifar 10](https://github.com/danielwilczak101/EasyNN/wiki/Cifar10) Classifier network for ten types of images varying from airplane, cat, dog, etc - 32x32 RGB images.
+
 ## To see more examples with many other datasets. Please visit our [wiki](https://github.com/danielwilczak101/EasyNN/wiki).
