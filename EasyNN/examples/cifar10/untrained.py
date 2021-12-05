@@ -1,6 +1,7 @@
 from EasyNN.examples.mnist.fashion.structure import model
 from EasyNN.examples.cifar10.data import dataset
 from EasyNN.examples.cifar10 import labels, show
+from EasyNN.loss.abc import Loss
 from EasyNN.optimizer import MomentumDescent
 from EasyNN.batch import MiniBatch
 
@@ -28,7 +29,7 @@ def setup(model):
 model.callback(
     # Set when to terminate point. 
         # In this case it will end once your validation accuracy hits above 90% five times.
-    cb.ReachValidationAccuracy(limit=0.30, patience=2),
+    cb.ReachValidationAccuracy(limit=0.90, patience=2),
 )
 
 # When the model hit a validation point it will print the iteration and accuracy of the model.
