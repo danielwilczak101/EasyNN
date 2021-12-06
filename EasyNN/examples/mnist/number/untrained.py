@@ -1,4 +1,4 @@
-from EasyNN.examples.mnist.fashion.structure import model
+from EasyNN.examples.mnist.number.structure import model
 from EasyNN.examples.mnist.number.data import dataset
 from EasyNN.examples.mnist.number import labels, show
 from EasyNN.optimizer import MomentumDescent

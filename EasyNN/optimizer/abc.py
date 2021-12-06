@@ -92,11 +92,11 @@ class Optimizer(AutoDocumentation, ABC):
     def on_validation_start(self: Optimizer, model: EasyNN.model.abc.Model) -> None:
         """Ran at the start of every validation iteration. By default, attempts to tune the learning rate."""
         parameters = model.parameters.copy()
-        model._optimizer_lr *= 2
+        model._optimizer_lr *= 4
         self.on_training_start(model)
         loss_1 = model.loss(*model.training.sample)
         model.parameters = parameters
-        model._optimizer_lr *= 0.25
+        model._optimizer_lr *= 0.125
         self.on_training_start(model)
         loss_2 = model.loss(*model.training.sample)
         model.parameters = parameters
@@ -104,6 +104,7 @@ class Optimizer(AutoDocumentation, ABC):
             model._optimizer_lr *= 1.0625 / 0.5
         else:
             model._optimizer_lr *= 0.875 / 0.5
+        model._optimizer_lr = max(min(model._optimizer_lr, self.lr * 8), self.lr / 8)
 
 
     def on_validation_end(self: Optimizer, model: EasyNN.model.abc.Model) -> None:

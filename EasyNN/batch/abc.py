@@ -10,6 +10,7 @@ class Batch(AutoDocumentation, ABC):
     """
     Abstract Base Class for generating samples to loop over from the dataset.
     """
+    size: int
 
     @abstractmethod
     def generate_samples(self: Batch, dataset: Dataset) -> Iterator[Sample]:

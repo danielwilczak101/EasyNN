@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import Generic, IO, Iterator, NoReturn, TypeVar, Union
+from typing import Any, Generic, IO, Iterator, TypeVar, Union
 from EasyNN.utilities.download import download
 from EasyNN.utilities.data.load import load
 from EasyNN.typing import ArrayND
-from typing import Any
+import EasyNN.batch.abc
 
 ArrayIn = TypeVar("ArrayIn", bound=ArrayND)
 ArrayOut = TypeVar("ArrayOut", bound=ArrayND)
@@ -20,7 +20,7 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         >>> training.data = (x, y)
         >>> assert training[0] == (x[0], y[0])
     """
-    _batch: Batch
+    _batch: EasyNN.batch.abc.Batch
     _batch_size: int
     _data: tuple[ArrayIn, ArrayOut]  # Don't save
     percent: float = 0.05
@@ -32,7 +32,7 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
 
     def __getstate__(self) -> dict[str, Any]:
         return {
-            name: attribute
+            name.removeprefix("_") if name != "_batch_size" else "_batch_size": attribute
             for name, attribute in vars(self).items()
             if name not in ("_data", "sample", "samples")
         }
@@ -62,13 +62,14 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         return self.iteration * self._batch_size // len(self)
 
     @property
-    def batch(self) -> None:
+    def batch(self) -> EasyNN.batch.abc.Batch:
         """When setting the batch, get the samples using the batch."""
         return self._batch
 
     @batch.setter
-    def batch(self, batch: Batch) -> None:
+    def batch(self, batch: EasyNN.batch.abc.Batch) -> None:
         self._batch = batch
+        self._batch_size = batch.size
         self.samples = batch.generate_samples(self)
 
     @property

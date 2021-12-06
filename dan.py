@@ -5,6 +5,7 @@ try:
     model.train()
     model.save("cifar10")
 except KeyboardInterrupt:
+    print()
     model.save("cifar10")
 
 
@@ -27,3 +28,4 @@ print(model.classify(image))
 # Show the image after it has been processed.
 model.show(image)
 
+breakpoint()
