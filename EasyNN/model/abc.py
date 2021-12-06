@@ -313,18 +313,22 @@ class Model(AutoDocumentation, ABC, Generic[ArrayIn, ArrayOut]):
             raise ValueError("requires len(model.training.data) >= 10 to train the model")
         # Shuffle the training dataset.
         self.training.data = self.training[np.random.permutation(len(self.training))]
-        # Steal 15% of the testing data from the training data if necessary.
+        # Steal a percent of the testing data from the training data if necessary.
         if not hasattr(self.testing, "data"):
-            self.testing.data = self.training[:int(len(self.training) * 0.15)]
-            self.training.data = self.training[int(len(self.training) * 0.15):]
-        # Steal 15% of the validation data from the training data if necessary.
+            self.testing.data = self.training[:int(len(self.training) * self.testing.percent)]
+            self.training.data = self.training[int(len(self.training) * self.testing.percent):]
+        # Steal a percent of the validation data from the training data if necessary.
         if not hasattr(self.validation, "data"):
-            self.validation.data = self.training[:int(len(self.training) * 0.15)]
-            self.training.data = self.training[int(len(self.training) * 0.15):]
+            self.validation.data = self.training[:int(len(self.training) * self.validation.percent)]
+            self.training.data = self.training[int(len(self.training) * self.validation.percent):]
         # Apply the batches to each dataset.
-        self.training.batch = self.batch
-        self.testing.batch = MiniBatch(len(self.testing))
-        self.validation.batch = MiniBatch(256)
+        if not hasattr(self.training, "batch"):
+            self.training.batch = self.batch
+        if not hasattr(self.testing, "batch"):
+            self.testing.batch = MiniBatch(len(self.testing))
+        if not hasattr(self.validation, "batch"):
+            self.validation.batch = MiniBatch(1024)
+        # Apply the datasets to each layer.
         for layer in self.layers:
             layer._training = self.training
             layer._testing = self.testing

@@ -20,9 +20,10 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
         >>> training.data = (x, y)
         >>> assert training[0] == (x[0], y[0])
     """
-
+    _batch: Batch
     _batch_size: int
     _data: tuple[ArrayIn, ArrayOut]  # Don't save
+    percent: float = 0.05
     file: Union[str, IO]
     url: str
     sample: tuple[ArrayIn, ArrayOut]
@@ -62,11 +63,12 @@ class Dataset(Generic[ArrayIn, ArrayOut]):
 
     @property
     def batch(self) -> None:
-        """When setting the batch, get the samples using the batch. Don't store the batch."""
-        raise NotImplementedError
+        """When setting the batch, get the samples using the batch."""
+        return self._batch
 
     @batch.setter
     def batch(self, batch: Batch) -> None:
+        self._batch = batch
         self.samples = batch.generate_samples(self)
 
     @property
