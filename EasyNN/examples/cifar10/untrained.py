@@ -4,13 +4,13 @@ from EasyNN.examples.cifar10 import labels, show
 from EasyNN.loss.abc import Loss
 from EasyNN.optimizer import MomentumDescent
 from EasyNN.batch import MiniBatch
-
 import EasyNN.callbacks as cb
 import numpy as np
 
 
 # Set your models data
 model.training.data = dataset
+model.validation.batch = MiniBatch(256)
 
 # Establish the labels and show feature.
 model.labels = labels
@@ -20,11 +20,7 @@ model.show = show
 model.optimizer = MomentumDescent()
 
 # Change the default learning rate.
-model.optimizer.lr = 0.4
-
-# Define the setup callback in here.
-def setup(model):
-    model.validation.batch = MiniBatch(1024)
+model.optimizer.lr = 0.3
 
 model.callback(
     # Set when to terminate point. 
@@ -33,6 +29,6 @@ model.callback(
 )
 
 # When the model hit a validation point it will print the iteration and accuracy of the model.
-model.print.on_validation_start(iteration=True,accuracy=True)
+model.print.on_validation_start(iteration=True, accuracy=True)
 # When the model completes 10 iterations. It will print that iteration number.
 model.print.on_training_start(iteration=True, frequency=10)

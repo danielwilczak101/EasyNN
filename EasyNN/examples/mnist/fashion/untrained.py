@@ -3,8 +3,6 @@ from EasyNN.examples.mnist.fashion.data import dataset
 from EasyNN.examples.mnist.fashion import labels, show
 from EasyNN.callbacks import ReachValidationAccuracy
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.batch import MiniBatch
-
 import EasyNN.callbacks as cb
 import numpy as np
 
@@ -25,10 +23,6 @@ model.show = show
 
 # Use gradient descent with momentum.
 model.optimizer = MomentumDescent()
-
-# Test against 1024 validation images to see accuracy.
-def setup(model):
-    model.validation.batch = MiniBatch(1024)
 
 model.callback(
     # Set when to terminate point. 

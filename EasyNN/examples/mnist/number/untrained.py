@@ -2,8 +2,6 @@ from EasyNN.examples.mnist.fashion.structure import model
 from EasyNN.examples.mnist.number.data import dataset
 from EasyNN.examples.mnist.number import labels, show
 from EasyNN.optimizer import MomentumDescent
-from EasyNN.batch import MiniBatch
-
 import EasyNN.callbacks as cb
 import numpy as np
 
@@ -19,10 +17,6 @@ model.optimizer = MomentumDescent()
 
 # Change the default learning rate.
 model.optimizer.lr = 0.03
-
-# Test against 1024 validation images to see accuracy.
-def setup(model):
-    model.validation.batch = MiniBatch(1024)
 
 model.callback(
     # Set when to terminate point. 
