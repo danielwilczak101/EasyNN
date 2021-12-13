@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/readme_logo.png)
+![](https://raw.githubusercontent.com/SimpleArt/pyroot/media/images/logo.png)
 
 # EasyNN - Neural Networks made Easy
 EasyNN is a python package designed to provide an easy-to-use Neural Network. The package is designed to work right out of the box with multiple datasets, while also allowing the user to customize features as they see fit. 
