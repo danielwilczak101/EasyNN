@@ -43,7 +43,6 @@ class Preprocess:
                 Ex. resize([28,28]) -> Image will now be a 28x28 pixel image.   
         """
         if convert:
-            print(convert)
             self.image.convert(convert)
         if grayscale:
             # Convert to grey scale.

@@ -100,6 +100,17 @@ def scrape_google(search_term:str, driver_path='./chromedriver', target_path='./
             Download your corresponding ChromeDriver from the link provided for your main
             version and put the executable into the same folder as your python file.
 
+    Example:
+        >>> from EasyNN.scrape.scrape import scrape_google
+        >>> scrape_google("dog")
+        Opens browser and downloads 5 images of dogs and puts the into images folder.
+
+        >>> scrape_google("dog", count=100)
+        Opens browser and downloads 100 images of dog.
+
+        >>> scrape_google("dog", target_path='./my_new_folder')
+        Opens browser and downloads 5 images of dog and put it into a folder named "my_new_folder".
+        
     Function parameters:
         
         search_term: The term you want to scrape google images for.
@@ -114,16 +125,7 @@ def scrape_google(search_term:str, driver_path='./chromedriver', target_path='./
     Return:
         Images folder with sub folder of the search term with images inside of there.
 
-    Example:
-        >>> from EasyNN.scrape.scrape import scrape_google
-        >>> scrape_google("dog")
-        Opens browser and downloads 5 images of dogs and puts the into images folder.
-
-        >>> scrape_google("dog", count=100)
-        Opens browser and downloads 100 images of dog.
-
-        >>> scrape_google("dog", target_path='./my_new_folder')
-        Opens browser and downloads 5 images of dog and put it into a folder named "my_new_folder".
+    
     """
     target_folder = os.path.join(target_path,'_'.join(search_term.lower().split(' ')))
 
