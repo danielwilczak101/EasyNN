@@ -3,10 +3,9 @@ import setuptools
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-
 setuptools.setup(
     name='EasyNN',
-    version='0.1.1',
+    version='0.1.2',
     description='EasyNN is a python package designed to provide an easy-to-use neural network. The package is designed to work right out of the box, while also allowing the user to customize features as they see fit.',
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
@@ -25,6 +24,7 @@ setuptools.setup(
                         "tabulate >=0.8.7",
                         "requests >=2.26.0",
                         "numpy >=1.21.3",
-                        "nptyping >=1.4.4"
+                        "nptyping >=1.4.4",
+                        "selenium>=4.1.0"
                         ],
     )

@@ -1,13 +1,7 @@
-from EasyNN.examples.mnist.number.untrained import model
-from EasyNN.examples.mnist.number.data import dataset
-from EasyNN.callbacks import ReachValidationAccuracy
+from EasyNN.examples.cifar10.trained import model
+from EasyNN.examples.cifar10.data import dataset
 
 images, labels = dataset
 
-# Train the model.
-model.callback(ReachValidationAccuracy(limit=0.80, patience=3))
-model.train()
-model.save("number")
-
-# Check the models accuracy
-print(model.accuracy(images, labels))
+# Show the image
+model.show(images[2])

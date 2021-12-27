@@ -11,16 +11,6 @@ Code downloaded from:
     Author:Fabian Bosler
 """
 
-"""
-from EasyNN.google.image import scrape
-
-scrape("dog",100,path="./images")
-
-# TODO:
-    # Format shown above
-    # Chromedriver try catches for getting which version you need.
-"""
-
 def fetch_image_urls(query:str, max_links_to_fetch:int, wd:webdriver, sleep_between_interactions:int=1):
     def scroll_to_end(wd):
         wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -77,7 +67,7 @@ def fetch_image_urls(query:str, max_links_to_fetch:int, wd:webdriver, sleep_betw
 
     return image_urls
 
-def persist_image(folder_path:str,url:str):
+def persist_image(folder_path:str,url:str,index:int):
     try:
         image_content = requests.get(url).content
 
@@ -87,22 +77,62 @@ def persist_image(folder_path:str,url:str):
     try:
         image_file = io.BytesIO(image_content)
         image = Image.open(image_file).convert('RGB')
-        file_path = os.path.join(folder_path,hashlib.sha1(image_content).hexdigest()[:10] + '.jpg')
+        file_path = os.path.join(folder_path, str(index) + '.jpg')
         with open(file_path, 'wb') as f:
             image.save(f, "JPEG", quality=85)
         print(f"SUCCESS - saved {url} - as {file_path}")
     except Exception as e:
         print(f"ERROR - Could not save {url} - {e}")
 
-def google_images(search_term:str,driver_path='chromedriver',target_path='./images',number_images=5):
+def scrape_google(search_term:str, driver_path='./chromedriver', target_path='./images', count=5):
+    """
+    Used for scraping images from google using the chromedriver.
+
+    Requirement:
+        chromedriver - 
+            1. Install Google Chrome (skip if its already installed)
+            2. Identify your Chrome version. In chrome go to  "About Google Chrome". I 
+            currently have version 77.0.3865.90 (my main version is thus 77, the number
+            before the first dot).
+            
+            https://chromedriver.chromium.org/downloads
+
+            Download your corresponding ChromeDriver from the link provided for your main
+            version and put the executable into the same folder as your python file.
+
+    Function parameters:
+        
+        search_term: The term you want to scrape google images for.
+
+        count: Number of image to scrape from google.
+
+        driver_path: Defaulted to the path where the python file is executed.
+
+        target_path: Creates a directory with target_path name and puts all
+        the images inside here.
+
+    Return:
+        Images folder with sub folder of the search term with images inside of there.
+
+    Example:
+        >>> from EasyNN.scrape.scrape import scrape_google
+        >>> scrape_google("dog")
+        Opens browser and downloads 5 images of dogs and puts the into images folder.
+
+        >>> scrape_google("dog", count=100)
+        Opens browser and downloads 100 images of dog.
+
+        >>> scrape_google("dog", target_path='./my_new_folder')
+        Opens browser and downloads 5 images of dog and put it into a folder named "my_new_folder".
+    """
     target_folder = os.path.join(target_path,'_'.join(search_term.lower().split(' ')))
 
     if not os.path.exists(target_folder):
         os.makedirs(target_folder)
 
     with webdriver.Chrome(executable_path=driver_path) as wd:
-        res = fetch_image_urls(search_term, number_images, wd=wd, sleep_between_interactions=0.5)
+        res = fetch_image_urls(search_term, count, wd=wd, sleep_between_interactions=0.5)
 
-    for elem in res:
-        persist_image(target_folder,elem)
+    for index, elem in enumerate(res):
+        persist_image(target_folder,elem,index)
 

@@ -1,31 +1,4 @@
-from EasyNN.examples.cifar10.untrained import model
-from EasyNN.utilities import Preprocess, download
+from EasyNN.utilities.scrape import scrape_google
 
-try:
-    model.train()
-    model.save("cifar10")
-except KeyboardInterrupt:
-    print()
-    model.save("cifar10")
-
-
-# Download an example image.
-download("ship.png", "https://bit.ly/31jyerQ")
-
-format_options = dict(
-    contrast=0,
-    resize=(32, 32),
-    rotate=1,
-    flatten='F',
-)
-
-# Converting your image into the correct format for the mnist number dataset.
-image = Preprocess("ship.png").format(**format_options)
-
-# Classify what the image is using the pretrained model.
-print(model.classify(image))
-
-# Show the image after it has been processed.
-model.show(image)
-
-breakpoint()
+scrape_google("dog", count=10)
+scrape_google("cat", count=10)
