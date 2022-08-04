@@ -3,7 +3,7 @@ from copy import copy
 from EasyNN.typing import ArrayND
 from typing import Generic, TypeVar
 
-Array = TypeVar("Array", bound=ArrayND[float])
+Array = TypeVar("Array", bound=ArrayND)
 
 
 class Momentum(Generic[Array]):
