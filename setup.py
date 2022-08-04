@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='EasyNN',
-    version='0.1.3',
+    version='0.2.0',
     description=
         'EasyNN is a python package designed to provide an easy-to-use neural '
         'network. The package is designed to work right out of the box, while '
