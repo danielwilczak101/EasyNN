@@ -6,7 +6,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name='EasyNN',
     version='0.1.3',
-    description='EasyNN is a python package designed to provide an easy-to-use neural network. The package is designed to work right out of the box, while also allowing the user to customize features as they see fit.',
+    description=
+        'EasyNN is a python package designed to provide an easy-to-use neural '
+        'network. The package is designed to work right out of the box, while '
+        'also allowing the user to customize features as they see fit.',
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
     url="https://github.com/danielwilczak101/EasyNN",
@@ -18,13 +21,14 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
         "Operating System :: OS Independent",
-        ],
-    install_requires = ["matplotlib ~= 3.3.2",
-                        "clint >=0.5.1",
-                        "tabulate >=0.8.7",
-                        "requests >=2.26.0",
-                        "numpy >=1.21.3",
-                        "nptyping >=1.4.4",
-                        "selenium>=4.1.0"
-                        ],
-    )
+    ],
+    install_requires = [
+        "matplotlib ~= 3.3.2",
+        "clint >=0.5.1",
+        "tabulate >=0.8.7",
+        "requests >=2.26.0",
+        "numpy >=1.21.3",
+        "nptyping >=2.0.0",
+        "selenium>=4.1.0",
+    ],
+)
