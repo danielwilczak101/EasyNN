@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "EasyNN"
+dynamic = ["description", "version"]
+
+authors = [
+    {email = "danielwilczak101@gmail.com", name = "Daniel Wilczak"},
+    {name = "Jack Nguyen"}
+]
+
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
+dependencies = [
+    "matplotlib ~= 3.3.2",
+    "clint >= 0.5.1",
+    "tabulate >= 0.8.7",
+    "requests >= 2.26.0",
+    "numpy >= 1.21.3",
+    "nptyping >= 2.0.0",
+    "selenium >= 4.1.0"
+]
+
+keywords = ["artificial intelligence", "machine learning", "neural networks"]
+
+license = {text = "mit"}
+readme = "README.md"
+
+requires-python = ">=3.7"
+
+[project.urls]
+repository = "https://github.com/danielwilczak101/EasyNN"
+
+[tool.setuptools.dynamic]
+version = {attr = "EasyNN.__version__"}
