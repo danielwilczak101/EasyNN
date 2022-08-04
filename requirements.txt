@@ -1,0 +1,9 @@
+matplotlib >= 3.3.2
+clint >= 0.5.1
+tabulate >= 0.8.7
+requests >= 2.26.0
+numpy >= 1.21.3
+nptyping >= 2.0.0
+beautifulsoup4==4.11.1 
+google_search_results==2.4.1
+prettyformatter==1.1.1 

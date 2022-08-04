@@ -1,87 +1,13 @@
+from itertools import islice
+from serpapi import GoogleSearch
 import hashlib
 from PIL import Image
 import io
 import os
 import requests
 import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 
-"""
-Code downloaded from:
-    Medium article: https://towardsdatascience.com/image-scraping-with-python-a96feda8af2d
-    Author:Fabian Bosler
-"""
-
-
-def fetch_image_urls(
-    query: str,
-    max_links_to_fetch: int,
-    wd: webdriver,
-    sleep_between_interactions: int = 1,
-):
-    def scroll_to_end(wd):
-        wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(sleep_between_interactions)
-
-    # build the google query
-    search_url = "https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q={q}&oq={q}&gs_l=img"
-
-    # load the page
-    wd.get(search_url.format(q=query))
-
-    image_urls = set()
-    image_count = 0
-    results_start = 0
-    while image_count < max_links_to_fetch:
-        scroll_to_end(wd)
-
-        # get all image thumbnail results
-        thumbnail_results = wd.find_element(By.CSS_SELECTOR, "img.Q4LuWd")
-
-        number_results = len(thumbnail_results)
-
-        print(
-            f"Found: {number_results} search results. Extracting links from {results_start}:{number_results}"
-        )
-
-        for img in thumbnail_results[results_start:number_results]:
-            # try to click every thumbnail such that we can get the real image behind it
-            try:
-                img.click()
-                time.sleep(sleep_between_interactions)
-            except Exception as e:
-                print(e)
-                continue
-
-            # extract image urls
-            actual_images = wd.find_element(By.CSS_SELECTOR, "img.n3VNCb")
-
-            for actual_image in actual_images:
-                if actual_image.get_attribute(
-                    "src"
-                ) and "http" in actual_image.get_attribute("src"):
-                    image_urls.add(actual_image.get_attribute("src"))
-
-            image_count = len(image_urls)
-
-            if len(image_urls) >= max_links_to_fetch:
-                print(f"Found: {len(image_urls)} image links, done!")
-                break
-        else:
-            print("Found:", len(image_urls),
-                  "image links, looking for more ...")
-            time.sleep(30)
-            # return
-            load_more_button = wd.find_element(By.CSS_SELECTOR, ".mye4qd")
-
-            if load_more_button:
-                wd.execute_script("document.querySelector('.mye4qd').click();")
-
-        # move the result startpoint further down
-        results_start = len(thumbnail_results)
-
-    return image_urls
+from prettyformatter import pprint
 
 
 def persist_image(folder_path: str, url: str, index: int):
@@ -97,31 +23,17 @@ def persist_image(folder_path: str, url: str, index: int):
         file_path = os.path.join(folder_path, str(index) + ".jpg")
         with open(file_path, "wb") as f:
             image.save(f, "JPEG", quality=85)
-        print(f"SUCCESS - saved {url} - as {file_path}")
     except Exception as e:
         print(f"ERROR - Could not save {url} - {e}")
 
 
 def scrape_google(
     search_term: str,
-    driver_path: str = "./chromedriver",
     target_path: str = "./images",
     count: int = 5,
 ):
     """
-    Used for scraping images from google using the chromedriver.
-
-    Requirement:
-        chromedriver -
-            1. Install Google Chrome (skip if its already installed)
-            2. Identify your Chrome version. In chrome go to  "About Google Chrome". I
-            currently have version 77.0.3865.90 (my main version is thus 77, the number
-            before the first dot).
-
-            https://chromedriver.chromium.org/downloads
-
-            Download your corresponding ChromeDriver from the link provided for your main
-            version and put the executable into the same folder as your python file.
+    Used for scraping images from google.
 
     Example:
         >>> from EasyNN.scrape.scrape import scrape_google
@@ -156,10 +68,21 @@ def scrape_google(
     if not os.path.exists(target_folder):
         os.makedirs(target_folder)
 
-    with webdriver.Chrome(executable_path=driver_path) as wd:
-        res = fetch_image_urls(
-            search_term, count, wd=wd, sleep_between_interactions=0.5
-        )
+    params = {
+        "q": search_term,
+        "tbm": "isch",
+        "ijn": "0",
+        "api_key": "4435d3a85dec7cb053ae29a3e360d111ae85170fa24d8e108c702d3c9b56374c"
+    }
 
-    for index, elem in enumerate(res):
-        persist_image(target_folder, elem, index)
+    search = GoogleSearch(params)
+    results = search.get_dict()
+    images_results = results["images_results"]
+
+    links: list = []
+
+    for item in islice(images_results, count):
+        links.append(item['original'])
+
+    for index, url in enumerate(links):
+        persist_image(target_folder, url, index)
