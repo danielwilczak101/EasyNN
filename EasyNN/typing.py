@@ -1,17 +1,17 @@
 """
 Contains all of the type-hint related things.
 """
-from nptyping import NDArray
+from nptyping import NDArray, Shape
 from numpy.typing import ArrayLike
 from typing import Any, Callable, Literal, Sequence, Type, TypeVar, Union
 
 T = TypeVar("T")
 
 Factory = Union[T, Callable[[], T]]
-Array1D = NDArray[(Any,), Any]
-Array2D = NDArray[(Any, Any), Any]
-Array3D = NDArray[(Any, Any, Any), Any]
-ArrayND = NDArray[(Any, ...), float]
+Array1D = NDArray[Shape["*"], Any]
+Array2D = NDArray[Shape["*, *"], Any]
+Array3D = NDArray[Shape["*, *, *"], Any]
+ArrayND = NDArray[Any, Any]
 ArrayLike1D = Union[Array1D, Sequence[Any]]
 ArrayLike2D = Union[Array2D, Sequence[Sequence[Any]]]
 ArrayLike3D = Union[Array3D, Sequence[Sequence[Sequence[Any]]]]
