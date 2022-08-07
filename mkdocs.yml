@@ -1,3 +1,5 @@
 site_name: EasyNN
 theme:
   name: material
+  palette:
+    primary: light blue
