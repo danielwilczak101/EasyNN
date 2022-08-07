@@ -7,6 +7,7 @@ chromedriver
 
 # C extensions
 *.so
+*.vscode
 
 # To prevent accidental upload of model/dataset files
 *.model
