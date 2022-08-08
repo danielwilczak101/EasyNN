@@ -1,5 +1,5 @@
 ## **EasyNN runs on Python 3.9.7 or greater.**
-* If you don't already have Python installed, you can install it here: https://www.python.org/downloads/
+If you don't already have Python installed, you can install it here: https://www.python.org/downloads/
 
 ## Installation:
 
