@@ -3,3 +3,27 @@ theme:
   name: material
   palette:
     primary: light blue
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Trained Models:
+      - MNIST Numbers: trained_models/mnist_numbers.md
+      - MNIST Fashion: trained_models/mnist_fashion.md
+      - Cifar10: trained_models/cifar10.md
+  - Untrained Model:
+      - Getting Started Guide: untrained/getting_started.md
+      - Attributes: untrained/getting_started.md#2-customizing-attributes
+      - Callbacks: untrained/getting_started.md#3-customizing-callbacks
+      - Save / Load: untrained/save_load.md
+      - Graph Training: untrained/getting_started.md
+      - Full Example: untrained/full_example.md
+  - Image Utilities:
+      - Image: image_utilities/image.md
+      - Compare: image_utilities/compare.md
+      - Show: image_utilities/show.md
+  - Dataset Utilities:
+      - Create from Images: dataset_utilities/from_images.md
+      - Create from Excel: dataset_utilities/from_excel.md
+  - General Utilities:
+      - Download: general_utilities/download.md
+      - Google Images: general_utilities/google_images.md
