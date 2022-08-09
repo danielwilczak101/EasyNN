@@ -15,12 +15,12 @@ nav:
                   - MNIST Fashion: trained_models/mnist_fashion.md
                   - Cifar10: trained_models/cifar10.md
         - Untrained Model:
-                  - Getting Started Guide: untrained_models/getting_started.md
-                  - Attributes: untrained_models/getting_started.md#2-customizing-attributes
-                  - Callbacks: untrained_models/getting_started.md#3-customizing-callbacks
-                  - Save / Load: untrained_models/save_load.md
-                  - Graph Training: untrained_models/getting_started.md
-                  - Full Example: untrained_models/full_example.md
+                  - Getting Started Guide: untrained_model/getting_started.md
+                  - Attributes: untrained_model/getting_started.md#2-customizing-attributes
+                  - Callbacks: untrained_model/getting_started.md#3-customizing-callbacks
+                  - Save / Load: untrained_model/save_load.md
+                  - Graph Training: untrained_model/getting_started.md
+                  - Full Example: untrained_model/full_example.md
         - Image Utilities:
                   - Image: image_utilities/image.md
                   - Compare: image_utilities/compare.md
