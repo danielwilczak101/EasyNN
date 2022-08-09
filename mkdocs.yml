@@ -1,31 +1,38 @@
 site_name: EasyNN
 theme:
-    name: material
-    features:
-        - navigation.expand
-    palette:
-        primary: light blue
+      name: material
+      features:
+            - navigation.expand
+      palette:
+            primary: light blue
 nav:
-    - Home: index.md
-    - Getting Started: getting_started.md
-    - Trained Models:
-          - MNIST Numbers: trained_models/mnist_numbers.md
-          - MNIST Fashion: trained_models/mnist_fashion.md
-          - Cifar10: trained_models/cifar10.md
-    - Untrained Model:
-          - Getting Started Guide: untrained_models/getting_started.md
-          - Attributes: untrained_models/getting_started.md#2-customizing-attributes
-          - Callbacks: untrained_models/getting_started.md#3-customizing-callbacks
-          - Save / Load: untrained_models/save_load.md
-          - Graph Training: untrained_models/getting_started.md
-          - Full Example: untrained_models/full_example.md
-    - Image Utilities:
-          - Image: image_utilities/image.md
-          - Compare: image_utilities/compare.md
-          - Show: image_utilities/show.md
-    - Dataset Utilities:
-          - Create from Images: dataset_utilities/from_images.md
-          - Create from Excel: dataset_utilities/from_excel.md
-    - General Utilities:
-          - Download: general_utilities/download.md
-          - Google Images: general_utilities/google_images.md
+      - Home: index.md
+      - Getting Started: getting_started.md
+      - Trained Models:
+              - MNIST Numbers: trained_models/mnist_numbers.md
+              - MNIST Fashion: trained_models/mnist_fashion.md
+              - Cifar10: trained_models/cifar10.md
+      - Untrained Model:
+              - Getting Started Guide: untrained_models/getting_started.md
+              - Attributes: untrained_models/getting_started.md#2-customizing-attributes
+              - Callbacks: untrained_models/getting_started.md#3-customizing-callbacks
+              - Save / Load: untrained_models/save_load.md
+              - Graph Training: untrained_models/getting_started.md
+              - Full Example: untrained_models/full_example.md
+      - Image Utilities:
+              - Image: image_utilities/image.md
+              - Compare: image_utilities/compare.md
+              - Show: image_utilities/show.md
+      - Dataset Utilities:
+              - Create from Images: dataset_utilities/from_images.md
+              - Create from Excel: dataset_utilities/from_excel.md
+      - General Utilities:
+              - Download: general_utilities/download.md
+              - Google Images: general_utilities/google_images.md
+
+markdown_extensions:
+      - pymdownx.highlight:
+              anchor_linenums: true
+      - pymdownx.inlinehilite
+      - pymdownx.snippets
+      - pymdownx.superfences
