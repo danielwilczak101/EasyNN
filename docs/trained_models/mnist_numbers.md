@@ -78,5 +78,5 @@ Downloading - four.jpg:
 
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="images/example_three.png">
+  <img width="400px" height="400px" src="https://danielwilczak101.github.io/EasyNN/images/example_three.png">
 </p>

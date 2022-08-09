@@ -78,7 +78,7 @@ Downloading - four.jpg:
 
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="/images/example_four.png">
+  <img width="400px" height="400px" src="https://danielwilczak101.github.io/EasyNN/images/example_four.png">
 </p>
 
 Since you now understand the basics, try one of our other trained models or create one with your data using our [untrained model section](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-with-Untrained-Model).

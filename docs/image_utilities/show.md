@@ -13,7 +13,7 @@ model.show(images[0])
 
 #### Output:
 <p>
-  <img width="350px" height="300px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/five_example_show.png">
+  <img width="350px" height="300px" src="https://danielwilczak101.github.io/EasyNN/images/five_example_show.png">
 </p>
 
 #### Downloaded Example:
@@ -46,5 +46,5 @@ print(model.classify(image))
 
 #### Output:
 <p>
-  <img width="350px" height="300px" src="/images/dress_example.png">
+  <img width="350px" height="300px" src="https://danielwilczak101.github.io/EasyNN/images/dress_example.png">
 </p>
