@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/fashion_mnist_example.jpg">
+  <img src="/images/fashion_mnist_example.jpg">
 </p>
 
 ## MNIST Fashion:

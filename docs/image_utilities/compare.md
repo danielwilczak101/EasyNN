@@ -35,6 +35,6 @@ Downloading - four.jpg:
 ```
 
 <p>
-  <img width="450px" height="400px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/compare_example.png">
+  <img width="450px" height="400px" src="/images/compare_example.png">
 </p>
 

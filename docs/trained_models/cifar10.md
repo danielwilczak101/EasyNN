@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/cifar10_example.png">
+  <img src="/images/cifar10_example.png">
 </p>
 
 ## CIFAR-10:
