@@ -5,9 +5,10 @@ EasyNN is a python package designed to provide an easy-to-use Neural Network. Th
 
 ### [Getting Started Guide](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide)
 Here you can learn all about the basics of getting started with EasyNN.
-* [Pip Install](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide#installation)
-* [Dataset Example](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide#dataset-example)
-* [Full Example](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide#full-example)
+
+[Pip Install](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide#installation)  
+[Dataset Example](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide#dataset-example)  
+[Full Example](https://github.com/danielwilczak101/EasyNN/wiki/Getting-Started-Guide#full-example)  
 
 ### Trained Models
 Use the trained models section to see EasyNN's datasets and pre-trained neural networks ready to run.  
