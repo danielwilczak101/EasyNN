@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../images/MnistExamples.png">
+  <img src="https://danielwilczak101.github.io/EasyNN/images/MnistExamples.png">
 </p>
 
 
