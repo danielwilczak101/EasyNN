@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/danielwilczak101/EasyNN/blob/media/images/MnistExamples.png">
+  <img src="images/MnistExamples.png">
 </p>
 
 
@@ -78,5 +78,5 @@ Downloading - four.jpg:
 
 ### Image output:
 <p align="center">
-  <img width="400px" height="400px" src="https://raw.githubusercontent.com/danielwilczak101/EasyNN/media/images/example_three.png">
+  <img width="400px" height="400px" src="images/example_three.png">
 </p>

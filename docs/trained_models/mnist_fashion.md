@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/danielwilczak101/EasyNN/blob/media/images/fashion_mnist_example.jpg">
+  <img src="images/fashion_mnist_example.jpg">
 </p>
 
 ## MNIST Fashion:
@@ -96,5 +96,5 @@ Dress
 ```
 ### Image output:
 <p>
-  <img width="350px" height="300px" src="https://github.com/danielwilczak101/EasyNN/blob/media/images/dress_example.png">
+  <img width="350px" height="300px" src="images/dress_example.png">
 </p>

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/danielwilczak101/EasyNN/blob/media/images/cifar10_example.png">
+  <img src="images/cifar10_example.png">
 </p>
 
 ## CIFAR-10:
@@ -90,7 +90,7 @@ ship
 ### Image output:
 Shows what the image from the internet looks like and what it becomes after being resized and processed.
 <p>
-  <img src="https://github.com/danielwilczak101/EasyNN/blob/media/images/image_compare.png">
+  <img src="images/image_compare.png">
 </p>
 
 
